@@ -53,7 +53,7 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int p) {
         switch(p) {
             case 0:
-                return "asdersicht";
+                return "Übersicht";
             case 1:
                 return "Heute";
             case 2:

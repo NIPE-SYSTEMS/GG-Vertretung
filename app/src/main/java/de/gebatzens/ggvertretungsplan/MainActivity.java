@@ -17,19 +17,32 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 
 public class MainActivity extends FragmentActivity {
 
     GGFragmentAdapter mAdapter;
     ViewPager mPager;
+    String[] mStrings;
+    DrawerLayout mDrawerLayout;
+    ListView mDrawerList;
+    ActionBarDrawerToggle mToggle;
+    Toolbar mToolbar;
+    int selected = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,9 +56,9 @@ public class MainActivity extends FragmentActivity {
             transaction.commit();
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
@@ -57,11 +70,57 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
-        toolbar.setTitle("Vertretung");
-        toolbar.inflateMenu(R.menu.toolbar_menu);
-        toolbar.setTitleTextColor(Color.WHITE);
+        mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule", "Einstellugen"};
 
+        mToolbar.setTitle(mStrings[0]);
+        mToolbar.inflateMenu(R.menu.toolbar_menu);
+        mToolbar.setTitleTextColor(Color.WHITE);
+        //toolbar.setNavigationIcon(R.drawable.ic_menu_white);
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                mToolbar, R.string.drawer_open, R.string.drawer_close) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        mDrawerLayout.setDrawerListener(mToggle);
+
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mStrings));
+        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selected = position;
+                mToolbar.setTitle(mStrings[position]);
+                mDrawerLayout.closeDrawers();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mToggle.onConfigurationChanged(newConfig);
     }
 
 

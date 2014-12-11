@@ -17,10 +17,37 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
  * Created by hauke on 11.12.14.
  */
 public class GGFragment extends Fragment {
+
+    String url;
+    boolean overview;
+
+    public void setParams(String u, boolean b) {
+        url = u;
+        overview = b;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
+
+        LinearLayout l = new LinearLayout(getActivity());
+        l.setPadding(1, 1, 1, 1);
+        TextView t = new TextView(getActivity());
+        t.setText("Muahhahahahahahahahahahahahhahah");
+        l.addView(t);
+
+        return l;
+
+    }
 }
