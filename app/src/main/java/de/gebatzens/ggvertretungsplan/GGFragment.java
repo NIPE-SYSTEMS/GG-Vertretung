@@ -17,32 +17,10 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TableLayout;
 
 /**
- * Created by hauke on 10.12.14.
+ * Created by hauke on 11.12.14.
  */
 public class GGFragment extends Fragment {
-
-    String mUrl;
-
-    public GGFragment() {
-
-    }
-
-    public void setURL(String u) {
-        mUrl = u;
-    }
-
-
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        return new TableLayout(this.getActivity());
-    }
 }
