@@ -26,13 +26,16 @@ import android.support.v4.app.FragmentManager;
  */
 public class GGFragmentAdapter extends FragmentPagerAdapter {
 
-    Fragment heute, morgen, overview;
+    GGFragment heute, morgen, overview;
 
     public GGFragmentAdapter(FragmentManager m) {
         super(m);
         heute = new GGFragment();
+        heute.setParams("http://gymglinde.de/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_heute.htm", GGFragment.TYPE_TODAY);
         morgen = new GGFragment();
+        morgen.setParams("http://gymglinde.de/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_morgen.htm", GGFragment.TYPE_TOMORROW);
         overview = new GGFragment();
+        overview.setParams(null, GGFragment.TYPE_OVERVIEW);
     }
 
     @Override

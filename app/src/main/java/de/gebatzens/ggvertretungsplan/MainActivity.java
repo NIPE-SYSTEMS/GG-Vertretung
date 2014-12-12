@@ -43,6 +43,7 @@ public class MainActivity extends FragmentActivity {
     ActionBarDrawerToggle mToggle;
     Toolbar mToolbar;
     int selected = 0;
+    public static VPProvider mProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,15 +63,15 @@ public class MainActivity extends FragmentActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-                switch (menuItem.getItemId()){
 
-                }
 
                 return false;
             }
         });
 
-        mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule", "Einstellugen"};
+        mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule", "Einstellungen"};
+
+        createProvider();
 
         mToolbar.setTitle(mStrings[0]);
         mToolbar.inflateMenu(R.menu.toolbar_menu);
@@ -102,9 +103,13 @@ public class MainActivity extends FragmentActivity {
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selected = position;
-                mToolbar.setTitle(mStrings[position]);
-                mDrawerLayout.closeDrawers();
+                if(position < 2) {
+                    selected = position;
+                    mToolbar.setTitle(mStrings[position]);
+                    mDrawerLayout.closeDrawers();
+                    createProvider();
+                }
+
             }
         });
 
@@ -123,6 +128,15 @@ public class MainActivity extends FragmentActivity {
         mToggle.onConfigurationChanged(newConfig);
     }
 
-
+    public void createProvider() {
+        switch(selected) {
+            case 0:
+                mProvider = new GGProvider();
+                break;
+            case 1:
+                mProvider = new SWSProvider();
+                break;
+        }
+    }
 
 }
