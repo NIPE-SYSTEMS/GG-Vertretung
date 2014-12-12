@@ -22,4 +22,14 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="boldText">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#555</item>
+    </style>
+
+    <style name="normalText">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#555</item>
+    </style>
+
 </resources>

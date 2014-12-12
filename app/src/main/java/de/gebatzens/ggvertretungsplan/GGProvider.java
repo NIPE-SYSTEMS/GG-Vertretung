@@ -50,10 +50,10 @@ public class GGProvider implements VPProvider {
 
                 while(scan.hasNextLine()) {
                     String line = scan.nextLine();
+                    line = decodeHTML(line);
                     Matcher m = title.matcher(line);
                     if(m.find()) {
                         target.date = m.group(1);
-                        target.date = target.date.replaceAll("&uuml;", "\u00FC");
                     } else {
                         Matcher row = tr.matcher(line);
                         if(row.find()) {
@@ -62,11 +62,12 @@ public class GGProvider implements VPProvider {
                                 String[] values = new String[5];
                                 for(int i = 0; i < 5; i++) {
                                     String l = scan.nextLine();
+                                    l = decodeHTML(l);
                                     Matcher data = tdata.matcher(l);
                                     if(data.find())
                                         values[i] = data.group(1).trim();
                                     else
-                                        values[i] = l;
+                                        values[i] = "#error";
                                 }
                                 if(values[0].equals(""))
                                     values[0] = lastClass;
@@ -86,7 +87,21 @@ public class GGProvider implements VPProvider {
             target.loaded = true;
             return target;
         }
+
+        private String decodeHTML(String html) {
+            html = html.replaceAll("&uuml;", "ü");
+            html = html.replaceAll("&auml;", "ä");
+            html = html.replaceAll("&ouml;", "ö");
+
+            html = html.replaceAll("&Uuml;", "Ü");
+            html = html.replaceAll("&Auml;", "Ä");
+            html = html.replaceAll("&Ouml;", "Ö");
+
+            return html;
+        }
     }
+
+
 
     @Override
     public GGPlan getVP(String s) {

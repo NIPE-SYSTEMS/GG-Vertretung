@@ -17,12 +17,15 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -58,6 +61,13 @@ public class GGFragment extends Fragment {
         return (int) (dp * scale + 0.5f);
     }
 
+    private LinearLayout createLinearLayoutText(String text, int size, ViewGroup g) {
+        LinearLayout l = new LinearLayout(getActivity());
+        createTextView(text, size, null, l);
+        g.addView(l);
+        return l;
+    }
+
     private TextView createTextView(String text, int size, LayoutInflater inflater, ViewGroup group) {
        // TextView t = (TextView) inflater.inflate(R.layout.plan_text, group, true).findViewById(R.id.plan_entry);
         TextView t = new TextView(getActivity());
@@ -69,7 +79,7 @@ public class GGFragment extends Fragment {
     }
 
     public View createTable(List<String[]> list, boolean clas, LayoutInflater inflater, ViewGroup group) {
-        TableLayout table = (TableLayout) inflater.inflate(R.layout.overview_table, group, true).findViewById(R.id.plan_table);
+        TableLayout table = (TableLayout) inflater.inflate(clas ? R.layout.all_table : R.layout.overview_table, group, true).findViewById(R.id.plan_table);
 
         for(String[] s : list) {
             TableRow row = new TableRow(getActivity());
@@ -87,30 +97,51 @@ public class GGFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
 
+        ScrollView s = new ScrollView(getActivity());
         LinearLayout l = new LinearLayout(getActivity());
+        l.setOrientation(LinearLayout.VERTICAL);
+        s.addView(l);
         l.setPadding(10, 10, 10, 10);
         if(type == TYPE_OVERVIEW) {
             List<String[]> list = planh.getAllForClass("Eb");
-            createTable(list, false, inflater, l);
+            LinearLayout l2 = new LinearLayout(getActivity());
+            l2.setOrientation(LinearLayout.VERTICAL);
+            l.addView(l2);
+            TextView tv1 = createTextView(planh.date + " für Eb:", 10, inflater, l2);
+            tv1.setPadding(0, 0, 0, toPixels(5));
+            tv1.setTextAppearance(getActivity(), R.style.boldText);
+            if(list.size() == 0) {
+                createTextView("Nichts!", 10, inflater, l2);
+            } else
+                createTable(list, false, inflater, l2);
+
+
+            list = planm.getAllForClass("Eb");
+            LinearLayout l3 = new LinearLayout(getActivity());
+            l3.setOrientation(LinearLayout.VERTICAL);
+            l.addView(l3);
+            TextView tv2 = createTextView(planm.date + " für Eb:", 10, inflater, l3);
+            tv2.setPadding(0, 0, 0, toPixels(5));
+            tv2.setTextAppearance(getActivity(), R.style.boldText);
+            if(list.size() == 0) {
+                createTextView("Nichts!", 10, inflater, l3);
+            } else
+                createTable(list, false, inflater, l3);
 
         } else if(plan.loaded) {
             TextView text = new TextView(getActivity());
             if(plan.throwable != null) {
-                text.setTextSize(40);
+                text.setTextSize(20);
+                text.setTextColor(Color.RED);
                 text.setText(plan.throwable.toString());
+                l.addView(text);
             } else {
                 text.setTextSize(20);
                 text.setText(plan.date);
-
-                for(String[] s : plan.entries) {
-                    TextView tv = new TextView(getActivity());
-                    tv.setTextSize(10);
-                    tv.setText(s[0] + " " + s[1] + " " + s[2] + " " + s[3] + " " + s[4]);
-                    l.addView(tv);
-                }
-
+                //l.addView(text);
+                createTable(plan.entries, true, inflater, l);
             }
-            l.addView(text);
+
         } else {
             TextView text = new TextView(getActivity());
             text.setTextSize(20);
@@ -118,7 +149,7 @@ public class GGFragment extends Fragment {
             l.addView(text);
         }
 
-        return l;
+        return s;
 
     }
 }

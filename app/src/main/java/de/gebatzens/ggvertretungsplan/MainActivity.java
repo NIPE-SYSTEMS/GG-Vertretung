@@ -44,6 +44,7 @@ public class MainActivity extends FragmentActivity {
     Toolbar mToolbar;
     int selected = 0;
     public static VPProvider mProvider;
+    public GGContentFragment mContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +53,8 @@ public class MainActivity extends FragmentActivity {
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            GGContentFragment fragment = new GGContentFragment();
-            transaction.replace(R.id.content_fragment, fragment);
+            mContent = new GGContentFragment();
+            transaction.replace(R.id.content_fragment, mContent);
             transaction.commit();
         }
 
@@ -63,7 +64,7 @@ public class MainActivity extends FragmentActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-
+                mContent.getGGAdapter().refresh();
 
                 return false;
             }

@@ -54,4 +54,8 @@ public class GGContentFragment extends Fragment {
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
     }
+
+    public GGFragmentAdapter getGGAdapter() {
+        return (GGFragmentAdapter) mViewPager.getAdapter();
+    }
 }

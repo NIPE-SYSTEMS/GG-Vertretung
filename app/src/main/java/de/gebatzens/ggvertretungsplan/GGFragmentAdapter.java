@@ -30,12 +30,17 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
 
     public GGFragmentAdapter(FragmentManager m) {
         super(m);
+        refresh();
+    }
+
+    public void refresh() {
         heute = new GGFragment();
         heute.setParams("http://gymglinde.de/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_heute.htm", GGFragment.TYPE_TODAY);
         morgen = new GGFragment();
         morgen.setParams("http://gymglinde.de/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_morgen.htm", GGFragment.TYPE_TOMORROW);
         overview = new GGFragment();
         overview.setParams(null, GGFragment.TYPE_OVERVIEW);
+        notifyDataSetChanged();
     }
 
     @Override
