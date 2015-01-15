@@ -67,8 +67,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
     }
 
     private static final int TITLE_OFFSET_DIPS = 24;
-    private static final int TAB_VIEW_PADDING_DIPS = 16;
-    private static final int TAB_VIEW_TEXT_SIZE_SP = 12;
+    private static final int TAB_VIEW_PADDING_DIPS = 14;
+    private static final int TAB_VIEW_TEXT_SIZE_SP = 14;
 
     private int mTitleOffset;
 
@@ -209,6 +209,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 tabView = LayoutInflater.from(getContext()).inflate(mTabViewLayoutId, mTabStrip,
                         false);
                 tabTitleView = (TextView) tabView.findViewById(mTabViewTextViewId);
+                tabTitleView.setTextColor(getResources().getColorStateList(R.color.tabviewcolor));
             }
 
             if (tabView == null) {
@@ -217,12 +218,18 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
             if (tabTitleView == null && TextView.class.isInstance(tabView)) {
                 tabTitleView = (TextView) tabView;
+                tabTitleView.setTextColor(getResources().getColorStateList(R.color.tabviewcolor));
             }
 
             tabTitleView.setText(adapter.getPageTitle(i));
+            tabTitleView.setTextColor(getResources().getColorStateList(R.color.tabviewcolor));
             tabView.setOnClickListener(tabClickListener);
 
             mTabStrip.addView(tabView);
+
+            if (i == mViewPager.getCurrentItem()) {
+                tabView.setSelected(true);
+            }
         }
     }
 
@@ -293,7 +300,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 mTabStrip.onViewPagerPageChanged(position, 0f);
                 scrollToTab(position, 0);
             }
-
+            for (int i = 0; i < mTabStrip.getChildCount(); i++) {
+                mTabStrip.getChildAt(i).setSelected(position == i);
+            }
             if (mViewPagerPageChangeListener != null) {
                 mViewPagerPageChangeListener.onPageSelected(position);
             }
