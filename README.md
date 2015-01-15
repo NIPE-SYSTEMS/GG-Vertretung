@@ -8,6 +8,6 @@ Kompilieren und APK erstellen:
 
 Starten:
 ```
-./gradlew install
+./gradlew installDebug
 ```
 
