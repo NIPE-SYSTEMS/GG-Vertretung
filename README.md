@@ -10,4 +10,4 @@ Starten:
 ```
 ./gradlew install
 ```
-gut
+
