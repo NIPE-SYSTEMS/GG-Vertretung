@@ -20,6 +20,15 @@
     package="de.gebatzens.ggvertretungsplan" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <receiver android:enabled="true" android:name="de.gebatzens.ggvertretungsplan.GGBroadcast"
+        android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
+    </receiver>
 
     <application
         android:allowBackup="true"

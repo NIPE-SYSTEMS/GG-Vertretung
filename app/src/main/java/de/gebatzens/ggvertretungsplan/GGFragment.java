@@ -37,20 +37,27 @@ public class GGFragment extends Fragment {
     public static final int TYPE_OVERVIEW = 0, TYPE_TODAY = 1, TYPE_TOMORROW = 2;
 
     String url;
-    static GGPlan planh, planm;
-    GGPlan plan;
+    GGPlan plan, planh, planm;
     int type;
 
-    public void setParams(String u, int type) {
-        url = u;
+    public void setParams(int type) {
         this.type = type;
-
-        if(url != null)
-            plan = MainActivity.mProvider.getVP(url);
+        planh = MainActivity.mVPToday;
+        planm = MainActivity.mVPTomorrow;
         if(type == TYPE_TODAY)
-            planh = plan;
+            plan = planh;
         else if(type == TYPE_TOMORROW)
-            planm = plan;
+            plan = planm;
+
+    }
+
+    public void recreate() {
+        if(getView() == null)
+            return;
+        ((ViewGroup) getView()).removeAllViews();
+
+        createView(getActivity().getLayoutInflater(), (ViewGroup) getView());
+
     }
 
     private int toPixels(int dp) {
@@ -91,13 +98,10 @@ public class GGFragment extends Fragment {
         return table;
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
-
-        ScrollView s = new ScrollView(getActivity());
+    public void createView(LayoutInflater inflater, ViewGroup group) {
         LinearLayout l = new LinearLayout(getActivity());
         l.setOrientation(LinearLayout.VERTICAL);
-        s.addView(l);
+        group.addView(l);
         l.setPadding(10, 10, 10, 10);
         if(type == TYPE_OVERVIEW) {
             List<String[]> list = planh.getAllForClass("Eb");
@@ -108,7 +112,7 @@ public class GGFragment extends Fragment {
             tv1.setPadding(0, 0, 0, toPixels(5));
             tv1.setTextAppearance(getActivity(), R.style.boldText);
             if(list.size() == 0) {
-                createTextView("Nichts!", 10, inflater, l2);
+                createTextView("Es fällt nichts für dich aus!", 10, inflater, l2);
             } else
                 createTable(list, false, inflater, l2);
 
@@ -121,7 +125,7 @@ public class GGFragment extends Fragment {
             tv2.setPadding(0, 0, 0, toPixels(5));
             tv2.setTextAppearance(getActivity(), R.style.boldText);
             if(list.size() == 0) {
-                createTextView("Nichts!", 10, inflater, l3);
+                createTextView("Es fällt nichts für dich aus!", 10, inflater, l3);
             } else
                 createTable(list, false, inflater, l3);
 
@@ -145,8 +149,13 @@ public class GGFragment extends Fragment {
             text.setText("Lade...");
             l.addView(text);
         }
+    }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
+        Log.w("ggv", "Create View " + group + " " + getView());
+        ScrollView s = new ScrollView(getActivity());
+        createView(inflater, s);
         return s;
-
     }
 }

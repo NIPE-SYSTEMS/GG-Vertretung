@@ -21,6 +21,20 @@ public class SWSProvider implements VPProvider {
 
     @Override
     public GGPlan getVP(String url) {
-        return null;
+        GGPlan plan = new GGPlan();
+        plan.date = url;
+        plan.entries.add(new String[]{"SWS 1", "SWS", "SWS", "SWS", "SWS"});
+        plan.loaded = true;
+        return plan;
+    }
+
+    @Override
+    public String getTodayURL() {
+        return "HEUTE!";
+    }
+
+    @Override
+    public String getTomorrowURL() {
+        return "MORGEN!";
     }
 }

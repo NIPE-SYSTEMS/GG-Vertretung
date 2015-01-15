@@ -45,6 +45,7 @@ public class MainActivity extends FragmentActivity {
     int selected = 0;
     public static VPProvider mProvider;
     public GGContentFragment mContent;
+    public static GGPlan mVPToday, mVPTomorrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class MainActivity extends FragmentActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-                mContent.getGGAdapter().refresh();
+                updateVP();
 
                 return false;
             }
@@ -73,6 +74,8 @@ public class MainActivity extends FragmentActivity {
         mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule", "Einstellungen"};
 
         createProvider();
+        mVPToday = mProvider.getVP(mProvider.getTodayURL());
+        mVPTomorrow = mProvider.getVP(mProvider.getTomorrowURL());
 
         mToolbar.setTitle(mStrings[0]);
         mToolbar.inflateMenu(R.menu.toolbar_menu);
@@ -109,6 +112,8 @@ public class MainActivity extends FragmentActivity {
                     mToolbar.setTitle(mStrings[position]);
                     mDrawerLayout.closeDrawers();
                     createProvider();
+                    updateVP();
+
                 }
 
             }
@@ -138,6 +143,12 @@ public class MainActivity extends FragmentActivity {
                 mProvider = new SWSProvider();
                 break;
         }
+    }
+
+    public void updateVP() {
+        mVPToday = mProvider.getVP(mProvider.getTodayURL());
+        mVPTomorrow = mProvider.getVP(mProvider.getTomorrowURL());
+        mContent.mGGFrag.updateFragments();
     }
 
 }

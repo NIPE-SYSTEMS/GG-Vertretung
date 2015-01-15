@@ -17,16 +17,19 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-public interface VPProvider {
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
-    /**
-     * starts an async task
-     * @param url
-     * @return VP
-     */
-    public GGPlan getVP(String url);
+public class GGBroadcast extends BroadcastReceiver {
 
-    public String getTodayURL();
-    public String getTomorrowURL();
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
+
+        } else {
+
+        }
+    }
 
 }
