@@ -18,9 +18,10 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:colorPrimary">#F57C00</item>
-        <item name="android:colorPrimaryDark">#F57C00</item>
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <item name="android:colorPrimary">#2196F3</item>
+        <item name="android:colorPrimaryDark">#1976D2</item>
+        <item name="android:textColorSecondary">#ffffffff</item>
     </style>
 
     <style name="boldText">
