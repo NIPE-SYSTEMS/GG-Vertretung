@@ -27,9 +27,6 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by hauke on 11.12.14.
- */
 public class GGProvider implements VPProvider {
 
     private static class GGAsync extends AsyncTask<Object, Void, GGPlan> {

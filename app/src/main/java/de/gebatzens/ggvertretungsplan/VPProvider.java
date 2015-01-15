@@ -17,9 +17,6 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-/**
- * Created by hauke on 11.12.14.
- */
 public interface VPProvider {
 
     /**

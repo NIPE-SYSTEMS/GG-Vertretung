@@ -20,9 +20,6 @@ package de.gebatzens.ggvertretungsplan;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by hauke on 11.12.14.
- */
 public class GGPlan {
 
     public ArrayList<String[]> entries = new ArrayList<String[]>();

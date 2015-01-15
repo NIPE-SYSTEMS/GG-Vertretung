@@ -25,9 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
 
-/**
- * Created by hauke on 10.12.14.
- */
 public class GGContentFragment extends Fragment {
 
     ViewPager mViewPager;

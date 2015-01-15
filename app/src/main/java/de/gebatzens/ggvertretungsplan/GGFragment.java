@@ -32,9 +32,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-/**
- * Created by hauke on 11.12.14.
- */
 public class GGFragment extends Fragment {
 
     public static final int TYPE_OVERVIEW = 0, TYPE_TODAY = 1, TYPE_TOMORROW = 2;

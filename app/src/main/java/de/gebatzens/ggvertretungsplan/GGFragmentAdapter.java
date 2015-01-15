@@ -21,9 +21,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
 
-/**
- * Created by hauke on 10.12.14.
- */
 public class GGFragmentAdapter extends FragmentPagerAdapter {
 
     GGFragment heute, morgen, overview;
