@@ -66,8 +66,12 @@ public class GGContentFragment extends Fragment {
                 GGApp.GG_APP.refreshAsync(new Runnable() {
                     @Override
                     public void run() {
-
-                        swipeContainer.setRefreshing(false);
+                        swipeContainer.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                swipeContainer.setRefreshing(false);
+                            }
+                        });
 
                     }
                 });
