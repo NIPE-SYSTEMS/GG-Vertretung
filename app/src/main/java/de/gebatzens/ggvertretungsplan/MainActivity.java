@@ -20,44 +20,53 @@ package de.gebatzens.ggvertretungsplan;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.List;
+
 
 public class MainActivity extends FragmentActivity {
 
-    GGFragmentAdapter mAdapter;
-    ViewPager mPager;
     String[] mStrings;
     DrawerLayout mDrawerLayout;
     ListView mDrawerList;
     ActionBarDrawerToggle mToggle;
     Toolbar mToolbar;
     int selected = 0;
-    public static VPProvider mProvider;
     public GGContentFragment mContent;
-    public static GGPlan mVPToday, mVPTomorrow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        GGApp.GG_APP.mActivity = this;
+        setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
+
+        List<Fragment> frags = getSupportFragmentManager().getFragments();
+        if(frags != null)
+            for(Fragment frag : frags) {
+                if(!frag.getTag().equals("gg_content_fragment"))
+                    getSupportFragmentManager().beginTransaction().remove(frag).commit();
+            }
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             mContent = new GGContentFragment();
-            transaction.replace(R.id.content_fragment, mContent);
+            transaction.replace(R.id.content_fragment, mContent, "gg_content_fragment");
             transaction.commit();
-        }
+        } else
+            mContent = (GGContentFragment) getSupportFragmentManager().findFragmentByTag("gg_content_fragment");
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -65,17 +74,13 @@ public class MainActivity extends FragmentActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-                updateVP();
+                GGApp.GG_APP.updateVP();
 
                 return false;
             }
         });
 
         mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule", "Einstellungen"};
-
-        createProvider();
-        mVPToday = mProvider.getVP(mProvider.getTodayURL());
-        mVPTomorrow = mProvider.getVP(mProvider.getTomorrowURL());
 
         mToolbar.setTitle(mStrings[0]);
         mToolbar.inflateMenu(R.menu.toolbar_menu);
@@ -108,16 +113,18 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position < 2) {
-                    selected = position;
                     mToolbar.setTitle(mStrings[position]);
                     mDrawerLayout.closeDrawers();
-                    createProvider();
-                    updateVP();
+                    GGApp.GG_APP.createProvider(position);
+                    GGApp.GG_APP.updateVP();
 
                 }
 
             }
         });
+
+        if(!GGApp.GG_APP.created)
+            GGApp.GG_APP.create();
 
     }
 
@@ -126,29 +133,13 @@ public class MainActivity extends FragmentActivity {
         super.onPostCreate(savedInstanceState);
         // Sync the toggle state after onRestoreInstanceState has occurred.
         mToggle.syncState();
+
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mToggle.onConfigurationChanged(newConfig);
-    }
-
-    public void createProvider() {
-        switch(selected) {
-            case 0:
-                mProvider = new GGProvider();
-                break;
-            case 1:
-                mProvider = new SWSProvider();
-                break;
-        }
-    }
-
-    public void updateVP() {
-        mVPToday = mProvider.getVP(mProvider.getTodayURL());
-        mVPTomorrow = mProvider.getVP(mProvider.getTomorrowURL());
-        mContent.mGGFrag.updateFragments();
     }
 
 }

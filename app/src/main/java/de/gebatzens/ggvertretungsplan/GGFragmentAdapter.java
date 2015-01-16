@@ -17,15 +17,18 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.ViewGroup;
 
 public class GGFragmentAdapter extends FragmentPagerAdapter {
 
     GGFragment heute, morgen, overview;
 
-    public GGFragmentAdapter(FragmentManager m) {
+    public GGFragmentAdapter(FragmentManager m, Bundle savedState) {
         super(m);
         createFragments();
 
@@ -62,6 +65,13 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
             default:
                 return null;
         }
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup view, int pos) {
+        Object o = super.instantiateItem(view, pos);
+        ((GGFragment)o).setParams(pos == 0 ? GGFragment.TYPE_OVERVIEW : pos == 1 ? GGFragment.TYPE_TODAY : GGFragment.TYPE_TOMORROW);
+        return o;
     }
 
     @Override

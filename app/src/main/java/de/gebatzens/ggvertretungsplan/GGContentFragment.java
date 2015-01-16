@@ -20,6 +20,7 @@ package de.gebatzens.ggvertretungsplan;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,8 @@ public class GGContentFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        mViewPager.setAdapter(mGGFrag = new GGFragmentAdapter(getActivity().getSupportFragmentManager()));
+        mGGFrag = new GGFragmentAdapter(getActivity().getSupportFragmentManager(), savedInstanceState);
+        mViewPager.setAdapter(mGGFrag);
 
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
@@ -53,4 +55,5 @@ public class GGContentFragment extends Fragment {
         mSlidingTabLayout.setPadding(24,0,24,0);
         mSlidingTabLayout.setViewPager(mViewPager);
     }
+
 }

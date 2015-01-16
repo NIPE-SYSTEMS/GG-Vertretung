@@ -38,12 +38,12 @@ public class GGFragment extends Fragment {
 
     String url;
     GGPlan plan, planh, planm;
-    int type;
+    int type = -1;
 
     public void setParams(int type) {
         this.type = type;
-        planh = MainActivity.mVPToday;
-        planm = MainActivity.mVPTomorrow;
+        planh = GGApp.GG_APP.mVPToday;
+        planm = GGApp.GG_APP.mVPTomorrow;
         if(type == TYPE_TODAY)
             plan = planh;
         else if(type == TYPE_TOMORROW)
@@ -103,7 +103,12 @@ public class GGFragment extends Fragment {
         l.setOrientation(LinearLayout.VERTICAL);
         group.addView(l);
         l.setPadding(10, 10, 10, 10);
-        if(type == TYPE_OVERVIEW) {
+        if(planh == null || planm == null) {
+            TextView tv = new TextView(getActivity());
+            tv.setText("Error: " + type);
+            l.addView(tv);
+            Log.w("ggvp", "setParams not called " + type + " " + this + " " + getParentFragment());
+        } else if(type == TYPE_OVERVIEW) {
             List<String[]> list = planh.getAllForClass("Eb");
             LinearLayout l2 = new LinearLayout(getActivity());
             l2.setOrientation(LinearLayout.VERTICAL);
@@ -153,7 +158,6 @@ public class GGFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
-        Log.w("ggv", "Create View " + group + " " + getView());
         ScrollView s = new ScrollView(getActivity());
         createView(inflater, s);
         return s;
