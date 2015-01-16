@@ -50,6 +50,7 @@ public class GGContentFragment extends Fragment {
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+        mSlidingTabLayout.setPadding(24,0,24,0);
         mSlidingTabLayout.setViewPager(mViewPager);
     }
 }
