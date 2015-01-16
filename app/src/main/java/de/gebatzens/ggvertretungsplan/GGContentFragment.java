@@ -17,6 +17,7 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -32,7 +33,7 @@ public class GGContentFragment extends Fragment {
     ViewPager mViewPager;
     SlidingTabLayout mSlidingTabLayout;
     GGFragmentAdapter mGGFrag;
-    private SwipeRefreshLayout swipeContainer;
+    SwipeRefreshLayout swipeContainer;
 
     public GGContentFragment() {
 
@@ -62,11 +63,14 @@ public class GGContentFragment extends Fragment {
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
+                GGApp.GG_APP.refreshAsync(new Runnable() {
+                    @Override
+                    public void run() {
 
-                //fetchTimelineAsync(0);
+                        swipeContainer.setRefreshing(false);
+
+                    }
+                });
             }
         });
         // Configure the refreshing colors

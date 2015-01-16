@@ -54,9 +54,12 @@ public class GGFragment extends Fragment {
     public void recreate() {
         if(getView() == null)
             return;
-        ((ViewGroup) getView()).removeAllViews();
 
-        createView(getActivity().getLayoutInflater(), (ViewGroup) getView());
+        ViewGroup vg = (ViewGroup) getView();
+
+        vg.removeAllViews();
+
+        createView(getActivity().getLayoutInflater(), vg);
 
     }
 
@@ -158,7 +161,7 @@ public class GGFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
-        ScrollView s = new ScrollView(getActivity());
+        LinearLayout s = new LinearLayout(getActivity());
         createView(inflater, s);
         return s;
     }

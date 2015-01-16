@@ -29,6 +29,13 @@ public class SWSProvider implements VPProvider {
     }
 
     @Override
+    public GGPlan getVPSync(String url) {
+        GGPlan plan = new GGPlan();
+        plan.date = "Sync " + url;
+        return plan;
+    }
+
+    @Override
     public String getTodayURL() {
         return "HEUTE!";
     }

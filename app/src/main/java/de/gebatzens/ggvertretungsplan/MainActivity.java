@@ -56,7 +56,7 @@ public class MainActivity extends FragmentActivity {
         List<Fragment> frags = getSupportFragmentManager().getFragments();
         if(frags != null)
             for(Fragment frag : frags) {
-                if(!frag.getTag().equals("gg_content_fragment"))
+                if(frag != null && !frag.getTag().equals("gg_content_fragment"))
                     getSupportFragmentManager().beginTransaction().remove(frag).commit();
             }
 
@@ -117,6 +117,8 @@ public class MainActivity extends FragmentActivity {
                     mDrawerLayout.closeDrawers();
                     GGApp.GG_APP.createProvider(position);
                     GGApp.GG_APP.updateVP();
+
+                } else if(position == 2) {
 
                 }
 

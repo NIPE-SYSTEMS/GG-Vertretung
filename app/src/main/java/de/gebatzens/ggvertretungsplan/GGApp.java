@@ -19,6 +19,7 @@ package de.gebatzens.ggvertretungsplan;
 
 import android.app.Activity;
 import android.app.Application;
+import android.os.AsyncTask;
 
 public class GGApp extends Application {
 
@@ -60,6 +61,28 @@ public class GGApp extends Application {
         mVPToday = mProvider.getVP(mProvider.getTodayURL());
         mVPTomorrow = mProvider.getVP(mProvider.getTomorrowURL());
         mActivity.mContent.mGGFrag.updateFragments();
+    }
+
+    public void refreshAsync(final Runnable finished) {
+        new AsyncTask<Object, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Object... params) {
+
+                mVPToday = mProvider.getVPSync(mProvider.getTodayURL());
+                mVPTomorrow = mProvider.getVPSync(mProvider.getTomorrowURL());
+
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mActivity.mContent.mGGFrag.updateFragments();
+                    }
+                });
+
+                mActivity.runOnUiThread(finished);
+                return null;
+            }
+        }.execute();
     }
 
 
