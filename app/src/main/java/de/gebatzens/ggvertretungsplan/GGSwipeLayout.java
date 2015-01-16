@@ -38,7 +38,9 @@ public class GGSwipeLayout extends SwipeRefreshLayout {
     public boolean onInterceptTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mPrevX = MotionEvent.obtain(event).getX();
+                MotionEvent m = MotionEvent.obtain(event);
+                mPrevX = m.getX();
+                m.recycle();
                 break;
 
             case MotionEvent.ACTION_MOVE:
