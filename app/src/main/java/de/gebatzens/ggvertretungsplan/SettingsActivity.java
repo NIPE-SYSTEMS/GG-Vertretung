@@ -52,6 +52,13 @@ public class SettingsActivity extends Activity {
         Toolbar t = (Toolbar) findViewById(R.id.toolbar);
         t.setTitle("Einstellungen");
         t.setTitleTextColor(Color.WHITE);
+        t.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        t.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buttonBack(null);
+            }
+        });
 
         mList = (ListView) findViewById(R.id.settings_list);
         mList.setAdapter(new ArrayAdapter<String>(this, R.layout.settings_drawer_list_item, mStrings));
