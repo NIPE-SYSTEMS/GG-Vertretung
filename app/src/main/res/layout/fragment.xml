@@ -15,20 +15,19 @@
   ~ You should have received a copy of the GNU General Public License
   ~ along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
   -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <de.gebatzens.ggvertretungsplan.SlidingTabLayout
+        android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:background="@color/main"/>
 
-        <de.gebatzens.ggvertretungsplan.SlidingTabLayout
-            android:id="@+id/sliding_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/main"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <de.gebatzens.ggvertretungsplan.GGSwipeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -43,12 +42,12 @@
                 android:background="@android:color/white"/>
         </de.gebatzens.ggvertretungsplan.GGSwipeLayout>
 
-    </LinearLayout>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="10dp"
-        android:layout_marginTop="47dp"
-        android:id="@+id/ShaderTabLayout"
-        android:background="@drawable/tablayoutbackground"/>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="10dp"
+            android:id="@+id/ShaderTabLayout"
+            android:background="@drawable/tablayoutbackground"/>
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>
