@@ -78,10 +78,10 @@ public class GGContentFragment extends Fragment {
             }
         });
         // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+        swipeContainer.setColorSchemeResources(R.color.custom_material_green,
+                R.color.custom_material_red,
+                R.color.custom_material_blue,
+                R.color.custom_material_orange);
     }
 
 }
