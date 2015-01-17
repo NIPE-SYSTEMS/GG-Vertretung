@@ -53,7 +53,7 @@ public class SettingsActivity extends Activity {
         t.setTitle("Einstellungen");
         t.setTitleTextColor(Color.WHITE);
         t.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-        t.setOnClickListener(new View.OnClickListener() {
+        t.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 buttonBack(null);
