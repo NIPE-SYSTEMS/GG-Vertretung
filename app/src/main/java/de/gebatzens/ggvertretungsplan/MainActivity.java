@@ -115,22 +115,40 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position < 2) {
+                    selected = position;
                     mToolbar.setTitle(mStrings[position]);
                     mDrawerLayout.closeDrawers();
                     mContent.mGGFrag.setFragmentsLoading();
+                    GGApp.GG_APP.setDefaultSelection(selected);
+                    GGApp.GG_APP.saveSettings();
                     GGApp.GG_APP.createProvider(position);
                     GGApp.GG_APP.refreshAsync(null);
 
                 } else if(position == 2) {
+                    //ignore settings selection
+                    mDrawerList.setSelection(selected);
+
 
                 }
+
 
             }
         });
 
+        if(savedInstanceState != null) {
+            selected = savedInstanceState.getInt("gg_selection");
+            mDrawerList.setSelection(selected);
+        }
+
         if(!GGApp.GG_APP.created)
             GGApp.GG_APP.create();
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle s) {
+        super.onSaveInstanceState(s);
+        s.putInt("gg_selection", selected);
     }
 
     @Override
