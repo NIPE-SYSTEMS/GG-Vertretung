@@ -19,8 +19,16 @@ package de.gebatzens.ggvertretungsplan;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Properties;
 
 public class GGApp extends Application {
 
@@ -28,6 +36,7 @@ public class GGApp extends Application {
     public MainActivity mActivity;
     public boolean created = false;
     public VPProvider mProvider;
+    public Properties mSettings;
 
     public static GGApp GG_APP;
 
@@ -41,10 +50,55 @@ public class GGApp extends Application {
     public void create() {
         created = true;
 
+        loadSettings();
+        mActivity.selected = Integer.parseInt(mSettings.getProperty("gg_selection", "0"));
+
         createProvider(mActivity.selected);
         mVPToday = mProvider.getVP(mProvider.getTodayURL());
         mVPTomorrow = mProvider.getVP(mProvider.getTomorrowURL());
 
+
+    }
+
+    public String getVPClass(int s) {
+        String str = mSettings.getProperty("gg_class" + s, "*");
+        return str;
+    }
+
+    public void setVPClass(int s, String cl) {
+        mSettings.put("gg_class" + s, cl);
+    }
+
+    public void setDefaultSelection(int s) {
+        mSettings.put("gg_prev_selection", ""+s);
+    }
+
+    public void loadSettings() {
+        mSettings = new Properties();
+        try {
+            InputStream in = mActivity.openFileInput("ggsettings");
+            mSettings.load(in);
+        } catch (IOException e) {
+            mSettings.put("gg_prev_selection", "0");
+            mSettings.put("gg_class0", "*");
+            mSettings.put("gg_class1", "*");
+            saveSettings();
+
+        }
+    }
+
+    public void saveSettings() {
+        try {
+            OutputStream out = mActivity.openFileOutput("ggsettings", Context.MODE_PRIVATE);
+            mSettings.store(out, "GGSettings");
+        } catch (IOException e) {
+            e.printStackTrace();
+            showToast(e.getClass().getName() + ": " + e.getMessage());
+        }
+    }
+
+    public void showToast(String s) {
+        Toast.makeText(mActivity, s, Toast.LENGTH_LONG).show();
     }
 
     public void createProvider(int selected) {

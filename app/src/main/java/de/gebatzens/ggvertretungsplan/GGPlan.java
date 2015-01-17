@@ -32,9 +32,10 @@ public class GGPlan {
     }
 
     public List<String[]> getAllForClass(String c) {
+        c = c.toLowerCase();
         ArrayList<String[]> list = new ArrayList<String[]>();
         for(String[] ss : entries)
-            if(ss[0].equals(c))
+            if(ss[0].toLowerCase().equals(c))
                 list.add(ss);
         return list;
     }

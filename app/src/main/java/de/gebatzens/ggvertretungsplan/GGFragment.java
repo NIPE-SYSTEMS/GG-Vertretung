@@ -17,6 +17,8 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.app.ActionBar;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -26,6 +28,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -135,12 +139,14 @@ public class GGFragment extends Fragment {
             tv.setText("Error: " + type);
             l.addView(tv);
             Log.w("ggvp", "setParams not called " + type + " " + this + " " + getParentFragment());
-        } else if(type == TYPE_OVERVIEW) {
-            List<String[]> list = planh.getAllForClass("Eb");
+        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getVPClass(((MainActivity)getActivity()).selected).equals("*")) {
+            String clas = GGApp.GG_APP.getVPClass(((MainActivity)getActivity()).selected);
+
+            List<String[]> list = planh.getAllForClass(clas);
             LinearLayout l2 = new LinearLayout(getActivity());
             l2.setOrientation(LinearLayout.VERTICAL);
             l.addView(l2);
-            TextView tv1 = createTextView(planh.date + " für Eb:", 10, inflater, l2);
+            TextView tv1 = createTextView(planh.date + " für "+clas+":", 10, inflater, l2);
             tv1.setPadding(0, 0, 0, toPixels(5));
             tv1.setTextAppearance(getActivity(), R.style.boldText);
             if(list.size() == 0) {
@@ -149,17 +155,46 @@ public class GGFragment extends Fragment {
                 createTable(list, false, inflater, l2);
 
 
-            list = planm.getAllForClass("Eb");
+            list = planm.getAllForClass(clas);
             LinearLayout l3 = new LinearLayout(getActivity());
             l3.setOrientation(LinearLayout.VERTICAL);
             l.addView(l3);
-            TextView tv2 = createTextView(planm.date + " für Eb:", 10, inflater, l3);
+            TextView tv2 = createTextView(planm.date + " für "+clas+":", 10, inflater, l3);
             tv2.setPadding(0, 0, 0, toPixels(5));
             tv2.setTextAppearance(getActivity(), R.style.boldText);
             if(list.size() == 0) {
                 createTextView("Es fällt nichts für dich aus!", 10, inflater, l3);
             } else
                 createTable(list, false, inflater, l3);
+
+        } else if(type == TYPE_OVERVIEW) {
+
+
+            //TODO center vertically
+            l.setGravity(Gravity.CENTER_HORIZONTAL);
+            l.setPadding(50, 50, 50, 50);
+
+            LinearLayout l2 = new LinearLayout(getActivity());
+            l2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            TextView tv = new TextView(getActivity());
+            tv.setText("Du musst eine Klasse wählen!");
+            l2.addView(tv);
+            l.addView(l2);
+
+            LinearLayout l3 = new LinearLayout(getActivity());
+            l3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            Button b = new Button(getActivity());
+            b.setText("Einstellungen");
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent i = new Intent(getActivity(), SettingsActivity.class);
+                    startActivityForResult(i, 1);
+                }
+            });
+            l3.addView(b);
+
+            l.addView(l3);
 
         } else if(plan.loaded) {
             TextView text = new TextView(getActivity());
