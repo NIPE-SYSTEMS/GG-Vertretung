@@ -51,12 +51,13 @@ public class GGApp extends Application {
         created = true;
 
         loadSettings();
-        mActivity.selected = Integer.parseInt(mSettings.getProperty("gg_selection", "0"));
+        mActivity.selected = Integer.parseInt(mSettings.getProperty("gg_prev_selection", "0"));
 
         createProvider(mActivity.selected);
-        mVPToday = mProvider.getVP(mProvider.getTodayURL());
-        mVPTomorrow = mProvider.getVP(mProvider.getTomorrowURL());
+        //mVPToday = mProvider.getVP(mProvider.getTodayURL());
+        //mVPTomorrow = mProvider.getVP(mProvider.getTomorrowURL());
 
+        refreshAsync(null);
 
     }
 

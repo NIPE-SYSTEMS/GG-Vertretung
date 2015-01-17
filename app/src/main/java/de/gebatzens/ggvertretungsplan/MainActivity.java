@@ -53,6 +53,12 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GGApp.GG_APP.mActivity = this;
+
+        if(!GGApp.GG_APP.created)
+            GGApp.GG_APP.create();
+        if(savedInstanceState != null)
+            selected = savedInstanceState.getInt("gg_selection");
+
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
         List<Fragment> frags = getSupportFragmentManager().getFragments();
@@ -85,7 +91,7 @@ public class MainActivity extends FragmentActivity {
 
         mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule", "Einstellungen"};
 
-        mToolbar.setTitle(mStrings[0]);
+        mToolbar.setTitle(mStrings[selected]);
         mToolbar.inflateMenu(R.menu.toolbar_menu);
         mToolbar.setTitleTextColor(Color.WHITE);
         //toolbar.setNavigationIcon(R.drawable.ic_menu_white);
@@ -113,7 +119,8 @@ public class MainActivity extends FragmentActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.drawer_list_item, mStrings);
         mDrawerList.setAdapter(aa);
-        mDrawerList.setItemChecked(0, true);
+        mDrawerList.setItemChecked(selected, true);
+
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -141,14 +148,6 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
-
-        if(savedInstanceState != null) {
-            selected = savedInstanceState.getInt("gg_selection");
-            mDrawerList.setSelection(selected);
-        }
-
-        if(!GGApp.GG_APP.created)
-            GGApp.GG_APP.create();
 
     }
 
