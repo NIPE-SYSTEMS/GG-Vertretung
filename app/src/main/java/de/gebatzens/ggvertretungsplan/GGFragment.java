@@ -18,6 +18,7 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -168,17 +169,15 @@ public class GGFragment extends Fragment {
 
 
             //TODO center vertically
-            l.setGravity(Gravity.CENTER);
-
-            LinearLayout lr = new LinearLayout(getActivity());
-            lr.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            l.setGravity(Gravity.CENTER_HORIZONTAL);
+            l.setPadding(50, 50, 50, 50);
 
             LinearLayout l2 = new LinearLayout(getActivity());
             l2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             TextView tv = new TextView(getActivity());
             tv.setText("Du musst eine Klasse wählen!");
             l2.addView(tv);
-            lr.addView(l2);
+            l.addView(l2);
 
             LinearLayout l3 = new LinearLayout(getActivity());
             l3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -187,14 +186,13 @@ public class GGFragment extends Fragment {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((MainActivity) getActivity()).mDrawerLayout.openDrawer(((MainActivity) getActivity()).mDrawerLayout.findViewById(R.id.left_drawer));
+                    Intent i = new Intent(getActivity(), SettingsActivity.class);
+                    startActivityForResult(i, 1);
                 }
             });
             l3.addView(b);
 
-            lr.addView(l3);
-
-            l.addView(lr);
+            l.addView(l3);
 
         } else if(plan.loaded) {
             TextView text = new TextView(getActivity());

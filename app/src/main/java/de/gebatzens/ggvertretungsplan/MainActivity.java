@@ -17,6 +17,7 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -109,7 +111,8 @@ public class MainActivity extends FragmentActivity {
         mDrawerLayout.setDrawerListener(mToggle);
 
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mStrings));
+        ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.drawer_list_item, mStrings);
+        mDrawerList.setAdapter(aa);
         mDrawerList.setItemChecked(0, true);
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -126,8 +129,12 @@ public class MainActivity extends FragmentActivity {
 
                 } else if(position == 2) {
                     //ignore settings selection
-                    mDrawerList.setSelection(selected);
+                    mDrawerList.setItemChecked(position, false);
+                    mDrawerList.setItemChecked(selected, true);
+                    mDrawerLayout.closeDrawers();
+                    Intent intent = new Intent(GGApp.GG_APP.mActivity, SettingsActivity.class);
 
+                    GGApp.GG_APP.mActivity.startActivityForResult(intent, 1);
 
                 }
 
@@ -163,6 +170,18 @@ public class MainActivity extends FragmentActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1 && resultCode == RESULT_OK) {
+            mContent.mGGFrag.setFragmentsLoading();
+            GGApp.GG_APP.saveSettings();
+            GGApp.GG_APP.refreshAsync(null);
+        }
+
     }
 
 }
