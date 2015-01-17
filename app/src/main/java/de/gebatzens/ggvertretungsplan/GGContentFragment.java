@@ -17,6 +17,7 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -55,7 +56,12 @@ public class GGContentFragment extends Fragment {
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
-        mSlidingTabLayout.setPadding(24,0,24,0);
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
+            mSlidingTabLayout.setPadding(138,0,138,0);
+        }
+        else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
+            mSlidingTabLayout.setPadding(24,0,24,0);
+        }
         mSlidingTabLayout.setViewPager(mViewPager);
 
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
