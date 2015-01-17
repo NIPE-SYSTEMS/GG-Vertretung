@@ -54,7 +54,7 @@ public class SettingsActivity extends Activity {
         t.setTitleTextColor(Color.WHITE);
 
         mList = (ListView) findViewById(R.id.settings_list);
-        mList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mStrings));
+        mList.setAdapter(new ArrayAdapter<String>(this, R.layout.settings_drawer_list_item, mStrings));
         mList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -66,9 +66,8 @@ public class SettingsActivity extends Activity {
                             public void onInput(String in) {
                                 GGApp.GG_APP.setVPClass(0, in);
                                 mStrings[0] = "Klasse (GG): " + in;
-                                mList.setAdapter(new ArrayAdapter<String>(SettingsActivity.this, R.layout.drawer_list_item, mStrings));
+                                mList.setAdapter(new ArrayAdapter<String>(SettingsActivity.this, R.layout.settings_drawer_list_item, mStrings));
                                 mList.requestLayout();
-                                changed = true;
                             }
                         });
                         break;
@@ -78,9 +77,8 @@ public class SettingsActivity extends Activity {
                             public void onInput(String in) {
                                 GGApp.GG_APP.setVPClass(1, in);
                                 mStrings[1] = "Klasse (SWS): " + in;
-                                mList.setAdapter(new ArrayAdapter<String>(SettingsActivity.this, R.layout.drawer_list_item, mStrings));
+                                mList.setAdapter(new ArrayAdapter<String>(SettingsActivity.this, R.layout.settings_drawer_list_item, mStrings));
                                 mList.requestLayout();
-                                changed = true;
                             }
                         });
                         break;
@@ -107,6 +105,7 @@ public class SettingsActivity extends Activity {
                 dil.onInput(input.getText().toString());
                 mList.setItemChecked(0, false);
                 mList.setItemChecked(1, false);
+                changed = true;
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -125,6 +124,11 @@ public class SettingsActivity extends Activity {
     public void onSaveInstanceState(Bundle b) {
         super.onSaveInstanceState(b);
         b.putBoolean("ggs_changed", changed);
+    }
+
+    @Override
+    public void onBackPressed() {
+        buttonBack(null);
     }
 
     public void buttonBack(View view) {
