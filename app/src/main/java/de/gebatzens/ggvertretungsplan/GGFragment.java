@@ -18,6 +18,7 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -77,6 +78,7 @@ public class GGFragment extends Fragment {
         l.setGravity(Gravity.CENTER);
 
         ProgressBar pb = new ProgressBar(getActivity());
+        pb.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.main),PorterDuff.Mode.SRC_IN);
         pb.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         pb.setVisibility(ProgressBar.VISIBLE);
 
