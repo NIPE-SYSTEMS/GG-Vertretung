@@ -32,6 +32,7 @@ public class SWSProvider implements VPProvider {
     public GGPlan getVPSync(String url) {
         GGPlan plan = new GGPlan();
         plan.date = "Sync " + url;
+        plan.loaded = true;
         return plan;
     }
 

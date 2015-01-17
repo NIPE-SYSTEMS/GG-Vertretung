@@ -74,7 +74,8 @@ public class MainActivity extends FragmentActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-                GGApp.GG_APP.updateVP();
+                mContent.mGGFrag.setFragmentsLoading();
+                GGApp.GG_APP.refreshAsync(null);
 
                 return false;
             }
@@ -116,8 +117,9 @@ public class MainActivity extends FragmentActivity {
                 if(position < 2) {
                     mToolbar.setTitle(mStrings[position]);
                     mDrawerLayout.closeDrawers();
+                    mContent.mGGFrag.setFragmentsLoading();
                     GGApp.GG_APP.createProvider(position);
-                    GGApp.GG_APP.updateVP();
+                    GGApp.GG_APP.refreshAsync(null);
 
                 } else if(position == 2) {
 

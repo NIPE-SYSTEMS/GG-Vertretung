@@ -20,6 +20,7 @@ package de.gebatzens.ggvertretungsplan;
 import android.app.Activity;
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class GGApp extends Application {
 
@@ -79,7 +80,8 @@ public class GGApp extends Application {
                     }
                 });
 
-                mActivity.runOnUiThread(finished);
+                if(finished != null)
+                    mActivity.runOnUiThread(finished);
                 return null;
             }
         }.execute();

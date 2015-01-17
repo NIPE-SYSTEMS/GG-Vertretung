@@ -53,6 +53,12 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
         overview.recreate();
     }
 
+    public void setFragmentsLoading() {
+        heute.createLoadingFragment();
+        morgen.createLoadingFragment();
+        overview.createLoadingFragment();
+    }
+
     @Override
     public Fragment getItem(int position) {
         switch(position) {

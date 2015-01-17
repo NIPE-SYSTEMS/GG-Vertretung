@@ -21,10 +21,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -61,6 +63,26 @@ public class GGFragment extends Fragment {
 
         createView(getActivity().getLayoutInflater(), vg);
 
+    }
+
+    public void createLoadingFragment() {
+        if(getView() == null)
+            return;
+
+        ViewGroup vg = (ViewGroup) getView();
+        vg.removeAllViews();
+
+
+        LinearLayout l = new LinearLayout(getActivity());
+        l.setGravity(Gravity.CENTER);
+
+        ProgressBar pb = new ProgressBar(getActivity());
+        pb.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        pb.setVisibility(ProgressBar.VISIBLE);
+
+        l.addView(pb);
+
+        vg.addView(l);
     }
 
     private int toPixels(int dp) {
@@ -151,17 +173,12 @@ public class GGFragment extends Fragment {
                 createTable(plan.entries, true, inflater, l);
             }
 
-        } else {
-            TextView text = new TextView(getActivity());
-            text.setTextSize(20);
-            text.setText("Lade...");
-            l.addView(text);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
-        LinearLayout s = new LinearLayout(getActivity());
+        ScrollView s = new ScrollView(getActivity());
         createView(inflater, s);
         return s;
     }
