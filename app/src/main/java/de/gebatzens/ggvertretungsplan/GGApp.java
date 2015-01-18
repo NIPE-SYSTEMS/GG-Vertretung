@@ -36,7 +36,7 @@ public class GGApp extends Application {
     public MainActivity mActivity;
     public boolean created = false;
     public VPProvider mProvider;
-    public Properties mSettings;
+    private Properties mSettings;
 
     public static GGApp GG_APP;
 
