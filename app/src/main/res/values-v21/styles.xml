@@ -21,7 +21,6 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="android:colorPrimary">#2196F3</item>
         <item name="android:colorPrimaryDark">#1976D2</item>
-        <item name="android:textColorSecondary">#ffffffff</item>
     </style>
 
     <style name="boldText">
