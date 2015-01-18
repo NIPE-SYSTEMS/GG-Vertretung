@@ -17,7 +17,12 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -25,7 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Toolbar mToolBar;
 
@@ -34,6 +39,17 @@ public class SettingsActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences);
+
+        SharedPreferences sharedPref = getPreferenceScreen().getSharedPreferences();
+        sharedPref.registerOnSharedPreferenceChangeListener(this);
+        String pref_schule_content = sharedPref.getString("schule", "Keine ausgewählt");
+        String pref_klasse_content = sharedPref.getString("klasse", "Keine ausgewählt");
+
+        Preference pref_schule = findPreference("schule");
+        pref_schule.setSummary(pref_schule_content);
+
+        Preference pref_klasse = findPreference("klasse");
+        pref_klasse.setSummary(pref_klasse_content);
 
         mToolBar.setTitle(getTitle());
     }
@@ -44,6 +60,8 @@ public class SettingsActivity extends PreferenceActivity {
                 R.layout.settings_activity, new LinearLayout(this), false);
 
         mToolBar = (Toolbar) contentView.findViewById(R.id.toolbar);
+        mToolBar.setTitleTextColor(Color.WHITE);
+        mToolBar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,5 +73,23 @@ public class SettingsActivity extends PreferenceActivity {
         LayoutInflater.from(this).inflate(layoutResID, contentWrapper, true);
 
         getWindow().setContentView(contentView);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Preference pref = findPreference(key);
+
+        if (pref instanceof ListPreference) {
+            ListPreference listPref = (ListPreference) pref;
+            pref.setSummary(listPref.getEntry());
+        }
+        if (pref instanceof EditTextPreference) {
+            EditTextPreference EditTextPref = (EditTextPreference) pref;
+            if(EditTextPref.getText().equals("")){
+                pref.setSummary("Keine ausgewählt");
+            } else{
+                pref.setSummary(EditTextPref.getText());
+            }
+        }
     }
 }
