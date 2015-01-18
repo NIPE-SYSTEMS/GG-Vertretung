@@ -18,114 +18,113 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.ListView;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+
+import java.util.List;
 
 public class SettingsActivity extends Activity {
 
-    public static interface DialogInputListener {
-        public void onInput(String in);
+    private Toolbar mToolBar;
+    private GGPFragment mFrag;
+    private static boolean changed;
+
+    public static class GGPFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+        @Override
+        public void onCreate(Bundle s) {
+            super.onCreate(s);
+
+            addPreferencesFromResource(R.xml.preferences);
+            SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
+            sp.registerOnSharedPreferenceChangeListener(this);
+            GGApp gg = GGApp.GG_APP;
+            String pref_schule_content = gg.getDefaultSelection() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule";
+            String pref_klasse_content = gg.getVPClass(gg.getDefaultSelection());
+            if(pref_klasse_content.equals(""))
+                pref_klasse_content = "Keine ausgewählt";
+
+            Preference pref_schule = findPreference("schule");
+            pref_schule.setSummary(pref_schule_content);
+
+            Preference pref_klasse = findPreference("klasse");
+            pref_klasse.setSummary(pref_klasse_content);
+
+
+        }
+
+        @Override
+         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            Preference pref = findPreference(key);
+
+            changed = true;
+
+            if (pref instanceof ListPreference) { //Schule
+                ListPreference listPref = (ListPreference) pref;
+                pref.setSummary(listPref.getEntry());
+                GGApp.GG_APP.setDefaultSelection(listPref.getEntry().equals("Gymnasium Glinde") ? 0 : 1);
+                Preference kl = findPreference("klasse");
+                kl.setSummary(GGApp.GG_APP.getVPClass(GGApp.GG_APP.getDefaultSelection()));
+                if(kl.getSummary().equals(""))
+                    kl.setSummary("Keine ausgewählt");
+            }
+            if (pref instanceof EditTextPreference) {
+                EditTextPreference editTextPref = (EditTextPreference) pref;
+                if(editTextPref.getText().equals("")){ //Klasse
+                    pref.setSummary("Keine ausgewählt");
+                } else{
+                    pref.setSummary(editTextPref.getText());
+                }
+                GGApp.GG_APP.setVPClass(GGApp.GG_APP.getDefaultSelection(), editTextPref.getText());
+            }
+        }
+
     }
 
-    String[] mStrings = new String[] { "Klasse (GG): " + GGApp.GG_APP.getVPClass(0), "Klasse (SWS): " + GGApp.GG_APP.getVPClass(1), "Test"};
-    ListView mList;
-    boolean changed = false;
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        changed = false;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings_activity);
+
+        ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(
+                R.layout.settings_activity, new LinearLayout(this), false);
 
         if(savedInstanceState != null)
             changed = savedInstanceState.getBoolean("ggs_changed");
 
-        Toolbar t = (Toolbar) findViewById(R.id.toolbar);
-        t.setTitle("Einstellungen");
-        t.setTitleTextColor(Color.WHITE);
-        t.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
-        t.setNavigationOnClickListener(new View.OnClickListener() {
+        mToolBar = (Toolbar) contentView.findViewById(R.id.toolbar);
+        mToolBar.setTitleTextColor(Color.WHITE);
+        mToolBar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 buttonBack(null);
             }
         });
 
-        mList = (ListView) findViewById(R.id.settings_list);
-        mList.setAdapter(new ArrayAdapter<String>(this, R.layout.settings_drawer_list_item, mStrings));
-        mList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch(position) {
-                    case 0:
-                        showDialog(new DialogInputListener() {
-                            @Override
-                            public void onInput(String in) {
-                                GGApp.GG_APP.setVPClass(0, in);
-                                mStrings[0] = "Klasse (GG): " + in;
-                                mList.setAdapter(new ArrayAdapter<String>(SettingsActivity.this, R.layout.settings_drawer_list_item, mStrings));
-                                mList.requestLayout();
-                            }
-                        });
-                        break;
-                    case 1:
-                        showDialog(new DialogInputListener() {
-                            @Override
-                            public void onInput(String in) {
-                                GGApp.GG_APP.setVPClass(1, in);
-                                mStrings[1] = "Klasse (SWS): " + in;
-                                mList.setAdapter(new ArrayAdapter<String>(SettingsActivity.this, R.layout.settings_drawer_list_item, mStrings));
-                                mList.requestLayout();
-                            }
-                        });
-                        break;
-                    case 2:
-                        GGApp.GG_APP.showToast("Das hier ist ein TEST!");
-                        mList.setItemChecked(2, false);
-                }
-            }
-        });
+        mToolBar.setTitle(getTitle());
 
+        if(savedInstanceState == null)
+            getFragmentManager().beginTransaction().replace(R.id.content_wrapper, new GGPFragment()).commit();
+
+        setContentView(contentView);
     }
 
-    public void showDialog(final DialogInputListener dil) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Klasse eingeben");
-
-        final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
-
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dil.onInput(input.getText().toString());
-                mList.setItemChecked(0, false);
-                mList.setItemChecked(1, false);
-                changed = true;
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-                mList.setItemChecked(0, false);
-                mList.setItemChecked(1, false);
-            }
-        });
-
-        builder.show();
-    }
 
     @Override
     public void onSaveInstanceState(Bundle b) {
@@ -143,4 +142,5 @@ public class SettingsActivity extends Activity {
         setResult(changed ? RESULT_OK : RESULT_CANCELED, i);
         this.finish();
     }
+
 }
