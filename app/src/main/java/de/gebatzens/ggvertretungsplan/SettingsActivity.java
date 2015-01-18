@@ -94,6 +94,8 @@ public class SettingsActivity extends Activity {
                 }
                 GGApp.GG_APP.setVPClass(editTextPref.getText());
             }
+            GGApp.GG_APP.saveSettings();
+
             Log.w("ggvp", "OnSharedPC" + key + pref.getSummary());
         }
 
