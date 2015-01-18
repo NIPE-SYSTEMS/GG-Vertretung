@@ -88,6 +88,10 @@ public class GGApp extends Application {
         }
     }
 
+    public int getDefaultSelection() {
+        return Integer.parseInt(mSettings.getProperty("gg_prev_selection", "0"));
+    }
+
     public void saveSettings() {
         try {
             OutputStream out = mActivity.openFileOutput("ggsettings", Context.MODE_PRIVATE);

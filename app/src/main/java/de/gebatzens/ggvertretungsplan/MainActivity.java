@@ -56,8 +56,7 @@ public class MainActivity extends FragmentActivity {
 
         if(!GGApp.GG_APP.created)
             GGApp.GG_APP.create();
-        if(savedInstanceState != null)
-            selected = savedInstanceState.getInt("gg_selection");
+        selected = GGApp.GG_APP.getDefaultSelection();
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
@@ -181,6 +180,11 @@ public class MainActivity extends FragmentActivity {
             GGApp.GG_APP.refreshAsync(null);
         }
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
     }
 
 }
