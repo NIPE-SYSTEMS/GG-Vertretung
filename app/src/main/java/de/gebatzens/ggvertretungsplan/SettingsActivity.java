@@ -18,6 +18,7 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -27,10 +28,10 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,13 +50,16 @@ public class SettingsActivity extends Activity {
         @Override
         public void onCreate(Bundle s) {
             super.onCreate(s);
-
+            Log.w("ggpv", "GGPF create");
+            GGApp gg = GGApp.GG_APP;
             addPreferencesFromResource(R.xml.preferences);
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
             sp.registerOnSharedPreferenceChangeListener(this);
-            GGApp gg = GGApp.GG_APP;
+            SharedPreferences.Editor e = sp.edit();
+            e.clear();
+            e.commit();
             String pref_schule_content = gg.getDefaultSelection() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule";
-            String pref_klasse_content = gg.getVPClass(gg.getDefaultSelection());
+            String pref_klasse_content = gg.getVPClass();
             if(pref_klasse_content.equals(""))
                 pref_klasse_content = "Keine ausgewählt";
 
@@ -64,6 +68,8 @@ public class SettingsActivity extends Activity {
 
             Preference pref_klasse = findPreference("klasse");
             pref_klasse.setSummary(pref_klasse_content);
+
+            //((ListPreference)findPreference("schule")).setValue(gg.getDefaultSelection() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule");
 
 
         }
@@ -74,24 +80,27 @@ public class SettingsActivity extends Activity {
 
             changed = true;
 
-            if (pref instanceof ListPreference) { //Schule
+
+            if (key.equals("schule")) {
                 ListPreference listPref = (ListPreference) pref;
                 pref.setSummary(listPref.getEntry());
                 GGApp.GG_APP.setDefaultSelection(listPref.getEntry().equals("Gymnasium Glinde") ? 0 : 1);
-                Preference kl = findPreference("klasse");
-                kl.setSummary(GGApp.GG_APP.getVPClass(GGApp.GG_APP.getDefaultSelection()));
-                if(kl.getSummary().equals(""))
-                    kl.setSummary("Keine ausgewählt");
-            }
-            if (pref instanceof EditTextPreference) {
+            } else if(key.equals("klasse")) {
                 EditTextPreference editTextPref = (EditTextPreference) pref;
                 if(editTextPref.getText().equals("")){ //Klasse
                     pref.setSummary("Keine ausgewählt");
                 } else{
                     pref.setSummary(editTextPref.getText());
                 }
-                GGApp.GG_APP.setVPClass(GGApp.GG_APP.getDefaultSelection(), editTextPref.getText());
+                GGApp.GG_APP.setVPClass(editTextPref.getText());
             }
+            Log.w("ggvp", "OnSharedPC" + key + pref.getSummary());
+        }
+
+        @Override
+        public void onDestroy() {
+            super.onDestroy();
+            getPreferenceScreen().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         }
 
     }
@@ -99,13 +108,22 @@ public class SettingsActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         changed = false;
+        Fragment f = getFragmentManager().findFragmentByTag("gg_settings_frag");
+        if(f != null) {
+            getFragmentManager().beginTransaction().remove(f).commit();
+            Log.w("ggvp", "removed f" + f);
+        }
+
         super.onCreate(savedInstanceState);
 
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(
                 R.layout.settings_activity, new LinearLayout(this), false);
 
-        if(savedInstanceState != null)
+        if(savedInstanceState != null) {
             changed = savedInstanceState.getBoolean("ggs_changed");
+
+        }
+
 
         mToolBar = (Toolbar) contentView.findViewById(R.id.toolbar);
         mToolBar.setTitleTextColor(Color.WHITE);
@@ -113,14 +131,13 @@ public class SettingsActivity extends Activity {
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                buttonBack(null);
+                finish();
             }
         });
 
         mToolBar.setTitle(getTitle());
 
-        if(savedInstanceState == null)
-            getFragmentManager().beginTransaction().replace(R.id.content_wrapper, new GGPFragment()).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content_wrapper, new GGPFragment(), "gg_settings_frag").commit();
 
         setContentView(contentView);
     }
@@ -134,13 +151,14 @@ public class SettingsActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        buttonBack(null);
+        finish();
     }
 
-    public void buttonBack(View view) {
+    @Override
+    public void finish() {
         Intent i = new Intent();
         setResult(changed ? RESULT_OK : RESULT_CANCELED, i);
-        this.finish();
+        super.finish();
     }
 
 }

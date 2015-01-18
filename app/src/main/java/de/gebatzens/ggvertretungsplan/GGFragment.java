@@ -139,8 +139,8 @@ public class GGFragment extends Fragment {
             tv.setText("Error: " + type);
             l.addView(tv);
             Log.w("ggvp", "setParams not called " + type + " " + this + " " + getParentFragment());
-        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getVPClass(((MainActivity)getActivity()).selected).equals("")) {
-            String clas = GGApp.GG_APP.getVPClass(((MainActivity)getActivity()).selected);
+        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getVPClass().equals("")) {
+            String clas = GGApp.GG_APP.getVPClass();
 
             List<String[]> list = planh.getAllForClass(clas);
             LinearLayout l2 = new LinearLayout(getActivity());
@@ -189,7 +189,7 @@ public class GGFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getActivity(), SettingsActivity.class);
-                    startActivityForResult(i, 1);
+                    getActivity().startActivityForResult(i, 1);
                 }
             });
             l3.addView(b);

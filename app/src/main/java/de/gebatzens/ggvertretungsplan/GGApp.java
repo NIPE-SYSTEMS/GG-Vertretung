@@ -59,15 +59,17 @@ public class GGApp extends Application {
 
         refreshAsync(null);
 
+        Log.w("ggvp", "GGApp created (" + getVPClass() + " " + getDefaultSelection() + ")");
+
     }
 
-    public String getVPClass(int s) {
-        String str = mSettings.getProperty("gg_class" + s, "");
+    public String getVPClass() {
+        String str = mSettings.getProperty("gg_class", "");
         return str;
     }
 
-    public void setVPClass(int s, String cl) {
-        mSettings.put("gg_class" + s, cl);
+    public void setVPClass(String cl) {
+        mSettings.put("gg_class", cl);
     }
 
     public void setDefaultSelection(int s) {
@@ -85,8 +87,7 @@ public class GGApp extends Application {
             mSettings.load(in);
         } catch (IOException e) {
             mSettings.put("gg_prev_selection", "0");
-            mSettings.put("gg_class0", "");
-            mSettings.put("gg_class1", "");
+            mSettings.put("gg_class", "");
             saveSettings();
 
         }

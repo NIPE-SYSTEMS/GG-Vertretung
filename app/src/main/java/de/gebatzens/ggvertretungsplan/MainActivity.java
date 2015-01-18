@@ -175,6 +175,8 @@ public class MainActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        Log.w("ggvp", "result=" + resultCode + " should be " + RESULT_OK + " req=" + requestCode);
+
         if(requestCode == 1 && resultCode == RESULT_OK) { //Settings changed
             mContent.mGGFrag.setFragmentsLoading();
             selected = GGApp.GG_APP.getDefaultSelection();
@@ -185,6 +187,7 @@ public class MainActivity extends FragmentActivity {
             mToolbar.setTitle(mStrings[selected]);
             GGApp.GG_APP.saveSettings();
             GGApp.GG_APP.refreshAsync(null);
+            Log.w("ggvp", selected + " " + GGApp.GG_APP.getVPClass());
         }
 
     }
