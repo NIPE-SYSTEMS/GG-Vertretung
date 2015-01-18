@@ -7,9 +7,10 @@
         android:entryValues="@array/listValues" />
     <EditTextPreference android:title="Klasse"
         android:key="klasse"
-        android:summary="Die Klasse, in die du gehst"/>
+        android:summary="Gynasium Glinde"/>
     <CheckBoxPreference android:title="Benachrichtigungen anzeigen"
         android:defaultValue="false"
         android:summary="Benachrichtigen, wenn für deine Klasse etwas auf dem Vertretungsplan steht"
         android:key="benachrichtigungen" />
+
 </PreferenceScreen>

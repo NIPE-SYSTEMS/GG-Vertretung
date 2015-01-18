@@ -139,7 +139,7 @@ public class GGFragment extends Fragment {
             tv.setText("Error: " + type);
             l.addView(tv);
             Log.w("ggvp", "setParams not called " + type + " " + this + " " + getParentFragment());
-        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getVPClass(((MainActivity)getActivity()).selected).equals("*")) {
+        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getVPClass(((MainActivity)getActivity()).selected).equals("")) {
             String clas = GGApp.GG_APP.getVPClass(((MainActivity)getActivity()).selected);
 
             List<String[]> list = planh.getAllForClass(clas);

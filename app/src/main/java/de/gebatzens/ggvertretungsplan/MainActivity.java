@@ -175,8 +175,14 @@ public class MainActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == 1 && resultCode == RESULT_OK) {
+        if(requestCode == 1 && resultCode == RESULT_OK) { //Settings changed
             mContent.mGGFrag.setFragmentsLoading();
+            selected = GGApp.GG_APP.getDefaultSelection();
+            mDrawerList.setItemChecked(0, false);
+            mDrawerList.setItemChecked(1, false);
+            mDrawerList.setItemChecked(selected, true);
+            GGApp.GG_APP.createProvider(selected);
+            mToolbar.setTitle(mStrings[selected]);
             GGApp.GG_APP.saveSettings();
             GGApp.GG_APP.refreshAsync(null);
         }

@@ -62,7 +62,7 @@ public class GGApp extends Application {
     }
 
     public String getVPClass(int s) {
-        String str = mSettings.getProperty("gg_class" + s, "*");
+        String str = mSettings.getProperty("gg_class" + s, "");
         return str;
     }
 
@@ -74,6 +74,10 @@ public class GGApp extends Application {
         mSettings.put("gg_prev_selection", ""+s);
     }
 
+    public int getDefaultSelection() {
+        return Integer.parseInt(mSettings.getProperty("gg_prev_selection", "0"));
+    }
+
     public void loadSettings() {
         mSettings = new Properties();
         try {
@@ -81,8 +85,8 @@ public class GGApp extends Application {
             mSettings.load(in);
         } catch (IOException e) {
             mSettings.put("gg_prev_selection", "0");
-            mSettings.put("gg_class0", "*");
-            mSettings.put("gg_class1", "*");
+            mSettings.put("gg_class0", "");
+            mSettings.put("gg_class1", "");
             saveSettings();
 
         }

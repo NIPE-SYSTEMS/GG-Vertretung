@@ -17,6 +17,8 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -24,40 +26,86 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+import java.util.List;
+
+public class SettingsActivity extends Activity {
 
     private Toolbar mToolBar;
+    private GGPFragment mFrag;
+    private static boolean changed;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public static class GGPFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-        addPreferencesFromResource(R.xml.preferences);
+        @Override
+        public void onCreate(Bundle s) {
+            super.onCreate(s);
 
-        SharedPreferences sharedPref = getPreferenceScreen().getSharedPreferences();
-        sharedPref.registerOnSharedPreferenceChangeListener(this);
-        String pref_schule_content = sharedPref.getString("schule", "Keine ausgewählt");
-        String pref_klasse_content = sharedPref.getString("klasse", "Keine ausgewählt");
+            addPreferencesFromResource(R.xml.preferences);
+            SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
+            sp.registerOnSharedPreferenceChangeListener(this);
+            GGApp gg = GGApp.GG_APP;
+            String pref_schule_content = gg.getDefaultSelection() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule";
+            String pref_klasse_content = gg.getVPClass(gg.getDefaultSelection());
+            if(pref_klasse_content.equals(""))
+                pref_klasse_content = "Keine ausgewählt";
 
-        Preference pref_schule = findPreference("schule");
-        pref_schule.setSummary(pref_schule_content);
+            Preference pref_schule = findPreference("schule");
+            pref_schule.setSummary(pref_schule_content);
 
-        Preference pref_klasse = findPreference("klasse");
-        pref_klasse.setSummary(pref_klasse_content);
+            Preference pref_klasse = findPreference("klasse");
+            pref_klasse.setSummary(pref_klasse_content);
 
-        mToolBar.setTitle(getTitle());
+
+        }
+
+        @Override
+         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            Preference pref = findPreference(key);
+
+            changed = true;
+
+            if (pref instanceof ListPreference) { //Schule
+                ListPreference listPref = (ListPreference) pref;
+                pref.setSummary(listPref.getEntry());
+                GGApp.GG_APP.setDefaultSelection(listPref.getEntry().equals("Gymnasium Glinde") ? 0 : 1);
+                Preference kl = findPreference("klasse");
+                kl.setSummary(GGApp.GG_APP.getVPClass(GGApp.GG_APP.getDefaultSelection()));
+                if(kl.getSummary().equals(""))
+                    kl.setSummary("Keine ausgewählt");
+            }
+            if (pref instanceof EditTextPreference) {
+                EditTextPreference editTextPref = (EditTextPreference) pref;
+                if(editTextPref.getText().equals("")){ //Klasse
+                    pref.setSummary("Keine ausgewählt");
+                } else{
+                    pref.setSummary(editTextPref.getText());
+                }
+                GGApp.GG_APP.setVPClass(GGApp.GG_APP.getDefaultSelection(), editTextPref.getText());
+            }
+        }
+
     }
 
     @Override
-    public void setContentView(int layoutResID) {
+    protected void onCreate(Bundle savedInstanceState) {
+        changed = false;
+        super.onCreate(savedInstanceState);
+
         ViewGroup contentView = (ViewGroup) LayoutInflater.from(this).inflate(
                 R.layout.settings_activity, new LinearLayout(this), false);
+
+        if(savedInstanceState != null)
+            changed = savedInstanceState.getBoolean("ggs_changed");
 
         mToolBar = (Toolbar) contentView.findViewById(R.id.toolbar);
         mToolBar.setTitleTextColor(Color.WHITE);
@@ -65,31 +113,34 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                buttonBack(null);
             }
         });
 
-        ViewGroup contentWrapper = (ViewGroup) contentView.findViewById(R.id.content_wrapper);
-        LayoutInflater.from(this).inflate(layoutResID, contentWrapper, true);
+        mToolBar.setTitle(getTitle());
 
-        getWindow().setContentView(contentView);
+        if(savedInstanceState == null)
+            getFragmentManager().beginTransaction().replace(R.id.content_wrapper, new GGPFragment()).commit();
+
+        setContentView(contentView);
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle b) {
+        super.onSaveInstanceState(b);
+        b.putBoolean("ggs_changed", changed);
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Preference pref = findPreference(key);
-
-        if (pref instanceof ListPreference) {
-            ListPreference listPref = (ListPreference) pref;
-            pref.setSummary(listPref.getEntry());
-        }
-        if (pref instanceof EditTextPreference) {
-            EditTextPreference EditTextPref = (EditTextPreference) pref;
-            if(EditTextPref.getText().equals("")){
-                pref.setSummary("Keine ausgewählt");
-            } else{
-                pref.setSummary(EditTextPref.getText());
-            }
-        }
+    public void onBackPressed() {
+        buttonBack(null);
     }
+
+    public void buttonBack(View view) {
+        Intent i = new Intent();
+        setResult(changed ? RESULT_OK : RESULT_CANCELED, i);
+        this.finish();
+    }
+
 }
