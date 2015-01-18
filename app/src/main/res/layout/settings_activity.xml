@@ -21,28 +21,17 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/toolbar"
-        android:background="@color/main"/>
-
-    <RelativeLayout
+        android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:background="@color/main"
+        app:theme="@style/ToolBarStyle"/>
 
-        <ListView
-            android:id="@+id/settings_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-2sp"
-            android:background="@color/background_material_light"/>
-
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="10dp"
-            android:id="@+id/ShaderTabLayout"
-            android:background="@drawable/tablayoutbackground"/>
-
-    </RelativeLayout>
+    <FrameLayout
+        android:id="@+id/content_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>
