@@ -25,10 +25,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 public class SettingsActivity extends Activity {
@@ -100,11 +102,16 @@ public class SettingsActivity extends Activity {
 
     public void showDialog(final DialogInputListener dil) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Klasse eingeben");
+        builder.setTitle("Klasse");
 
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setGravity(Gravity.CENTER_HORIZONTAL);
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_TEXT);
-        builder.setView(input);
+        layout.setPadding(65, 65, 65, 0);
+        layout.addView(input);
+        builder.setView(layout);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
@@ -115,7 +122,7 @@ public class SettingsActivity extends Activity {
                 changed = true;
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("ABBRECHEN", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
