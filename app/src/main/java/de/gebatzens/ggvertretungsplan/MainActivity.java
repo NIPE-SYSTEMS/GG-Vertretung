@@ -20,6 +20,7 @@ package de.gebatzens.ggvertretungsplan;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -78,7 +79,7 @@ public class MainActivity extends FragmentActivity {
 
                 if(menuItem.getItemId() == R.id.action_refresh) {
                     mContent.mGGFrag.setFragmentsLoading();
-                    GGApp.GG_APP.refreshAsync(null);
+                    GGApp.GG_APP.refreshAsync(null, true);
                 } else if(menuItem.getItemId() == R.id.action_settings) {
                     Intent i = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivityForResult(i, 1);
@@ -95,6 +96,22 @@ public class MainActivity extends FragmentActivity {
         mToolbar.setTitleTextColor(Color.WHITE);
         //toolbar.setNavigationIcon(R.drawable.ic_menu_white);
 
+        //wait for vps
+        new AsyncTask<Object, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Object... params) {
+                while(GGApp.GG_APP.mVPToday == null || GGApp.GG_APP.mVPTomorrow == null);
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mContent.mGGFrag.updateFragments();
+                    }
+                });
+                return null;
+            }
+        }.execute();
+
     }
 
     @Override
@@ -109,7 +126,7 @@ public class MainActivity extends FragmentActivity {
             GGApp.GG_APP.createProvider(selected);
             mToolbar.setTitle(mStrings[selected]);
             GGApp.GG_APP.saveSettings();
-            GGApp.GG_APP.refreshAsync(null);
+            GGApp.GG_APP.refreshAsync(null, true);
             Log.w("ggvp", selected + " " + GGApp.GG_APP.getVPClass());
         }
 
