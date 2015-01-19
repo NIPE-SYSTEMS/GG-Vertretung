@@ -22,6 +22,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -133,7 +134,15 @@ public class GGBroadcast extends BroadcastReceiver {
 
             am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 1000, AlarmManager.INTERVAL_HALF_HOUR, pi);
         } else if (intent.getAction().equals("de.gebatzens.ACTION_ALARM")) {
-            checkForUpdates((GGApp) context.getApplicationContext());
+            new AsyncTask<GGApp, Void, Void>() {
+
+                @Override
+                protected Void doInBackground(GGApp... params) {
+                    checkForUpdates(params[0]);
+                    return null;
+                }
+            }.execute((GGApp) context.getApplicationContext());
+
         }
     }
 
