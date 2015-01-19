@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -58,6 +59,7 @@ public class SettingsActivity extends Activity {
             SharedPreferences.Editor e = sp.edit();
             e.putString("schule", gg.getDefaultSelection() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule");
             e.putString("klasse", gg.getVPClass());
+            e.putBoolean("benachrichtigungen", gg.getNotificationsEnabled());
             e.commit();
             String pref_schule_content = gg.getDefaultSelection() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule";
             String pref_klasse_content = gg.getVPClass();
@@ -94,7 +96,8 @@ public class SettingsActivity extends Activity {
                     pref.setSummary(editTextPref.getText());
                 }
                 GGApp.GG_APP.setVPClass(editTextPref.getText());
-            }
+            } else if(key.equals("benachrichtigungen"))
+                GGApp.GG_APP.setNotificationsEnabled(((CheckBoxPreference)pref).isChecked());
             GGApp.GG_APP.saveSettings();
 
             Log.w("ggvp", "OnSharedPC" + key + pref.getSummary());

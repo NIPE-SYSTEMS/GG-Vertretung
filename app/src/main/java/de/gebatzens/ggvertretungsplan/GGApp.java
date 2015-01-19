@@ -44,14 +44,14 @@ public class GGApp extends Application {
     public void onCreate() {
         super.onCreate();
         GG_APP = this;
+        create();
 
     }
 
-    public void create() {
+    private void create() {
         created = true;
 
         loadSettings();
-        mActivity.selected = Integer.parseInt(mSettings.getProperty("gg_prev_selection", "0"));
 
         createProvider(mActivity.selected);
         //mVPToday = mProvider.getVP(mProvider.getTodayURL());
@@ -78,6 +78,14 @@ public class GGApp extends Application {
 
     public int getDefaultSelection() {
         return Integer.parseInt(mSettings.getProperty("gg_prev_selection", "0"));
+    }
+
+    public boolean getNotificationsEnabled() {
+        return Boolean.parseBoolean(mSettings.getProperty("gg_notifications", "true"));
+    }
+
+    public void setNotificationsEnabled(boolean b) {
+        mSettings.setProperty("gg_notifications", ""+b);
     }
 
     public void loadSettings() {

@@ -23,6 +23,10 @@ import android.content.Intent;
 
 public class GGBroadcast extends BroadcastReceiver {
 
+    public void checkForUpdates() {
+
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {

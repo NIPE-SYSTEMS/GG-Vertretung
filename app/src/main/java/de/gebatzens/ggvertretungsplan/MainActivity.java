@@ -51,10 +51,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         GGApp.GG_APP.mActivity = this;
 
-        if(!GGApp.GG_APP.created)
-            GGApp.GG_APP.create();
-        if(savedInstanceState != null)
-            selected = savedInstanceState.getInt("gg_selection");
+        selected = Integer.parseInt(GGApp.GG_APP.mSettings.getProperty("gg_prev_selection", "0"));
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
@@ -98,12 +95,6 @@ public class MainActivity extends FragmentActivity {
         mToolbar.setTitleTextColor(Color.WHITE);
         //toolbar.setNavigationIcon(R.drawable.ic_menu_white);
 
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle s) {
-        super.onSaveInstanceState(s);
-        s.putInt("gg_selection", selected);
     }
 
     @Override
