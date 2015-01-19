@@ -20,15 +20,6 @@ package de.gebatzens.ggvertretungsplan;
 public class SWSProvider implements VPProvider {
 
     @Override
-    public GGPlan getVP(String url) {
-        GGPlan plan = new GGPlan();
-        plan.date = url;
-        plan.entries.add(new String[]{"SWS 1", "SWS", "SWS", "SWS", "SWS"});
-        plan.loaded = true;
-        return plan;
-    }
-
-    @Override
     public GGPlan getVPSync(String url) {
         GGPlan plan = new GGPlan();
         plan.date = "Sync " + url;
@@ -38,11 +29,11 @@ public class SWSProvider implements VPProvider {
 
     @Override
     public String getTodayURL() {
-        return "HEUTE!";
+        return "http://www.sachsenwaldschule.org/index.php?id=262";
     }
 
     @Override
     public String getTomorrowURL() {
-        return "MORGEN!";
+        return "http://www.sachsenwaldschule.org/index.php?id=263";
     }
 }

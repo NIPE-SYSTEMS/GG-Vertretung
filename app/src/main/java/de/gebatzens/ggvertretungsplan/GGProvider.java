@@ -114,15 +114,6 @@ public class GGProvider implements VPProvider {
     }
 
     @Override
-    public GGPlan getVP(String s) {
-        GGPlan p = new GGPlan();
-        new GGAsync().execute(p, s);
-        Log.w("GG", "Started Async " + s);
-        while(!p.loaded); //TODO besser machen
-        return p;
-    }
-
-    @Override
     public String getTodayURL() {
         return "http://gymglinde.de/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_heute.htm";
     }

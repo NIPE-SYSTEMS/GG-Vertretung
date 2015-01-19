@@ -24,7 +24,6 @@ public interface VPProvider {
      * @param url
      * @return VP
      */
-    public GGPlan getVP(String url);
     public GGPlan getVPSync(String url);
 
     public String getTodayURL();
