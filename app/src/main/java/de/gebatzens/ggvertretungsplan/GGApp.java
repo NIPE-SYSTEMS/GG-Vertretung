@@ -178,12 +178,6 @@ public class GGApp extends Application {
         }
     }
 
-    public void updateVP() {
-        mVPToday = mProvider.getVP(mProvider.getTodayURL());
-        mVPTomorrow = mProvider.getVP(mProvider.getTomorrowURL());
-        mActivity.mContent.mGGFrag.updateFragments();
-    }
-
     public void refreshAsync(final Runnable finished, final boolean updateFragments) {
         new AsyncTask<Object, Void, Void>() {
 
