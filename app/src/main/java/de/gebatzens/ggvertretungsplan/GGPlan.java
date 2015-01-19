@@ -33,10 +33,13 @@ public class GGPlan {
 
     public List<String[]> getAllForClass(String c) {
         c = c.toLowerCase();
+        c = c.replaceAll(" ", "");
         ArrayList<String[]> list = new ArrayList<String[]>();
-        for(String[] ss : entries)
-            if(ss[0].toLowerCase().equals(c))
+        for(String[] ss : entries) {
+            String sc = ss[0].toLowerCase().replaceAll(" ", "");
+            if (sc.equals(c))
                 list.add(ss);
+        }
         return list;
     }
 
