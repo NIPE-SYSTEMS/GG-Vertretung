@@ -51,7 +51,6 @@ public class SettingsActivity extends Activity {
         @Override
         public void onCreate(Bundle s) {
             super.onCreate(s);
-            Log.w("ggpv", "GGPF create");
             GGApp gg = GGApp.GG_APP;
             addPreferencesFromResource(R.xml.preferences);
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
@@ -100,7 +99,6 @@ public class SettingsActivity extends Activity {
                 GGApp.GG_APP.setNotificationsEnabled(((CheckBoxPreference)pref).isChecked());
             GGApp.GG_APP.saveSettings();
 
-            Log.w("ggvp", "OnSharedPC" + key + pref.getSummary());
         }
 
         @Override
@@ -117,7 +115,6 @@ public class SettingsActivity extends Activity {
         Fragment f = getFragmentManager().findFragmentByTag("gg_settings_frag");
         if(f != null) {
             getFragmentManager().beginTransaction().remove(f).commit();
-            Log.w("ggvp", "removed f" + f);
         }
 
         super.onCreate(savedInstanceState);

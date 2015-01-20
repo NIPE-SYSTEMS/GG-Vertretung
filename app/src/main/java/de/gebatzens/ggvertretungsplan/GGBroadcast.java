@@ -23,7 +23,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
@@ -31,6 +34,9 @@ import java.util.Properties;
 public class GGBroadcast extends BroadcastReceiver {
 
     public void checkForUpdates(GGApp gg) {
+        if(!gg.getNotificationsEnabled())
+            return;
+
         VPProvider prov = gg.mProvider;
         GGPlan today = prov.getVPSync(prov.getTodayURL());
         GGPlan tomo = prov.getVPSync(prov.getTomorrowURL());
@@ -40,7 +46,9 @@ public class GGBroadcast extends BroadcastReceiver {
 
         Properties p = new Properties();
         try {
-            p.load(gg.openFileInput("ggsavedstate"));
+            InputStream in;
+            p.load(in = gg.openFileInput("ggsavedstate"));
+            in.close();
         } catch(Exception e) {
             p.setProperty("todaydate", today.date);
             p.setProperty("tomdate", tomo.date);
@@ -57,8 +65,12 @@ public class GGBroadcast extends BroadcastReceiver {
             tdn[i] = ss[1];
             i++;
         }
+        if(td[0].isEmpty())
+            td = new String[0];
         if(tdn.length != td.length) { //Heute fällt mehr/(weniger) aus
             b = true;
+            Log.d("ggvp", "Heutestd nicht gleich " + tdn.length + " " + td.length);
+
         }
 
         String[] tm = p.getProperty("tomoles").split(";");
@@ -68,12 +80,17 @@ public class GGBroadcast extends BroadcastReceiver {
             tmn[i] = ss[1];
             i++;
         }
+        if(tm[0].isEmpty())
+            tm = new String[0];
         if(tmn.length != tm.length) { //Morgen fällt mehr/(weniger) aus
             b = true;
+            Log.d("ggvp", "Morgenstd nicht gleich " + tmn.length + " " + tm.length);
         }
 
-        if(!today.date.equals(p.getProperty("todaydate")))
+        if(!today.date.equals(p.getProperty("todaydate"))) {
             b = true;
+            Log.d("ggvp", "Datum anders: " + today.date + " " + p.getProperty("todaydate"));
+        }
 
         p.setProperty("todaydate", today.date);
         p.setProperty("tomdate", tomo.date);
@@ -96,16 +113,23 @@ public class GGBroadcast extends BroadcastReceiver {
                 stdt += s + ", ";
             if(!stdt.isEmpty())
                 stdt = stdt.substring(0, stdt.length() - 2);
+            else
+                stdt = "Nichts";
             String stdtm = "";
             for(String s : tmn)
                 stdtm += s + ", ";
             if(!stdtm.isEmpty())
                 stdtm = stdtm.substring(0, stdtm.length() - 2);
-            gg.createNotification("Vertretungsplanänderung", "Vertretungsplanänderung für deine Klasse", 123, "Betroffene Stunden:", "Heute: " + stdt, "Morgen: " + stdtm);
-        }
+            else
+                stdtm = "Nichts";
+            gg.createNotification("Vertretungsplanänderung", "Der Vertretungsplan hat sich geändert", 123, "Betroffene Stunden:", "Heute: " + stdt, "Morgen: " + stdtm);
+        } else
+            Log.d("ggvp", "Up to date!");
 
         try {
-            p.store(gg.openFileOutput("ggsavedstate", Context.MODE_PRIVATE), "GGSavedState");
+            OutputStream out;
+            p.store(out = gg.openFileOutput("ggsavedstate", Context.MODE_PRIVATE), "GGSavedState");
+            out.close();
         } catch(Exception e) {
             e.printStackTrace();
             gg.showToast(e.getClass().getName() + " " + e.getMessage());
@@ -120,7 +144,7 @@ public class GGBroadcast extends BroadcastReceiver {
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         am.cancel(pi);
-        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 20000, AlarmManager.INTERVAL_HALF_HOUR, pi);
+        am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 60000, 60000, pi);
     }
 
     @Override

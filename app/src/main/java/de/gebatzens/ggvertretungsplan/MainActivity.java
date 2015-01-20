@@ -42,7 +42,6 @@ import java.util.List;
 
 public class MainActivity extends FragmentActivity {
 
-    String[] mStrings;
     Toolbar mToolbar;
     int selected = 0;
     public GGContentFragment mContent;
@@ -89,9 +88,7 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
-        mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule", "Einstellungen"};
-
-        mToolbar.setTitle(mStrings[selected]);
+        mToolbar.setTitle(GGApp.mStrings[selected]);
         mToolbar.inflateMenu(R.menu.toolbar_menu);
         mToolbar.setTitleTextColor(Color.WHITE);
         //toolbar.setNavigationIcon(R.drawable.ic_menu_white);
@@ -118,16 +115,13 @@ public class MainActivity extends FragmentActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.w("ggvp", "result=" + resultCode + " should be " + RESULT_OK + " req=" + requestCode);
-
         if(requestCode == 1 && resultCode == RESULT_OK) { //Settings changed
             mContent.mGGFrag.setFragmentsLoading();
             selected = GGApp.GG_APP.getDefaultSelection();
             GGApp.GG_APP.createProvider(selected);
-            mToolbar.setTitle(mStrings[selected]);
+            mToolbar.setTitle(GGApp.mStrings[selected]);
             GGApp.GG_APP.saveSettings();
             GGApp.GG_APP.refreshAsync(null, true);
-            Log.w("ggvp", selected + " " + GGApp.GG_APP.getVPClass());
         }
 
     }

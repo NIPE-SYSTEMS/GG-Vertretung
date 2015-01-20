@@ -42,8 +42,10 @@ public class GGApp extends Application {
     public boolean created = false;
     public VPProvider mProvider;
     public Properties mSettings;
+    public static final String[] mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule"};
 
     public static GGApp GG_APP;
+
 
     @Override
     public void onCreate() {
@@ -64,8 +66,6 @@ public class GGApp extends Application {
         //mVPTomorrow = mProvider.getVP(mProvider.getTomorrowURL());
 
         refreshAsync(null, false);
-
-        Log.w("ggvp", "GGApp created (" + getVPClass() + " " + getDefaultSelection() + ")");
 
     }
 
@@ -89,6 +89,7 @@ public class GGApp extends Application {
 
             mBuilder.setStyle(inboxStyle);
         }
+        mBuilder.setColor(getResources().getColor(R.color.main));
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, MainActivity.class);
 
@@ -147,6 +148,7 @@ public class GGApp extends Application {
         } catch (IOException e) {
             mSettings.put("gg_prev_selection", "0");
             mSettings.put("gg_class", "");
+            mSettings.put("gg_notifications", "true");
             saveSettings();
 
         }
