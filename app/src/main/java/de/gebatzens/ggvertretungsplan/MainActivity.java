@@ -20,6 +20,7 @@ package de.gebatzens.ggvertretungsplan;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -41,7 +42,6 @@ import java.util.List;
 
 public class MainActivity extends FragmentActivity {
 
-    String[] mStrings;
     Toolbar mToolbar;
     int selected = 0;
     public GGContentFragment mContent;
@@ -51,10 +51,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         GGApp.GG_APP.mActivity = this;
 
-        if(!GGApp.GG_APP.created)
-            GGApp.GG_APP.create();
-        if(savedInstanceState != null)
-            selected = savedInstanceState.getInt("gg_selection");
+        selected = Integer.parseInt(GGApp.GG_APP.mSettings.getProperty("gg_prev_selection", "0"));
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
@@ -81,7 +78,7 @@ public class MainActivity extends FragmentActivity {
 
                 if(menuItem.getItemId() == R.id.action_refresh) {
                     mContent.mGGFrag.setFragmentsLoading();
-                    GGApp.GG_APP.refreshAsync(null);
+                    GGApp.GG_APP.refreshAsync(null, true);
                 } else if(menuItem.getItemId() == R.id.action_settings) {
                     Intent i = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivityForResult(i, 1);
@@ -91,35 +88,40 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
-        mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule", "Einstellungen"};
-
-        mToolbar.setTitle(mStrings[selected]);
+        mToolbar.setTitle(GGApp.mStrings[selected]);
         mToolbar.inflateMenu(R.menu.toolbar_menu);
         mToolbar.setTitleTextColor(Color.WHITE);
         //toolbar.setNavigationIcon(R.drawable.ic_menu_white);
 
-    }
+        //wait for vps
+        new AsyncTask<Object, Void, Void>() {
 
-    @Override
-    public void onSaveInstanceState(Bundle s) {
-        super.onSaveInstanceState(s);
-        s.putInt("gg_selection", selected);
+            @Override
+            protected Void doInBackground(Object... params) {
+                while(GGApp.GG_APP.mVPToday == null || GGApp.GG_APP.mVPTomorrow == null);
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mContent.mGGFrag.updateFragments();
+                    }
+                });
+                return null;
+            }
+        }.execute();
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.w("ggvp", "result=" + resultCode + " should be " + RESULT_OK + " req=" + requestCode);
-
         if(requestCode == 1 && resultCode == RESULT_OK) { //Settings changed
             mContent.mGGFrag.setFragmentsLoading();
             selected = GGApp.GG_APP.getDefaultSelection();
             GGApp.GG_APP.createProvider(selected);
-            mToolbar.setTitle(mStrings[selected]);
+            mToolbar.setTitle(GGApp.mStrings[selected]);
             GGApp.GG_APP.saveSettings();
-            GGApp.GG_APP.refreshAsync(null);
-            Log.w("ggvp", selected + " " + GGApp.GG_APP.getVPClass());
+            GGApp.GG_APP.refreshAsync(null, true);
         }
 
     }

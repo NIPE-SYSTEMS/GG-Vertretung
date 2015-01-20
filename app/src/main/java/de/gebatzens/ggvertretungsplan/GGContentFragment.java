@@ -80,7 +80,7 @@ public class GGContentFragment extends Fragment {
                         });
 
                     }
-                });
+                }, true);
             }
         });
         // Configure the refreshing colors
