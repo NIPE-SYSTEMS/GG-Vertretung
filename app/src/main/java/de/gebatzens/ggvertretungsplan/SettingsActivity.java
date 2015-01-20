@@ -56,7 +56,8 @@ public class SettingsActivity extends Activity {
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
             sp.registerOnSharedPreferenceChangeListener(this);
             SharedPreferences.Editor e = sp.edit();
-            e.clear();
+            e.putString("schule", gg.getDefaultSelection() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule");
+            e.putString("klasse", gg.getVPClass());
             e.commit();
             String pref_schule_content = gg.getDefaultSelection() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule";
             String pref_klasse_content = gg.getVPClass();
