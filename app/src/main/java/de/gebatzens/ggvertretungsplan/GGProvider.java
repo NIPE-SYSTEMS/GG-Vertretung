@@ -17,10 +17,10 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-import java.io.BufferedReader;
+import android.os.AsyncTask;
+import android.util.Log;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
@@ -32,7 +32,7 @@ public class GGProvider implements VPProvider {
     public static void load(GGPlan target, String s) {
         try {
             URLConnection con = new URL(s).openConnection();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
+            Scanner scan = new Scanner(con.getInputStream());
 
             Pattern title = Pattern.compile("<title>(.*?)</title>");
             Pattern tr = Pattern.compile("<tr .*>");
@@ -40,9 +40,9 @@ public class GGProvider implements VPProvider {
             int h = 0;
             String lastClass = "Bug";
 
-            String line;
-            while((line = decode(reader.readLine())) != null) {
-
+            while(scan.hasNextLine()) {
+                String line = scan.nextLine();
+                line = decodeHTML(line);
                 Matcher m = title.matcher(line);
                 if(m.find()) {
                     target.date = m.group(1);
@@ -53,7 +53,8 @@ public class GGProvider implements VPProvider {
                         if(h > 1) {
                             String[] values = new String[5];
                             for(int i = 0; i < 5; i++) {
-                                String l = decode(reader.readLine());
+                                String l = scan.nextLine();
+                                l = decodeHTML(l);
                                 Matcher data = tdata.matcher(l);
                                 if(data.find())
                                     values[i] = data.group(1).trim();
@@ -78,10 +79,7 @@ public class GGProvider implements VPProvider {
         target.loaded = true;
     }
 
-    public static String decode(String html) {
-        if(html == null)
-            return null;
-
+    private static String decodeHTML(String html) {
         html = html.replaceAll("&uuml;", "ü");
         html = html.replaceAll("&auml;", "ä");
         html = html.replaceAll("&ouml;", "ö");
@@ -90,10 +88,21 @@ public class GGProvider implements VPProvider {
         html = html.replaceAll("&Auml;", "Ä");
         html = html.replaceAll("&Ouml;", "Ö");
 
-        html = html.replaceAll("&nbsp;", "");
-        html = html.replaceAll("---", ""); //SWS '---'
-
         return html;
+    }
+
+    private static class GGAsync extends AsyncTask<Object, Void, GGPlan> {
+
+        @Override
+        protected GGPlan doInBackground(Object... params) {
+            GGPlan target = (GGPlan) params[0];
+            String s = (String) params[1];
+
+            load(target, s);
+            return target;
+        }
+
+
     }
 
 
