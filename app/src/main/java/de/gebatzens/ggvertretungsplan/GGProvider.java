@@ -106,12 +106,12 @@ public class GGProvider implements VPProvider {
 
     @Override
     public String getTodayURL() {
-        return "http://192.168.177.20/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_heute.htm";
+        return "http://gymglinde.de/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_heute.htm";
     }
 
     @Override
     public String getTomorrowURL() {
-        return "http://192.168.177.20/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_morgen.htm";
+        return "http://gymglinde.de/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_morgen.htm";
     }
 
 }
