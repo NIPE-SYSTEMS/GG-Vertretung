@@ -37,6 +37,9 @@ public class GGProvider implements VPProvider {
             Pattern title = Pattern.compile("<title>(.*?)</title>");
             Pattern tr = Pattern.compile("<tr .*>");
             Pattern tdata = Pattern.compile(">(.*)</td>");
+            Pattern special = Pattern.compile("<h2>.*?</h2>");
+            Pattern send = Pattern.compile("</div>");
+            Pattern extr = Pattern.compile("<p>(.*?)</p>");
             int h = 0;
             String lastClass = "Bug";
 
@@ -65,6 +68,19 @@ public class GGProvider implements VPProvider {
                             lastClass = values[0];
 
                             target.entries.add(values);
+                        }
+                    } else {
+                        Matcher sm = special.matcher(line);
+                        if(sm.find()) {
+                            String spv = "";
+                            String sp = "";
+                            while(!send.matcher(sp = reader.readLine()).find()) {
+                                Matcher mm = extr.matcher(sp);
+                                if(mm.find())
+                                    spv += mm.group(1) + " ";
+
+                            }
+                            target.special = spv;
                         }
                     }
                 }

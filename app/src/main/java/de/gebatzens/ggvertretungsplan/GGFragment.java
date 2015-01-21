@@ -23,6 +23,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -155,6 +156,18 @@ public class GGFragment extends Fragment {
                 createTable(list, false, inflater, l2);
 
 
+            if(!planh.special.isEmpty()) {
+                LinearLayout l4 = new LinearLayout(getActivity());
+                l.addView(l4);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(0, toPixels(10), 0, 0);
+                l4.setLayoutParams(lp);
+                l4.setOrientation(LinearLayout.VERTICAL);
+                TextView tv4 = new TextView(getActivity());
+                tv4.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + planh.special));
+                l4.addView(tv4);
+            }
+
             list = planm.getAllForClass(clas);
             LinearLayout l3 = new LinearLayout(getActivity());
             l3.setOrientation(LinearLayout.VERTICAL);
@@ -167,9 +180,19 @@ public class GGFragment extends Fragment {
             } else
                 createTable(list, false, inflater, l3);
 
+            if(!planm.special.isEmpty()) {
+                LinearLayout l4 = new LinearLayout(getActivity());
+                l.addView(l4);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                lp.setMargins(0, toPixels(10), 0, 0);
+                l4.setLayoutParams(lp);
+                l4.setOrientation(LinearLayout.VERTICAL);
+                TextView tv4 = new TextView(getActivity());
+                tv4.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + planm.special));
+                l4.addView(tv4);
+            }
+
         } else if(type == TYPE_OVERVIEW) {
-
-
             //TODO center vertically
             l.setGravity(Gravity.CENTER_HORIZONTAL);
             l.setPadding(50, 50, 50, 50);
@@ -207,7 +230,20 @@ public class GGFragment extends Fragment {
                 text.setTextSize(20);
                 text.setText(plan.date);
                 //l.addView(text);
-                createTable(plan.entries, true, inflater, l);
+                if(!plan.special.isEmpty()) {
+                    LinearLayout l1 = new LinearLayout(getActivity());
+                    l1.setOrientation(LinearLayout.VERTICAL);
+                    TextView tv = new TextView(getActivity());
+                    TextView tv4 = new TextView(getActivity());
+                    tv4.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + plan.special));
+                    l1.addView(tv4);
+                    l.addView(l1);
+                }
+
+                LinearLayout l2 = new LinearLayout(getActivity());
+                l2.setOrientation(LinearLayout.VERTICAL);
+                l.addView(l2);
+                createTable(plan.entries, true, inflater, l2);
             }
 
         }
