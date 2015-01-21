@@ -20,6 +20,7 @@ package de.gebatzens.ggvertretungsplan;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -41,10 +42,6 @@ import java.util.List;
 
 public class MainActivity extends FragmentActivity {
 
-    String[] mStrings;
-    DrawerLayout mDrawerLayout;
-    ListView mDrawerList;
-    ActionBarDrawerToggle mToggle;
     Toolbar mToolbar;
     int selected = 0;
     public GGContentFragment mContent;
@@ -54,8 +51,6 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         GGApp.GG_APP.mActivity = this;
 
-        if(!GGApp.GG_APP.created)
-            GGApp.GG_APP.create();
         selected = GGApp.GG_APP.getDefaultSelection();
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
@@ -81,93 +76,39 @@ public class MainActivity extends FragmentActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-                mContent.mGGFrag.setFragmentsLoading();
-                GGApp.GG_APP.refreshAsync(null);
+                if(menuItem.getItemId() == R.id.action_refresh) {
+                    mContent.mGGFrag.setFragmentsLoading();
+                    GGApp.GG_APP.refreshAsync(null, true);
+                } else if(menuItem.getItemId() == R.id.action_settings) {
+                    Intent i = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivityForResult(i, 1);
+                }
 
                 return false;
             }
         });
 
-        mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule", "Einstellungen"};
-
-        mToolbar.setTitle(mStrings[selected]);
+        mToolbar.setTitle(GGApp.mStrings[selected]);
         mToolbar.inflateMenu(R.menu.toolbar_menu);
         mToolbar.setTitleTextColor(Color.WHITE);
         //toolbar.setNavigationIcon(R.drawable.ic_menu_white);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //wait for vps
+        new AsyncTask<Object, Void, Void>() {
 
-        mToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                mToolbar, R.string.drawer_open, R.string.drawer_close) {
-
-            /** Called when a drawer has settled in a completely closed state. */
-            public void onDrawerClosed(View view) {
-                super.onDrawerClosed(view);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-
-            /** Called when a drawer has settled in a completely open state. */
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-            }
-        };
-
-        mDrawerLayout.setDrawerListener(mToggle);
-
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.drawer_list_item, mStrings);
-        mDrawerList.setAdapter(aa);
-        mDrawerList.setItemChecked(selected, true);
-
-        mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(position < 2) {
-                    selected = position;
-                    mToolbar.setTitle(mStrings[position]);
-                    mDrawerLayout.closeDrawers();
-                    mContent.mGGFrag.setFragmentsLoading();
-                    GGApp.GG_APP.setDefaultSelection(selected);
-                    GGApp.GG_APP.saveSettings();
-                    GGApp.GG_APP.createProvider(position);
-                    GGApp.GG_APP.refreshAsync(null);
-
-                } else if(position == 2) {
-                    //ignore settings selection
-                    mDrawerList.setItemChecked(position, false);
-                    mDrawerList.setItemChecked(selected, true);
-                    mDrawerLayout.closeDrawers();
-                    Intent intent = new Intent(GGApp.GG_APP.mActivity, SettingsActivity.class);
-
-                    GGApp.GG_APP.mActivity.startActivityForResult(intent, 1);
-
-                }
-
-
+            protected Void doInBackground(Object... params) {
+                while(GGApp.GG_APP.mVPToday == null || GGApp.GG_APP.mVPTomorrow == null);
+                MainActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mContent.mGGFrag.updateFragments();
+                    }
+                });
+                return null;
             }
-        });
+        }.execute();
 
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle s) {
-        super.onSaveInstanceState(s);
-        s.putInt("gg_selection", selected);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mToggle.syncState();
-
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mToggle.onConfigurationChanged(newConfig);
     }
 
     @Override
@@ -177,13 +118,10 @@ public class MainActivity extends FragmentActivity {
         if(requestCode == 1 && resultCode == RESULT_OK) { //Settings changed
             mContent.mGGFrag.setFragmentsLoading();
             selected = GGApp.GG_APP.getDefaultSelection();
-            mDrawerList.setItemChecked(0, false);
-            mDrawerList.setItemChecked(1, false);
-            mDrawerList.setItemChecked(selected, true);
             GGApp.GG_APP.createProvider(selected);
-            mToolbar.setTitle(mStrings[selected]);
+            mToolbar.setTitle(GGApp.mStrings[selected]);
             GGApp.GG_APP.saveSettings();
-            GGApp.GG_APP.refreshAsync(null);
+            GGApp.GG_APP.refreshAsync(null, true);
         }
 
     }

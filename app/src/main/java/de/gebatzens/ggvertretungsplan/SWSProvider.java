@@ -17,32 +17,105 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-public class SWSProvider implements VPProvider {
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-    @Override
-    public GGPlan getVP(String url) {
-        GGPlan plan = new GGPlan();
-        plan.date = url;
-        plan.entries.add(new String[]{"SWS 1", "SWS", "SWS", "SWS", "SWS"});
-        plan.loaded = true;
-        return plan;
-    }
+public class SWSProvider implements VPProvider {
 
     @Override
     public GGPlan getVPSync(String url) {
         GGPlan plan = new GGPlan();
-        plan.date = "Sync " + url;
+        plan.date = null;
+
+        try {
+            URLConnection con = new URL(url).openConnection();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
+
+            Pattern date = Pattern.compile("<div class=\"mon_title\">(.*)</div>");
+            Pattern tables = Pattern.compile("<table class=\"mon_list\">");
+            Pattern tdata = Pattern.compile("<td .*?>(.*?)</td>");
+            int h = 0;
+            String lastClass = "Bug";
+            int ln = 0;
+
+            String line;
+            while ((line = GGProvider.decode(reader.readLine())) != null) {
+                ln++;
+
+                if(plan.date == null) {
+                    Matcher md = date.matcher(line);
+                    if (md.find())
+                        plan.date = md.group(1).trim();
+                } else { //find table start
+                    Matcher mt = tables.matcher(line);
+                    if(mt.find()) {
+                        reader.readLine(); //ignore header
+                        ln++;
+                        String tline;
+                        String current = null;
+                        while(!(tline = GGProvider.decode(reader.readLine())).equals("</table>")) {
+                            ln++;
+                            if(tline.contains("colspan=\"6\"")) {
+                                Matcher m = tdata.matcher(tline);
+                                if(m.find()) {
+                                    current = m.group(1).trim();
+                                } else
+                                    throw new GGInvalidSourceException("Malformed class row (" + ln + "): " + tline);
+
+                                if(current == "---") //AG (?) ignorieren
+                                    current = null;
+                            } else {
+                                if(current == null)
+                                    continue;
+                                Matcher m = tdata.matcher(tline);
+                                String[] data = new String[6];
+                                int i = 0;
+                                while(m.find()) {
+                                    data[i] = m.group(1).trim();
+                                    i++;
+                                }
+                                if(i != 6)
+                                    throw new GGInvalidSourceException("Not enough data in line " + ln + ": " + tline);
+
+                                String[] rdata = new String[5];
+                                rdata[0] = current;
+                                rdata[1] = data[0]; //Stunde
+                                rdata[2] = data[2]; //Vertr.
+                                rdata[3] = data[1]; //Fach
+                                rdata[4] = data[5];
+                                if(!data[3].equals(""))
+                                    rdata[4] += "; Raum " + data[3];
+                                if(!data[4].equals(""))
+                                    rdata[4] += "; " + data[4];
+
+                                plan.entries.add(rdata);
+                            }
+                        }
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            plan.throwable = e;
+        }
+
+
         plan.loaded = true;
         return plan;
     }
 
     @Override
     public String getTodayURL() {
-        return "HEUTE!";
+        return "http://www.sachsenwaldschule.org/index.php?id=262";
     }
 
     @Override
     public String getTomorrowURL() {
-        return "MORGEN!";
+        return "http://www.sachsenwaldschule.org/index.php?id=263";
     }
 }

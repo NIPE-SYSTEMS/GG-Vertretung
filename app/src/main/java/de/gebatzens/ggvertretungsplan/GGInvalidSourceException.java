@@ -17,30 +17,17 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-import java.util.ArrayList;
-import java.util.List;
+public class GGInvalidSourceException extends Exception {
 
-public class GGPlan {
+    String extra;
 
-    public ArrayList<String[]> entries = new ArrayList<String[]>();
-    public String date;
-    public Throwable throwable = null;
-    public boolean loaded = false;
-
-    public GGPlan() {
-
+    public GGInvalidSourceException(String extra) {
+        this.extra = extra;
     }
 
-    public List<String[]> getAllForClass(String c) {
-        c = c.toLowerCase();
-        c = c.replaceAll(" ", "");
-        ArrayList<String[]> list = new ArrayList<String[]>();
-        for(String[] ss : entries) {
-            String sc = ss[0].toLowerCase().replaceAll(" ", "");
-            if (sc.equals(c))
-                list.add(ss);
-        }
-        return list;
+    @Override
+    public String getMessage() {
+        return extra == null ? "The received HTML is invalid." : "The received HTML is invalid: " + extra;
     }
 
 }
