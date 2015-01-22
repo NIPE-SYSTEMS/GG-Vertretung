@@ -29,4 +29,6 @@ public interface VPProvider {
     public String getTodayURL();
     public String getTomorrowURL();
 
+    public String getDay(String date);
+
 }

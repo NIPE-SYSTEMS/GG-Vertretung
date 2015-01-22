@@ -110,6 +110,16 @@ public class SWSProvider implements VPProvider {
     }
 
     @Override
+    public String getDay(String s) {
+        if(s.isEmpty())
+            return "Bug";
+        String[] strs = s.split(" ");
+        if(strs.length < 2)
+            return "Bug";
+        return strs[1];
+    }
+
+    @Override
     public String getTodayURL() {
         return "http://www.sachsenwaldschule.org/index.php?id=262";
     }

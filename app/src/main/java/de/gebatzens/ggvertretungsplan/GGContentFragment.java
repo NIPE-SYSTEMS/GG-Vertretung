@@ -50,7 +50,7 @@ public class GGContentFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        mGGFrag = new GGFragmentAdapter(getActivity().getSupportFragmentManager(), savedInstanceState);
+        mGGFrag = new GGFragmentAdapter(getActivity().getSupportFragmentManager(), savedInstanceState, (MainActivity) getActivity());
         mViewPager.setAdapter(mGGFrag);
 
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had

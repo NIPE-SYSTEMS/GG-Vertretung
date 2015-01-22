@@ -17,6 +17,8 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -128,6 +130,13 @@ public class GGProvider implements VPProvider {
     @Override
     public String getTomorrowURL() {
         return "http://gymglinde.de/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_morgen.htm";
+    }
+
+    @Override
+    public String getDay(String date) {
+        if(date.isEmpty() || date.length() < 40)
+            return "(Bug)";
+        return date.substring(21, date.length() - 17);
     }
 
 }
