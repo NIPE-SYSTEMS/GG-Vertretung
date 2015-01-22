@@ -26,7 +26,6 @@ public class GGPlan {
     public String date = "";
     public String special = "";
     public Throwable throwable = null;
-    public boolean loaded = false;
 
     public GGPlan() {
 

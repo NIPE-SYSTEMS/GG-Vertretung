@@ -105,7 +105,6 @@ public class SWSProvider implements VPProvider {
         }
 
 
-        plan.loaded = true;
         return plan;
     }
 

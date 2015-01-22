@@ -130,6 +130,28 @@ public class GGFragment extends Fragment {
         return table;
     }
 
+    private void createButtonWithText(LinearLayout l, String text, String button, View.OnClickListener onclick) {
+        //TODO center vertically
+        l.setGravity(Gravity.CENTER_HORIZONTAL);
+        l.setPadding(50, 50, 50, 50);
+
+        LinearLayout l2 = new LinearLayout(getActivity());
+        l2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        TextView tv = new TextView(getActivity());
+        tv.setText(text);
+        l2.addView(tv);
+        l.addView(l2);
+
+        LinearLayout l3 = new LinearLayout(getActivity());
+        l3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        Button b = new Button(getActivity());
+        b.setText(button);
+        b.setOnClickListener(onclick);
+        l3.addView(b);
+
+        l.addView(l3);
+    }
+
     public void createView(LayoutInflater inflater, ViewGroup group) {
         LinearLayout l = new LinearLayout(getActivity());
         l.setOrientation(LinearLayout.VERTICAL);
@@ -140,7 +162,7 @@ public class GGFragment extends Fragment {
             tv.setText("Error: " + type);
             l.addView(tv);
             Log.w("ggvp", "setParams not called " + type + " " + this + " " + getParentFragment());
-        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getVPClass().equals("")) {
+        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getVPClass().equals("") && planh.throwable == null && planm.throwable == null) {
             String clas = GGApp.GG_APP.getVPClass();
 
             List<String[]> list = planh.getAllForClass(clas);
@@ -192,61 +214,41 @@ public class GGFragment extends Fragment {
                 l4.addView(tv4);
             }
 
-        } else if(type == TYPE_OVERVIEW) {
-            //TODO center vertically
-            l.setGravity(Gravity.CENTER_HORIZONTAL);
-            l.setPadding(50, 50, 50, 50);
+        } else if(type == TYPE_OVERVIEW && planh.throwable == null && planm.throwable == null) {
+            createButtonWithText(l, "Du musst eine Klasse wählen!", "Einstellungen", new View.OnClickListener() {
 
-            LinearLayout l2 = new LinearLayout(getActivity());
-            l2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            TextView tv = new TextView(getActivity());
-            tv.setText("Du musst eine Klasse wählen!");
-            l2.addView(tv);
-            l.addView(l2);
-
-            LinearLayout l3 = new LinearLayout(getActivity());
-            l3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            Button b = new Button(getActivity());
-            b.setText("Einstellungen");
-            b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(getActivity(), SettingsActivity.class);
                     getActivity().startActivityForResult(i, 1);
                 }
             });
-            l3.addView(b);
 
-            l.addView(l3);
 
-        } else if(plan.loaded) {
-            TextView text = new TextView(getActivity());
-            if(plan.throwable != null) {
-                text.setTextSize(20);
-                text.setTextColor(Color.RED);
-                text.setText(plan.throwable.toString());
-                l.addView(text);
-            } else {
-                text.setTextSize(20);
-                text.setText(plan.date);
-                //l.addView(text);
-                if(!plan.special.isEmpty()) {
-                    LinearLayout l1 = new LinearLayout(getActivity());
-                    l1.setOrientation(LinearLayout.VERTICAL);
-                    TextView tv = new TextView(getActivity());
-                    TextView tv4 = new TextView(getActivity());
-                    tv4.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + plan.special));
-                    l1.addView(tv4);
-                    l.addView(l1);
-                }
-
-                LinearLayout l2 = new LinearLayout(getActivity());
-                l2.setOrientation(LinearLayout.VERTICAL);
-                l.addView(l2);
-                createTable(plan.entries, true, inflater, l2);
+        } else if((type == TYPE_OVERVIEW && (planm.throwable != null || planh.throwable != null)) || (plan != null && plan.throwable != null)) {
+                createButtonWithText(l, "Keine Verbindung", "Nochmal", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GGApp.GG_APP.refreshAsync(null, true);
+                    }
+                });
+        } else {
+            if(!plan.special.isEmpty()) {
+                LinearLayout l1 = new LinearLayout(getActivity());
+                l1.setOrientation(LinearLayout.VERTICAL);
+                TextView tv = new TextView(getActivity());
+                TextView tv4 = new TextView(getActivity());
+                tv4.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + plan.special));
+                l1.addView(tv4);
+                l.addView(l1);
             }
 
+            LinearLayout l2 = new LinearLayout(getActivity());
+            l2.setOrientation(LinearLayout.VERTICAL);
+            l.addView(l2);
+            createTable(plan.entries, true, inflater, l2);
         }
+
     }
 
     @Override

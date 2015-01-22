@@ -93,7 +93,6 @@ public class GGProvider implements VPProvider {
             e.printStackTrace();
             target.throwable = e;
         }
-        target.loaded = true;
     }
 
     public static String decode(String html) {
