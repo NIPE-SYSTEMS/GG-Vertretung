@@ -290,6 +290,7 @@ public class GGFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
         LinearLayout l = new LinearLayout(getActivity());
+        l.setOrientation(LinearLayout.VERTICAL);
         createView(inflater, l);
         return l;
     }
