@@ -55,11 +55,6 @@ public class SettingsActivity extends Activity {
             addPreferencesFromResource(R.xml.preferences);
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
             sp.registerOnSharedPreferenceChangeListener(this);
-            SharedPreferences.Editor e = sp.edit();
-            e.putString("schule", gg.getDefaultSelection() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule");
-            e.putString("klasse", gg.getVPClass());
-            e.putBoolean("benachrichtigungen", gg.getNotificationsEnabled());
-            e.commit();
             String pref_schule_content = gg.getDefaultSelection() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule";
             String pref_klasse_content = gg.getVPClass();
             if(pref_klasse_content.equals(""))
@@ -71,8 +66,8 @@ public class SettingsActivity extends Activity {
             Preference pref_klasse = findPreference("klasse");
             pref_klasse.setSummary(pref_klasse_content);
 
-            //((ListPreference)findPreference("schule")).setValue(gg.getDefaultSelection() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule");
-
+            Preference update = findPreference("appupdates");
+            update.setSummary(gg.translateUpdateType(gg.getUpdateType()));
 
         }
 
@@ -86,7 +81,6 @@ public class SettingsActivity extends Activity {
             if (key.equals("schule")) {
                 ListPreference listPref = (ListPreference) pref;
                 pref.setSummary(listPref.getEntry());
-                GGApp.GG_APP.setDefaultSelection(listPref.getEntry().equals("Gymnasium Glinde") ? 0 : 1);
             } else if(key.equals("klasse")) {
                 EditTextPreference editTextPref = (EditTextPreference) pref;
                 if(editTextPref.getText().equals("")){ //Klasse
@@ -94,10 +88,11 @@ public class SettingsActivity extends Activity {
                 } else{
                     pref.setSummary(editTextPref.getText());
                 }
-                GGApp.GG_APP.setVPClass(editTextPref.getText());
-            } else if(key.equals("benachrichtigungen"))
-                GGApp.GG_APP.setNotificationsEnabled(((CheckBoxPreference)pref).isChecked());
-            GGApp.GG_APP.saveSettings();
+            } else if(key.equals("appupdates")) {
+                ListPreference listPreference = (ListPreference) pref;
+                listPreference.setSummary(listPreference.getEntry());
+            }
+
 
         }
 

@@ -23,7 +23,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 
     <application
@@ -52,7 +53,7 @@
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
         <intent-filter>
             <action android:name="android.intent.action.BOOT_COMPLETED" />
-            <action android:name="android.net.wifi.SUPPLICANT_CONNECTION_CHANGE_ACTION" />
+            <action android:name="android.net.wifi.supplicant.CONNECTION_CHANGE" />
             <category android:name="android.intent.category.DEFAULT" />
         </intent-filter>
     </receiver>

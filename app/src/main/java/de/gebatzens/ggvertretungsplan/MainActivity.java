@@ -51,7 +51,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         GGApp.GG_APP.mActivity = this;
 
-        selected = Integer.parseInt(GGApp.GG_APP.mSettings.getProperty("gg_prev_selection", "0"));
+        selected = GGApp.GG_APP.getDefaultSelection();
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
@@ -112,6 +112,12 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        GGApp.GG_APP.mActivity = null;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -120,7 +126,6 @@ public class MainActivity extends FragmentActivity {
             selected = GGApp.GG_APP.getDefaultSelection();
             GGApp.GG_APP.createProvider(selected);
             mToolbar.setTitle(GGApp.mStrings[selected]);
-            GGApp.GG_APP.saveSettings();
             GGApp.GG_APP.refreshAsync(null, true);
         }
 

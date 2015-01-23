@@ -23,7 +23,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
@@ -41,9 +43,10 @@ public class GGApp extends Application {
     public MainActivity mActivity;
     public boolean created = false;
     public VPProvider mProvider;
-    public Properties mSettings;
     public static final String[] mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule"};
-
+    public final static int TYPE_GG = 0, TYPE_SWS = 1;
+    public static final int UPDATE_DISABLE = 0, UPDATE_WLAN = 1, UPDATE_ALL = 2;
+    private SharedPreferences preferences;
     public static GGApp GG_APP;
 
 
@@ -51,6 +54,7 @@ public class GGApp extends Application {
     public void onCreate() {
         super.onCreate();
         GG_APP = this;
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         GGBroadcast.createAlarm(this);
         create();
 
@@ -59,12 +63,7 @@ public class GGApp extends Application {
     private void create() {
         created = true;
 
-        loadSettings();
-
         createProvider(getDefaultSelection());
-        //mVPToday = mProvider.getVP(mProvider.getTodayURL());
-        //mVPTomorrow = mProvider.getVP(mProvider.getTomorrowURL());
-
         refreshAsync(null, false);
 
     }
@@ -114,55 +113,25 @@ public class GGApp extends Application {
         mNotificationManager.notify(id, mBuilder.build());
     }
 
+    public int translateStringToInt(String s) {
+        if(s.equals(mStrings[TYPE_GG]))
+            return TYPE_GG;
+        else if(s.equals(mStrings[TYPE_SWS]))
+            return TYPE_SWS;
+        else
+            return -1;
+    }
+
     public String getVPClass() {
-        String str = mSettings.getProperty("gg_class", "");
-        return str;
-    }
-
-    public void setVPClass(String cl) {
-        mSettings.put("gg_class", cl);
-    }
-
-    public void setDefaultSelection(int s) {
-        mSettings.put("gg_prev_selection", ""+s);
+        return preferences.getString("klasse", "");
     }
 
     public int getDefaultSelection() {
-        return Integer.parseInt(mSettings.getProperty("gg_prev_selection", "0"));
+        return translateStringToInt(preferences.getString("schule", mStrings[TYPE_GG]));
     }
 
     public boolean getNotificationsEnabled() {
-        return Boolean.parseBoolean(mSettings.getProperty("gg_notifications", "true"));
-    }
-
-    public void setNotificationsEnabled(boolean b) {
-        mSettings.setProperty("gg_notifications", "" + b);
-    }
-
-    public void loadSettings() {
-        mSettings = new Properties();
-        try {
-            InputStream in = getApplicationContext().openFileInput("ggsettings");
-            mSettings.load(in);
-            in.close();
-        } catch (IOException e) {
-            mSettings.put("gg_prev_selection", "0");
-            mSettings.put("gg_class", "");
-            mSettings.put("gg_notifications", "true");
-            saveSettings();
-
-        }
-    }
-
-    public void saveSettings() {
-        try {
-            OutputStream out = getApplicationContext().openFileOutput("ggsettings", Context.MODE_PRIVATE);
-            mSettings.store(out, "GGSettings");
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showToast(e.getClass().getName() + ": " + e.getMessage());
-        }
+        return preferences.getBoolean("benachrichtigungen", false);
     }
 
     public void showToast(String s) {
@@ -171,13 +140,32 @@ public class GGApp extends Application {
 
     public void createProvider(int selected) {
         switch(selected) {
-            case 0:
+            case TYPE_GG:
                 mProvider = new GGProvider();
                 break;
-            case 1:
+            case TYPE_SWS:
                 mProvider = new SWSProvider();
                 break;
         }
+    }
+
+    public int translateUpdateType(String s) {
+        if(s.equals("disable"))
+            return UPDATE_DISABLE;
+        else if(s.equals("wifi"))
+            return UPDATE_WLAN;
+        else if(s.equals("all"))
+            return UPDATE_ALL;
+        return UPDATE_DISABLE;
+    }
+
+    public String translateUpdateType(int i) {
+        String[] s = getResources().getStringArray(R.array.appupdatesArray);
+        return s[i];
+    }
+
+    public int getUpdateType() {
+        return translateUpdateType(preferences.getString("appupdates", "wifi"));
     }
 
     public void refreshAsync(final Runnable finished, final boolean updateFragments) {

@@ -9,12 +9,12 @@
     </string-array>
     <string-array name="appupdatesArray">
         <item>Keine automatischen Aktualisierungen des Vertretungsplans zulassen</item>
-        <item>Vertretungsplan jederzeit automatisch aktualisieren</item>
-        <item>Vertretungsplan nur über WLAN automatisch aktualisieren</item>
+        <item>Nur über WLAN automatisch aktualisieren</item>
+        <item>Jederzeit automatisch aktualisieren</item>
     </string-array>
     <string-array name="appupdatesValues">
-        <item>Keine automatischen Aktualisierungen zulassen</item>
-        <item>Kontent jederzeit automatisch aktualisieren</item>
-        <item>Kontent nur über WLAN automatisch aktualisieren</item>
+        <item>disable</item>
+        <item>wifi</item>
+        <item>all</item>
     </string-array>
 </resources>
