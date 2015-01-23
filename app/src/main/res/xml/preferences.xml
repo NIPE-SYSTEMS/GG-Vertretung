@@ -2,22 +2,22 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference android:title="Schule"
         android:summary="Gymnasium Glinde"
-        android:defaultValue="Gymnasium Glinde"
         android:key="schule"
         android:entries="@array/schuleArray"
-        android:entryValues="@array/schuleValues" />
+        android:entryValues="@array/schuleValues"
+        android:defaultValue="Gymnasium Glinde" />
     <EditTextPreference android:title="Klasse"
         android:key="klasse"
-        android:summary="Keine ausgewählt"/>
+        android:summary="Keine ausgewählt" />
     <CheckBoxPreference android:title="Benachrichtigungen anzeigen"
-        android:defaultValue="false"
         android:summary="Benachrichtigen, wenn für deine Klasse etwas auf dem Vertretungsplan steht"
-        android:key="benachrichtigungen" />
+        android:key="benachrichtigungen"
+        android:defaultValue="true" />
     <ListPreference android:title="Automatische Updates"
         android:summary="Nur über WLAN automatisch aktualisieren"
         android:key="appupdates"
         android:entries="@array/appupdatesArray"
         android:entryValues="@array/appupdatesValues"
-        android:defaultValue="wifi"/>
+        android:defaultValue="wifi" />
 
 </PreferenceScreen>
