@@ -46,6 +46,11 @@ public class GGContentFragment extends Fragment {
         return inflater.inflate(R.layout.fragment, container, false);
     }
 
+    private int toPixels(int dp) {
+        float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
@@ -57,10 +62,10 @@ public class GGContentFragment extends Fragment {
         // it's PagerAdapter set.
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            mSlidingTabLayout.setPadding(138,0,138,0);
+            mSlidingTabLayout.setPadding(toPixels(48),0,toPixels(48),0);
         }
         else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            mSlidingTabLayout.setPadding(24,0,24,0);
+            mSlidingTabLayout.setPadding(toPixels(8),0,toPixels(8),0);
         }
         mSlidingTabLayout.setViewPager(mViewPager);
 
