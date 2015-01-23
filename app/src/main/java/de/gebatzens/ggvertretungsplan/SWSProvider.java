@@ -29,7 +29,6 @@ public class SWSProvider implements VPProvider {
     @Override
     public GGPlan getVPSync(String url) {
         GGPlan plan = new GGPlan();
-        plan.date = null;
 
         try {
             URLConnection con = new URL(url).openConnection();
@@ -46,7 +45,7 @@ public class SWSProvider implements VPProvider {
             while ((line = GGProvider.decode(reader.readLine())) != null) {
                 ln++;
 
-                if(plan.date == null) {
+                if(plan.date.isEmpty()) {
                     Matcher md = date.matcher(line);
                     if (md.find())
                         plan.date = md.group(1).trim();
