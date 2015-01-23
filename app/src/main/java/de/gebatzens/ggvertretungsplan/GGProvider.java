@@ -50,7 +50,7 @@ public class GGProvider implements VPProvider {
 
                 Matcher m = title.matcher(line);
                 if(m.find()) {
-                    target.date = m.group(1);
+                    target.date = m.group(1).substring(21).replaceAll("den", "der");
                 } else {
                     Matcher row = tr.matcher(line);
                     if(row.find()) {
@@ -133,9 +133,9 @@ public class GGProvider implements VPProvider {
 
     @Override
     public String getDay(String date) {
-        if(date.isEmpty() || date.length() < 40)
+        if(date.isEmpty() || date.length() < 20)
             return "(Bug)";
-        return date.substring(21, date.length() - 17);
+        return date.substring(0, date.length() - 17);
     }
 
 }

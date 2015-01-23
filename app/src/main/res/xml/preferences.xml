@@ -8,7 +8,7 @@
         android:entryValues="@array/schuleValues" />
     <EditTextPreference android:title="Klasse"
         android:key="klasse"
-        android:summary="Gynasium Glinde"/>
+        android:summary="Keine ausgewählt"/>
     <CheckBoxPreference android:title="Benachrichtigungen anzeigen"
         android:defaultValue="false"
         android:summary="Benachrichtigen, wenn für deine Klasse etwas auf dem Vertretungsplan steht"
