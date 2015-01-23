@@ -18,6 +18,6 @@
         android:key="appupdates"
         android:entries="@array/appupdatesArray"
         android:entryValues="@array/appupdatesValues"
-        android:defaultValue="Nur über WLAN automatisch aktualisieren"/>
+        android:defaultValue="wifi"/>
 
 </PreferenceScreen>

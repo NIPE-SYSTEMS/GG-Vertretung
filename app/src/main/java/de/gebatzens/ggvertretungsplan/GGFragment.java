@@ -23,8 +23,10 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,7 +135,6 @@ public class GGFragment extends Fragment {
     private void createButtonWithText(LinearLayout l, String text, String button, View.OnClickListener onclick) {
         //TODO center vertically
         l.setGravity(Gravity.CENTER_HORIZONTAL);
-        l.setPadding(50, 50, 50, 50);
 
         LinearLayout l2 = new LinearLayout(getActivity());
         l2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -153,10 +154,11 @@ public class GGFragment extends Fragment {
     }
 
     public void createView(LayoutInflater inflater, ViewGroup group) {
+        ScrollView sv = new ScrollView(getActivity());
         LinearLayout l = new LinearLayout(getActivity());
         l.setOrientation(LinearLayout.VERTICAL);
-        group.addView(l);
-        l.setPadding(10, 10, 10, 10);
+        sv.addView(l);
+        group.addView(sv);
         if(planh == null || planm == null) {
             TextView tv = new TextView(getActivity());
             tv.setText("Error: " + type);
@@ -166,52 +168,61 @@ public class GGFragment extends Fragment {
             String clas = GGApp.GG_APP.getVPClass();
 
             List<String[]> list = planh.getAllForClass(clas);
+            FrameLayout f2 = new FrameLayout(getActivity());
+            CardView c2 = new CardView(getActivity());
+            CardView.LayoutParams c2params = new CardView.LayoutParams(
+                    CardView.LayoutParams.MATCH_PARENT,
+                    CardView.LayoutParams.WRAP_CONTENT
+            );
+            c2params.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
+            c2.setLayoutParams(c2params);
+            c2.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
             LinearLayout l2 = new LinearLayout(getActivity());
             l2.setOrientation(LinearLayout.VERTICAL);
-            l.addView(l2);
-            TextView tv1 = createTextView(planh.date + " für "+clas+":", 10, inflater, l2);
-            tv1.setPadding(0, 0, 0, toPixels(5));
-            tv1.setTextAppearance(getActivity(), R.style.boldText);
+            c2.addView(l2);
+            f2.addView(c2);
+            l.addView(f2);
+            TextView tv2 = createTextView(planh.date + " für "+clas+":", 24, inflater, l2);
+            tv2.setPadding(0, 0, 0, toPixels(8));
+            tv2.setTextColor(getResources().getColor(android.R.color.primary_text_light));
             if(list.size() == 0) {
-                createTextView("Es fällt nichts für dich aus!", 10, inflater, l2);
+                createTextView("Es fällt nichts für dich aus!", 14, inflater, l2);
             } else
                 createTable(list, false, inflater, l2);
 
-
             if(!planh.special.isEmpty()) {
-                LinearLayout l4 = new LinearLayout(getActivity());
-                l.addView(l4);
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                lp.setMargins(0, toPixels(10), 0, 0);
-                l4.setLayoutParams(lp);
-                l4.setOrientation(LinearLayout.VERTICAL);
-                TextView tv4 = new TextView(getActivity());
-                tv4.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + planh.special));
-                l4.addView(tv4);
+                TextView tv3 = new TextView(getActivity());
+                tv3.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + planh.special));
+                l2.addView(tv3);
             }
 
             list = planm.getAllForClass(clas);
-            LinearLayout l3 = new LinearLayout(getActivity());
-            l3.setOrientation(LinearLayout.VERTICAL);
-            l.addView(l3);
-            TextView tv2 = createTextView(planm.date + " für "+clas+":", 10, inflater, l3);
-            tv2.setPadding(0, 0, 0, toPixels(5));
-            tv2.setTextAppearance(getActivity(), R.style.boldText);
+            FrameLayout f4 = new FrameLayout(getActivity());
+            CardView c4 = new CardView(getActivity());
+            CardView.LayoutParams c4params = new CardView.LayoutParams(
+                    CardView.LayoutParams.MATCH_PARENT,
+                    CardView.LayoutParams.WRAP_CONTENT
+            );
+            c4params.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
+            c4.setLayoutParams(c4params);
+            c4.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
+            LinearLayout l4 = new LinearLayout(getActivity());
+            l4.setOrientation(LinearLayout.VERTICAL);
+            c4.addView(l4);
+            f4.addView(c4);
+            l.addView(f4);
+            TextView tv4 = createTextView(planm.date + " für "+clas+":", 24, inflater, l4);
+            tv4.setPadding(0, 0, 0, toPixels(8));
+            tv4.setTextColor(getResources().getColor(android.R.color.primary_text_light));
             if(list.size() == 0) {
-                createTextView("Es fällt nichts für dich aus!", 10, inflater, l3);
+                createTextView("Es fällt nichts für dich aus!", 14, inflater, l4);
             } else
-                createTable(list, false, inflater, l3);
+                createTable(list, false, inflater, l4);
 
             if(!planm.special.isEmpty()) {
-                LinearLayout l4 = new LinearLayout(getActivity());
-                l.addView(l4);
-                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                lp.setMargins(0, toPixels(10), 0, 0);
-                l4.setLayoutParams(lp);
-                l4.setOrientation(LinearLayout.VERTICAL);
-                TextView tv4 = new TextView(getActivity());
-                tv4.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + planm.special));
-                l4.addView(tv4);
+                TextView tv5 = new TextView(getActivity());
+                tv5.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + planm.special));
+                l4.addView(tv5);
             }
 
         } else if(type == TYPE_OVERVIEW && planh.throwable == null && planm.throwable == null) {
@@ -234,27 +245,52 @@ public class GGFragment extends Fragment {
                 });
         } else {
             if(!plan.special.isEmpty()) {
-                LinearLayout l1 = new LinearLayout(getActivity());
-                l1.setOrientation(LinearLayout.VERTICAL);
-                TextView tv = new TextView(getActivity());
-                TextView tv4 = new TextView(getActivity());
-                tv4.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + plan.special));
-                l1.addView(tv4);
-                l.addView(l1);
+                FrameLayout f6 = new FrameLayout(getActivity());
+                CardView c6 = new CardView(getActivity());
+                CardView.LayoutParams c6params = new CardView.LayoutParams(
+                        CardView.LayoutParams.MATCH_PARENT,
+                        CardView.LayoutParams.WRAP_CONTENT
+                );
+                c6params.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
+                c6.setLayoutParams(c6params);
+                c6.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
+                LinearLayout l6 = new LinearLayout(getActivity());
+                l6.setOrientation(LinearLayout.VERTICAL);
+                c6.addView(l6);
+                f6.addView(c6);
+                l.addView(f6);
+                TextView tv6 = new TextView(getActivity());
+                tv6.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + planm.special));
+                l6.addView(tv6);
             }
 
-            LinearLayout l2 = new LinearLayout(getActivity());
-            l2.setOrientation(LinearLayout.VERTICAL);
-            l.addView(l2);
-            createTable(plan.entries, true, inflater, l2);
+            FrameLayout f7 = new FrameLayout(getActivity());
+            FrameLayout.LayoutParams f7params = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+            );
+            f7.setLayoutParams(f7params);
+            CardView c7 = new CardView(getActivity());
+            CardView.LayoutParams c7params = new CardView.LayoutParams(
+                    CardView.LayoutParams.MATCH_PARENT,
+                    CardView.LayoutParams.WRAP_CONTENT
+            );
+            c7params.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
+            c7.setLayoutParams(c7params);
+            c7.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
+            LinearLayout l7 = new LinearLayout(getActivity());
+            l7.setOrientation(LinearLayout.VERTICAL);
+            c7.addView(l7);
+            f7.addView(c7);
+            l.addView(f7);
+            createTable(plan.entries, true, inflater, l7);
         }
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
-        ScrollView s = new ScrollView(getActivity());
-        createView(inflater, s);
-        return s;
+        LinearLayout l = new LinearLayout(getActivity());
+        createView(inflater, l);
+        return l;
     }
 }
