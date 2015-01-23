@@ -21,6 +21,7 @@ import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -35,6 +36,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -134,30 +136,42 @@ public class GGFragment extends Fragment {
 
     private void createButtonWithText(LinearLayout l, String text, String button, View.OnClickListener onclick) {
         //TODO center vertically
-        l.setGravity(Gravity.CENTER_HORIZONTAL);
+        RelativeLayout r = new RelativeLayout(getActivity());
+        r.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        LinearLayout l2 = new LinearLayout(getActivity());
-        l2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         TextView tv = new TextView(getActivity());
+        RelativeLayout.LayoutParams tvparams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvparams.addRule(RelativeLayout.ABOVE, R.id.reload_button);
+        tvparams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        tv.setLayoutParams(tvparams);
         tv.setText(text);
-        l2.addView(tv);
-        l.addView(l2);
+        tv.setTextSize(23);
+        tv.setPadding( 0, 0, 0, toPixels(15));
+        tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        r.addView(tv);
 
-        LinearLayout l3 = new LinearLayout(getActivity());
-        l3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         Button b = new Button(getActivity());
+        RelativeLayout.LayoutParams bparams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        bparams.addRule(RelativeLayout.CENTER_VERTICAL);
+        bparams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+        b.setLayoutParams(bparams);
+        b.setId(R.id.reload_button);
         b.setText(button);
+        b.setTextSize(23);
+        b.setAllCaps(false);
+        b.setTypeface(null, Typeface.NORMAL);
         b.setOnClickListener(onclick);
-        l3.addView(b);
+        r.addView(b);
 
-        l.addView(l3);
+        l.addView(r);
     }
 
     public void createView(LayoutInflater inflater, ViewGroup group) {
         ScrollView sv = new ScrollView(getActivity());
+        sv.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
+        sv.setFillViewport(true);
         LinearLayout l = new LinearLayout(getActivity());
         l.setOrientation(LinearLayout.VERTICAL);
-        sv.addView(l);
         group.addView(sv);
         if(planh == null || planm == null) {
             TextView tv = new TextView(getActivity());
@@ -237,7 +251,8 @@ public class GGFragment extends Fragment {
 
 
         } else if((type == TYPE_OVERVIEW && (planm.throwable != null || planh.throwable != null)) || (plan != null && plan.throwable != null)) {
-                createButtonWithText(l, "Keine Verbindung", "Nochmal", new View.OnClickListener() {
+            LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                createButtonWithText(l, "Verbindung prüfen und wiederholen", "Nochmal", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         GGApp.GG_APP.refreshAsync(null, true);
@@ -285,6 +300,7 @@ public class GGFragment extends Fragment {
             l.addView(f7);
             createTable(plan.entries, true, inflater, l7);
         }
+        sv.addView(l);
     }
 
     @Override
