@@ -196,7 +196,7 @@ public class GGFragment extends Fragment {
             c2.addView(l2);
             f2.addView(c2);
             l.addView(f2);
-            TextView tv2 = createTextView(planh.date + " für "+clas+":", 24, inflater, l2);
+            TextView tv2 = createTextView(planh.date + " für "+clas+":", 20, inflater, l2);
             tv2.setPadding(0, 0, 0, toPixels(8));
             tv2.setTextColor(getResources().getColor(android.R.color.primary_text_light));
             if(list.size() == 0) {
@@ -225,7 +225,7 @@ public class GGFragment extends Fragment {
             c4.addView(l4);
             f4.addView(c4);
             l.addView(f4);
-            TextView tv4 = createTextView(planm.date + " für "+clas+":", 24, inflater, l4);
+            TextView tv4 = createTextView(planm.date + " für "+clas+":", 20, inflater, l4);
             tv4.setPadding(0, 0, 0, toPixels(8));
             tv4.setTextColor(getResources().getColor(android.R.color.primary_text_light));
             if(list.size() == 0) {
