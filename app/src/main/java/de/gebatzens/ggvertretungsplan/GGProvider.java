@@ -31,8 +31,19 @@ import java.util.regex.Pattern;
 
 public class GGProvider implements VPProvider {
 
+    String mTDUrl, mTMUrl;
+    GGApp ggapp;
+
+    public GGProvider(GGApp gg) {
+        ggapp = gg;
+        mTDUrl = gg.urlProps == null ? null : gg.urlProps.getProperty("ggurltd");
+        mTMUrl = gg.urlProps == null ? null : gg.urlProps.getProperty("ggurltm");
+    }
+
     public static void load(GGPlan target, String s) {
         try {
+            if(s == null || s.isEmpty())
+                throw new VPUrlFileException();
             URLConnection con = new URL(s).openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
 
@@ -89,7 +100,7 @@ public class GGProvider implements VPProvider {
             }
 
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             target.throwable = e;
         }
@@ -123,12 +134,12 @@ public class GGProvider implements VPProvider {
 
     @Override
     public String getTodayURL() {
-        return "http://gymglinde.de/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_heute.htm";
+        return mTDUrl;
     }
 
     @Override
     public String getTomorrowURL() {
-        return "http://gymglinde.de/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_morgen.htm";
+        return mTMUrl;
     }
 
     @Override

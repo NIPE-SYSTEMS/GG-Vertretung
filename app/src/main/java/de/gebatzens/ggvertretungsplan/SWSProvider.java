@@ -26,11 +26,22 @@ import java.util.regex.Pattern;
 
 public class SWSProvider implements VPProvider {
 
+    String mTDUrl, mTMUrl;
+    GGApp ggapp;
+
+    public SWSProvider(GGApp gg) {
+        ggapp = gg;
+        mTDUrl = gg.urlProps == null ? null : gg.urlProps.getProperty("swsurltd");
+        mTMUrl = gg.urlProps == null ? null : gg.urlProps.getProperty("swsurltm");
+    }
+
     @Override
     public GGPlan getVPSync(String url) {
         GGPlan plan = new GGPlan();
 
         try {
+            if(url == null || url.isEmpty())
+                throw new VPUrlFileException();
             URLConnection con = new URL(url).openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
 
@@ -119,11 +130,11 @@ public class SWSProvider implements VPProvider {
 
     @Override
     public String getTodayURL() {
-        return "http://www.sachsenwaldschule.org/index.php?id=262";
+        return mTDUrl;
     }
 
     @Override
     public String getTomorrowURL() {
-        return "http://www.sachsenwaldschule.org/index.php?id=263";
+        return mTMUrl;
     }
 }

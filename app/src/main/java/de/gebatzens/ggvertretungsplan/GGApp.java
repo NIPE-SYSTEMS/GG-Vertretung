@@ -25,12 +25,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,31 +44,42 @@ public class GGApp extends Application {
 
     public GGPlan mVPToday, mVPTomorrow;
     public MainActivity mActivity;
-    public boolean created = false;
     public VPProvider mProvider;
     public static final String[] mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule"};
     public final static int TYPE_GG = 0, TYPE_SWS = 1;
     public static final int UPDATE_DISABLE = 0, UPDATE_WLAN = 1, UPDATE_ALL = 2;
     private SharedPreferences preferences;
     public static GGApp GG_APP;
-
+    public boolean urlsLoaded;
+    public Properties urlProps;
 
     @Override
     public void onCreate() {
         super.onCreate();
         GG_APP = this;
+        urlsLoaded = loadURLFile();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         GGBroadcast.createAlarm(this);
-        create();
-
-    }
-
-    private void create() {
-        created = true;
-
         createProvider(getDefaultSelection());
         refreshAsync(null, false);
 
+    }
+
+    public boolean loadURLFile() {
+        Properties properties = new Properties();
+        try {
+            InputStream in = new FileInputStream(new File(Environment.getExternalStorageDirectory(), "ggsec.conf"));
+
+            properties.load(in);
+            in.close();
+        } catch(IOException io) {
+            io.printStackTrace();
+            return false;
+        }
+
+        urlProps = properties;
+
+        return true;
     }
 
     public void createNotification(String title, String message, int id, String... strings) {
@@ -141,10 +155,10 @@ public class GGApp extends Application {
     public void createProvider(int selected) {
         switch(selected) {
             case TYPE_GG:
-                mProvider = new GGProvider();
+                mProvider = new GGProvider(this);
                 break;
             case TYPE_SWS:
-                mProvider = new SWSProvider();
+                mProvider = new SWSProvider(this);
                 break;
         }
     }

@@ -251,13 +251,15 @@ public class GGFragment extends Fragment {
 
 
         } else if((type == TYPE_OVERVIEW && (planm.throwable != null || planh.throwable != null)) || (plan != null && plan.throwable != null)) {
+
             LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                createButtonWithText(l, "Verbindung prüfen und wiederholen", "Nochmal", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        GGApp.GG_APP.refreshAsync(null, true);
-                    }
-                });
+            String text = planm.throwable != null && planm.throwable instanceof VPUrlFileException ? "Die URL-Datei ist ungültig oder nicht vorhanden!" : "Verbindung prüfen und wiederholen";
+            createButtonWithText(l, text, "Nochmal", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GGApp.GG_APP.refreshAsync(null, true);
+                }
+            });
         } else {
             if(!plan.special.isEmpty()) {
                 FrameLayout f6 = new FrameLayout(getActivity());
