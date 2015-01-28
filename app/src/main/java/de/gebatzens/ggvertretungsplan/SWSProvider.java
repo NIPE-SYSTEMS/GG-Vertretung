@@ -31,8 +31,8 @@ public class SWSProvider implements VPProvider {
 
     public SWSProvider(GGApp gg) {
         ggapp = gg;
-        mTDUrl = gg.urlProps == null ? null : gg.urlProps.getProperty("swsurltd");
-        mTMUrl = gg.urlProps == null ? null : gg.urlProps.getProperty("swsurltm");
+        mTDUrl = "http://www.sachsenwaldschule.org/index.php?id=262";
+        mTMUrl = "http://www.sachsenwaldschule.org/index.php?id=263";
     }
 
     @Override

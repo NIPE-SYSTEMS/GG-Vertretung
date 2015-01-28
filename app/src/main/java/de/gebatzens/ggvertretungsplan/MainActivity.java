@@ -18,24 +18,14 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -51,7 +41,7 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         GGApp.GG_APP.mActivity = this;
 
-        selected = GGApp.GG_APP.getDefaultSelection();
+        selected = GGApp.GG_APP.getSelectedProvider();
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
@@ -123,7 +113,7 @@ public class MainActivity extends FragmentActivity {
 
         if(requestCode == 1 && resultCode == RESULT_OK) { //Settings changed
             mContent.mGGFrag.setFragmentsLoading();
-            selected = GGApp.GG_APP.getDefaultSelection();
+            selected = GGApp.GG_APP.getSelectedProvider();
             GGApp.GG_APP.createProvider(selected);
             mToolbar.setTitle(GGApp.mStrings[selected]);
             GGApp.GG_APP.refreshAsync(null, true);

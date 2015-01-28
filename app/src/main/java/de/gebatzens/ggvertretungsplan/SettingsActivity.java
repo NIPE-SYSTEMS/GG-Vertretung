@@ -23,22 +23,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
-import java.util.List;
 
 public class SettingsActivity extends Activity {
 
@@ -55,8 +48,8 @@ public class SettingsActivity extends Activity {
             addPreferencesFromResource(R.xml.preferences);
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
             sp.registerOnSharedPreferenceChangeListener(this);
-            String pref_schule_content = gg.getDefaultSelection() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule";
-            String pref_klasse_content = gg.getVPClass();
+            String pref_schule_content = gg.getSelectedProvider() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule";
+            String pref_klasse_content = gg.getSelectedGrade();
             if(pref_klasse_content.equals(""))
                 pref_klasse_content = "Keine ausgewählt";
 

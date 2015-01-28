@@ -25,7 +25,7 @@ public class VPUrlFileException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "The URL file /sdcard/ggsec.conf is invalid or missing!";
+        return "The URL file ggsec.conf is invalid or missing!";
     }
 
 }

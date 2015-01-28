@@ -17,7 +17,6 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -25,19 +24,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Properties;
 
 public class GGApp extends Application {
@@ -60,7 +53,7 @@ public class GGApp extends Application {
         urlsLoaded = loadURLFile();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         GGBroadcast.createAlarm(this);
-        createProvider(getDefaultSelection());
+        createProvider(getSelectedProvider());
         refreshAsync(null, false);
 
     }
@@ -68,8 +61,7 @@ public class GGApp extends Application {
     public boolean loadURLFile() {
         Properties properties = new Properties();
         try {
-            InputStream in = new FileInputStream(new File(Environment.getExternalStorageDirectory(), "ggsec.conf"));
-
+            InputStream in = openFileInput("ggsec.conf");
             properties.load(in);
             in.close();
         } catch(IOException io) {
@@ -136,15 +128,15 @@ public class GGApp extends Application {
             return -1;
     }
 
-    public String getVPClass() {
+    public String getSelectedGrade() {
         return preferences.getString("klasse", "");
     }
 
-    public int getDefaultSelection() {
+    public int getSelectedProvider() {
         return translateStringToInt(preferences.getString("schule", mStrings[TYPE_GG]));
     }
 
-    public boolean getNotificationsEnabled() {
+    public boolean notificationsEnabled() {
         return preferences.getBoolean("benachrichtigungen", false);
     }
 

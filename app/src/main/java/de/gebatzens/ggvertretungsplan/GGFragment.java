@@ -17,22 +17,25 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -42,7 +45,22 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.io.BufferedInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.URL;
+import java.security.cert.X509Certificate;
 import java.util.List;
+import java.util.Scanner;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class GGFragment extends Fragment {
 
@@ -135,7 +153,6 @@ public class GGFragment extends Fragment {
     }
 
     private void createButtonWithText(LinearLayout l, String text, String button, View.OnClickListener onclick) {
-        //TODO center vertically
         RelativeLayout r = new RelativeLayout(getActivity());
         r.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -166,7 +183,7 @@ public class GGFragment extends Fragment {
         l.addView(r);
     }
 
-    public void createView(LayoutInflater inflater, ViewGroup group) {
+    public void createView(final LayoutInflater inflater, ViewGroup group) {
         ScrollView sv = new ScrollView(getActivity());
         sv.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
         sv.setFillViewport(true);
@@ -178,8 +195,8 @@ public class GGFragment extends Fragment {
             tv.setText("Error: " + type);
             l.addView(tv);
             Log.w("ggvp", "setParams not called " + type + " " + this + " " + getParentFragment());
-        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getVPClass().equals("") && planh.throwable == null && planm.throwable == null) {
-            String clas = GGApp.GG_APP.getVPClass();
+        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getSelectedGrade().equals("") && planh.throwable == null && planm.throwable == null) {
+            String clas = GGApp.GG_APP.getSelectedGrade();
 
             List<String[]> list = planh.getAllForClass(clas);
             FrameLayout f2 = new FrameLayout(getActivity());
@@ -253,13 +270,135 @@ public class GGFragment extends Fragment {
         } else if((type == TYPE_OVERVIEW && (planm.throwable != null || planh.throwable != null)) || (plan != null && plan.throwable != null)) {
 
             LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            String text = planm.throwable != null && planm.throwable instanceof VPUrlFileException ? "Die URL-Datei ist ungültig oder nicht vorhanden!" : "Verbindung prüfen und wiederholen";
-            createButtonWithText(l, text, "Nochmal", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    GGApp.GG_APP.refreshAsync(null, true);
-                }
-            });
+            boolean b = planm.throwable != null && planm.throwable instanceof VPUrlFileException;
+            if(!b)
+                createButtonWithText(l, "Verbindung überprüfen und wiederholen", "Nochmal", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GGApp.GG_APP.refreshAsync(null, true);
+                    }
+                });
+            else
+                createButtonWithText(l, "Du musst dich anmelden!", "Anmelden", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View c) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("Login");
+                        builder.setView(inflater.inflate(R.layout.login_dialog, null));
+
+                        builder.setPositiveButton("Einloggen", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(final DialogInterface dialog, int which) {
+                                new AsyncTask<Integer, Integer, Integer>() {
+
+                                    @Override
+                                    public void onProgressUpdate(Integer... values) {
+                                        if(values.length == 0)
+                                            return;
+                                        if(values[0] == 10)
+                                            GGApp.GG_APP.showToast("Benutzername oder Passwort falsch");
+                                        else if(values[0] == 20)
+                                            GGApp.GG_APP.showToast("Konnte keine Verbindung zum Anmeldeserver herstellen");
+                                        else if(values[0] == 30)
+                                            GGApp.GG_APP.showToast("Unbekannter Fehler bei der Anmeldung");
+                                    }
+
+                                    @Override
+                                    protected Integer doInBackground(Integer... params) {
+                                        String user = ((EditText)((Dialog)dialog).findViewById(R.id.usernameInput)).getText().toString();
+                                        String pass = ((EditText)((Dialog)dialog).findViewById(R.id.passwordInput)).getText().toString();
+                                        try {
+                                            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                                                @Override
+                                                public java.security.cert.X509Certificate[] getAcceptedIssuers() { return null; }
+                                                @Override
+                                                public void checkClientTrusted(X509Certificate[] certs, String authType) {}
+                                                @Override
+                                                public void checkServerTrusted(X509Certificate[] certs, String authType) {}
+                                            }
+                                            };
+                                            SSLContext sc = SSLContext.getInstance("TLS");
+                                            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+
+                                            HttpsURLConnection con = (HttpsURLConnection) new URL("https://gebatzens.de/api/getgg.php").openConnection();
+                                            con.setRequestMethod("POST");
+
+                                            con.setSSLSocketFactory(sc.getSocketFactory());
+                                            con.setHostnameVerifier(new HostnameVerifier() {
+                                                @Override
+                                                public boolean verify(String hostname, SSLSession session) {
+                                                    return true;
+                                                }
+                                            });
+
+                                            con.setDoOutput(true);
+                                            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+                                            wr.writeBytes("user=" + user + "&pw=" + pass);
+                                            wr.flush();
+                                            wr.close();
+
+                                            int resp = con.getResponseCode();
+                                            if(resp == 200) {
+                                                Scanner scan = new Scanner(new BufferedInputStream(con.getInputStream()));
+                                                String data = "";
+                                                while(scan.hasNextLine())
+                                                    data += scan.nextLine() + "\n";
+                                                scan.close();
+
+                                                Writer out = new OutputStreamWriter(getActivity().openFileOutput("ggsec.conf", Context.MODE_PRIVATE));
+                                                out.write(data);
+                                                out.flush();
+                                                out.close();
+
+                                                if(!GGApp.GG_APP.loadURLFile())
+                                                    publishProgress(30);
+                                                else {
+                                                    GGApp.GG_APP.createProvider(GGApp.GG_APP.getSelectedProvider());
+                                                    getActivity().runOnUiThread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            ((MainActivity) getActivity()).mContent.mGGFrag.setFragmentsLoading();
+                                                        }
+                                                    });
+                                                    GGApp.GG_APP.refreshAsync(null, true);
+                                                }
+
+
+                                            } else {
+                                                publishProgress(10);
+
+                                            }
+
+
+
+                                        } catch(Exception e) {
+                                            e.printStackTrace();
+                                            if(e instanceof IOException)
+                                                publishProgress(20);
+                                            else
+                                                publishProgress(30);
+
+                                        }
+                                        return null;
+                                    }
+                                }.execute();
+                                dialog.dismiss();
+                            }
+                        });
+
+
+                        builder.setNegativeButton("Abbrenchen", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        builder.create().show();
+
+                    }
+                });
         } else {
             if(!plan.special.isEmpty()) {
                 FrameLayout f6 = new FrameLayout(getActivity());

@@ -29,14 +29,12 @@ import android.util.Log;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Properties;
 
 public class GGBroadcast extends BroadcastReceiver {
 
     public void checkForUpdates(final GGApp gg, boolean notification) {
-        if(!gg.getNotificationsEnabled() && notification)
+        if(!gg.notificationsEnabled() && notification)
             return;
         if(gg.getUpdateType() == GGApp.UPDATE_DISABLE) {
             Log.w("ggvp", "update disabled");
@@ -79,9 +77,9 @@ public class GGBroadcast extends BroadcastReceiver {
         boolean b = false;
 
         String[] td = p.getProperty("todayles").split(";");
-        String[] tdn = new String[today.getAllForClass(gg.getVPClass()).size()];
+        String[] tdn = new String[today.getAllForClass(gg.getSelectedGrade()).size()];
         int i = 0;
-        for(String[] ss : today.getAllForClass(gg.getVPClass())) {
+        for(String[] ss : today.getAllForClass(gg.getSelectedGrade())) {
             tdn[i] = ss[1];
             i++;
         }
@@ -94,9 +92,9 @@ public class GGBroadcast extends BroadcastReceiver {
         }
 
         String[] tm = p.getProperty("tomoles").split(";");
-        String[] tmn = new String[tomo.getAllForClass(gg.getVPClass()).size()];
+        String[] tmn = new String[tomo.getAllForClass(gg.getSelectedGrade()).size()];
         i = 0;
-        for(String[] ss : tomo.getAllForClass(gg.getVPClass())) {
+        for(String[] ss : tomo.getAllForClass(gg.getSelectedGrade())) {
             tmn[i] = ss[1];
             i++;
         }
