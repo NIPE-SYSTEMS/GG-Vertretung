@@ -32,5 +32,6 @@ public interface VPProvider {
     public String getDay(String date);
     public int getColor();
     public int getDarkColor();
+    public int getTheme();
 
 }

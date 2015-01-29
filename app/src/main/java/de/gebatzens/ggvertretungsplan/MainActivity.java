@@ -48,6 +48,7 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
+        setTheme(GGApp.GG_APP.mProvider.getTheme());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             GGApp.GG_APP.setStatusBarColor(getWindow());
         }
@@ -124,6 +125,7 @@ public class MainActivity extends FragmentActivity {
             selected = GGApp.GG_APP.getSelectedProvider();
             GGApp.GG_APP.createProvider(selected);
             mToolbar.setTitle(GGApp.mStrings[selected]);
+            setTheme(GGApp.GG_APP.mProvider.getTheme());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 GGApp.GG_APP.setStatusBarColor(getWindow());
             }
