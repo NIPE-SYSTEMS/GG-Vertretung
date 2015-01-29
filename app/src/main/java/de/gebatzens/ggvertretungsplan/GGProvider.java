@@ -149,4 +149,14 @@ public class GGProvider implements VPProvider {
         return date.substring(0, date.length() - 17);
     }
 
+    @Override
+    public int getColor() {
+        return GGApp.GG_APP.getResources().getColor(R.color.main_orange);
+    }
+
+    @Override
+    public int getDarkColor() {
+        return GGApp.GG_APP.getResources().getColor(R.color.main_orange_dark);
+    }
+
 }

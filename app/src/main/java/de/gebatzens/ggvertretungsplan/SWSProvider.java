@@ -137,4 +137,14 @@ public class SWSProvider implements VPProvider {
     public String getTomorrowURL() {
         return mTMUrl;
     }
+
+    @Override
+    public int getColor() {
+        return GGApp.GG_APP.getResources().getColor(R.color.main_blue);
+    }
+
+    @Override
+    public int getDarkColor() {
+        return GGApp.GG_APP.getResources().getColor(R.color.main_blue_dark);
+    }
 }

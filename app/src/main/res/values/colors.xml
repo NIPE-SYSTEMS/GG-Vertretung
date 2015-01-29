@@ -22,4 +22,8 @@
     <color name="custom_material_red">#db4437</color>
     <color name="custom_material_blue">#4285f4</color>
     <color name="custom_material_orange">#f4b400</color>
+    <color name="main_blue">#2196F3</color>
+    <color name="main_blue_dark">#1976D2</color>
+    <color name="main_orange">#FF9800</color>
+    <color name="main_orange_dark">#F57C00</color>
 </resources>
