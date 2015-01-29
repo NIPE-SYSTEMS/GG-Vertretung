@@ -140,11 +140,11 @@ public class SWSProvider implements VPProvider {
 
     @Override
     public int getColor() {
-        return R.color.main_blue;
+        return GGApp.GG_APP.getResources().getColor(R.color.main_blue);
     }
 
     @Override
     public int getDarkColor() {
-        return R.color.main_blue_dark;
+        return GGApp.GG_APP.getResources().getColor(R.color.main_blue_dark);
     }
 }

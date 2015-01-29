@@ -22,6 +22,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
@@ -31,6 +32,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 public class SettingsActivity extends Activity {
@@ -38,6 +41,7 @@ public class SettingsActivity extends Activity {
     private Toolbar mToolBar;
     private GGPFragment mFrag;
     private static boolean changed;
+    int selected = 0;
 
     public static class GGPFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -115,8 +119,15 @@ public class SettingsActivity extends Activity {
 
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(GGApp.GG_APP.mProvider.getDarkColor());
+        }
 
         mToolBar = (Toolbar) contentView.findViewById(R.id.toolbar);
+        mToolBar.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
         mToolBar.setTitleTextColor(Color.WHITE);
         mToolBar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {

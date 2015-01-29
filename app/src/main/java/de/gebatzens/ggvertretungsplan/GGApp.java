@@ -94,7 +94,7 @@ public class GGApp extends Application {
 
             mBuilder.setStyle(inboxStyle);
         }
-        mBuilder.setColor(getResources().getColor(R.color.main));
+        mBuilder.setColor(getResources().getColor(R.color.main_blue));
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, MainActivity.class);
 

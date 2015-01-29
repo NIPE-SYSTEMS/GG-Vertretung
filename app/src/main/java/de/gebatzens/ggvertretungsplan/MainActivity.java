@@ -20,12 +20,15 @@ package de.gebatzens.ggvertretungsplan;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 
 import java.util.List;
 
@@ -45,6 +48,13 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = this.getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(GGApp.GG_APP.mProvider.getDarkColor());
+        }
+
         List<Fragment> frags = getSupportFragmentManager().getFragments();
         if(frags != null)
             for(Fragment frag : frags) {
@@ -62,6 +72,7 @@ public class MainActivity extends FragmentActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
+        mToolbar.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -116,6 +127,14 @@ public class MainActivity extends FragmentActivity {
             selected = GGApp.GG_APP.getSelectedProvider();
             GGApp.GG_APP.createProvider(selected);
             mToolbar.setTitle(GGApp.mStrings[selected]);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Window window = this.getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.setStatusBarColor(GGApp.GG_APP.mProvider.getDarkColor());
+            }
+            mToolbar.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
+            mContent.mSlidingTabLayout.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
             GGApp.GG_APP.refreshAsync(null, true);
         }
 

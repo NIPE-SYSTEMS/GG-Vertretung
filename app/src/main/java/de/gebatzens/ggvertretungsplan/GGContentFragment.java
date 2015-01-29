@@ -18,11 +18,13 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.content.res.Configuration;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +33,7 @@ import android.widget.TableLayout;
 
 public class GGContentFragment extends Fragment {
 
+    Toolbar mToolbar;
     ViewPager mViewPager;
     SlidingTabLayout mSlidingTabLayout;
     GGFragmentAdapter mGGFrag;
@@ -60,7 +63,13 @@ public class GGContentFragment extends Fragment {
 
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
+
+        mToolbar = (Toolbar) ((MainActivity) this.getActivity()).mToolbar;
+        ColorDrawable mToolbarColor = (ColorDrawable) mToolbar.getBackground();
+        int mToolbarColorId = mToolbarColor.getColor();
+
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
+        mSlidingTabLayout.setBackgroundColor(mToolbarColorId);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
             mSlidingTabLayout.setPadding(toPixels(48),0,toPixels(48),0);
         }
