@@ -18,10 +18,12 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.content.Context;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
+import android.widget.ScrollView;
 
 public class GGSwipeLayout extends SwipeRefreshLayout {
 
@@ -41,6 +43,12 @@ public class GGSwipeLayout extends SwipeRefreshLayout {
                 MotionEvent m = MotionEvent.obtain(event);
                 mPrevX = m.getX();
                 m.recycle();
+                int i = ((MainActivity) getContext()).mContent.mViewPager.getCurrentItem();
+                GGFragment frag = (GGFragment) ((FragmentPagerAdapter) ((MainActivity) getContext()).mContent.mViewPager.getAdapter()).getItem(i);
+                ScrollView sv = (ScrollView) frag.getView().findViewWithTag("ggfrag_scrollview");
+
+                if(sv.getScrollY() != 0)
+                    return false;
                 break;
 
             case MotionEvent.ACTION_MOVE:

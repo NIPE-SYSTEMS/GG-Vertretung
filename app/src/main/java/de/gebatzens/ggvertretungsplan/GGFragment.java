@@ -187,6 +187,7 @@ public class GGFragment extends Fragment {
         ScrollView sv = new ScrollView(getActivity());
         sv.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
         sv.setFillViewport(true);
+        sv.setTag("ggfrag_scrollview");
         LinearLayout l = new LinearLayout(getActivity());
         l.setOrientation(LinearLayout.VERTICAL);
         group.addView(sv);
