@@ -93,6 +93,7 @@ public class GGContentFragment extends Fragment {
                 R.color.custom_material_red,
                 R.color.custom_material_blue,
                 R.color.custom_material_orange);
+
     }
 
 }

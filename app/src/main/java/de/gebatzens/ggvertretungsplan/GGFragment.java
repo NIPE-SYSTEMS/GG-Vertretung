@@ -320,17 +320,18 @@ public class GGFragment extends Fragment {
                                             };
                                             SSLContext sc = SSLContext.getInstance("TLS");
                                             sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                                            HostnameVerifier hv = new HostnameVerifier() {
+                                                @Override
+                                                public boolean verify(String hostname, SSLSession session) {
+                                                    return true;
+                                                };
+                                            };
 
                                             HttpsURLConnection con = (HttpsURLConnection) new URL("https://gebatzens.de/api/getgg.php").openConnection();
                                             con.setRequestMethod("POST");
 
                                             con.setSSLSocketFactory(sc.getSocketFactory());
-                                            con.setHostnameVerifier(new HostnameVerifier() {
-                                                @Override
-                                                public boolean verify(String hostname, SSLSession session) {
-                                                    return true;
-                                                }
-                                            });
+                                            con.setHostnameVerifier(hv);
 
                                             con.setDoOutput(true);
                                             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
