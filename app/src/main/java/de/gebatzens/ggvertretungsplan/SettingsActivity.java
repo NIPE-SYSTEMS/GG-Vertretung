@@ -120,10 +120,7 @@ public class SettingsActivity extends Activity {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = this.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(GGApp.GG_APP.mProvider.getDarkColor());
+            GGApp.GG_APP.setStatusBarColor(getWindow());
         }
 
         mToolBar = (Toolbar) contentView.findViewById(R.id.toolbar);

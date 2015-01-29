@@ -17,6 +17,7 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.annotation.TargetApi;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -24,13 +25,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.Target;
 import java.util.Properties;
 
 public class GGApp extends Application {
@@ -196,6 +201,13 @@ public class GGApp extends Application {
                 return null;
             }
         }.execute();
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setStatusBarColor(Window w) {
+        w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        w.setStatusBarColor(GGApp.GG_APP.mProvider.getDarkColor());
     }
 
 

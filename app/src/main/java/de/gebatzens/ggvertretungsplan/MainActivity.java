@@ -49,10 +49,7 @@ public class MainActivity extends FragmentActivity {
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = this.getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(GGApp.GG_APP.mProvider.getDarkColor());
+            GGApp.GG_APP.setStatusBarColor(getWindow());
         }
 
         List<Fragment> frags = getSupportFragmentManager().getFragments();
@@ -128,10 +125,7 @@ public class MainActivity extends FragmentActivity {
             GGApp.GG_APP.createProvider(selected);
             mToolbar.setTitle(GGApp.mStrings[selected]);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Window window = this.getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                window.setStatusBarColor(GGApp.GG_APP.mProvider.getDarkColor());
+                GGApp.GG_APP.setStatusBarColor(getWindow());
             }
             mToolbar.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
             mContent.mSlidingTabLayout.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
