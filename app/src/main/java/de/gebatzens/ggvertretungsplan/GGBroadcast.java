@@ -46,8 +46,8 @@ public class GGBroadcast extends BroadcastReceiver {
             return;
         }
         VPProvider prov = gg.mProvider;
-        GGPlan today = prov.getVPSync(prov.getTodayURL());
-        GGPlan tomo = prov.getVPSync(prov.getTomorrowURL());
+        GGPlan today = prov.getVPSync(prov.getTodayURL(), false);
+        GGPlan tomo = prov.getVPSync(prov.getTomorrowURL(), false);
 
         if(today.throwable != null || tomo.throwable != null)
             return;

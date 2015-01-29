@@ -21,6 +21,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +38,7 @@ public class SWSProvider implements VPProvider {
     }
 
     @Override
-    public GGPlan getVPSync(String url) {
+    public GGPlan getVPSync(String url, boolean toast) {
         GGPlan plan = new GGPlan();
 
         try {
@@ -109,11 +111,30 @@ public class SWSProvider implements VPProvider {
                 }
 
             }
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+            plan.loadDate = sdf.format(new Date());
         } catch (Exception e) {
             e.printStackTrace();
             plan.throwable = e;
         }
 
+
+        if(plan.throwable == null)
+            plan.save(GGApp.GG_APP, url == mTDUrl ? "swstd" : "swstm");
+        else {
+            if(plan.load(GGApp.GG_APP, url == mTDUrl ? "swstd" : "swstm")) {
+                final String message = plan.throwable.getMessage();
+                plan.loadDate += " (Offline)";
+                plan.throwable = null;
+                if(toast)
+                    GGApp.GG_APP.mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            GGApp.GG_APP.showToast("Fehler beim Laden: " + message);
+                        }
+                    });
+            }
+        }
 
         return plan;
     }

@@ -185,8 +185,8 @@ public class GGApp extends Application {
             @Override
             protected Void doInBackground(Object... params) {
 
-                mVPToday = mProvider.getVPSync(mProvider.getTodayURL());
-                mVPTomorrow = mProvider.getVPSync(mProvider.getTomorrowURL());
+                mVPToday = mProvider.getVPSync(mProvider.getTodayURL(), updateFragments);
+                mVPTomorrow = mProvider.getVPSync(mProvider.getTomorrowURL(), updateFragments);
 
                 if(updateFragments)
                     mActivity.runOnUiThread(new Runnable() {

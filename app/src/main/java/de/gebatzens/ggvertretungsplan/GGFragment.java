@@ -136,7 +136,7 @@ public class GGFragment extends Fragment {
         return t;
     }
 
-    public View createTable(List<String[]> list, boolean clas, LayoutInflater inflater, ViewGroup group) {
+    public View createTable(List<String[]> list, boolean clas, LayoutInflater inflater, ViewGroup group, GGPlan plan) {
         TableLayout table = (TableLayout) inflater.inflate(clas ? R.layout.all_table : R.layout.overview_table, group, true).findViewById(R.id.plan_table);
 
         for(String[] s : list) {
@@ -197,6 +197,7 @@ public class GGFragment extends Fragment {
             l.addView(tv);
             Log.w("ggvp", "setParams not called " + type + " " + this + " " + getParentFragment());
         } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getSelectedGrade().equals("") && planh.throwable == null && planm.throwable == null) {
+            //normale Übersicht
             String clas = GGApp.GG_APP.getSelectedGrade();
 
             List<String[]> list = planh.getAllForClass(clas);
@@ -217,10 +218,13 @@ public class GGFragment extends Fragment {
             TextView tv2 = createTextView(planh.date + " für "+clas+":", 20, inflater, l2);
             tv2.setPadding(0, 0, 0, toPixels(8));
             tv2.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+            LinearLayout ls = new LinearLayout(getActivity());
+            createTextView("Stand: " + planh.loadDate, 15, inflater, ls);
+            l2.addView(ls);
             if(list.size() == 0) {
                 createTextView("Es fällt nichts für dich aus!", 14, inflater, l2);
             } else
-                createTable(list, false, inflater, l2);
+                createTable(list, false, inflater, l2, planh);
 
             if(!planh.special.isEmpty()) {
                 TextView tv3 = new TextView(getActivity());
@@ -246,10 +250,14 @@ public class GGFragment extends Fragment {
             TextView tv4 = createTextView(planm.date + " für "+clas+":", 20, inflater, l4);
             tv4.setPadding(0, 0, 0, toPixels(8));
             tv4.setTextColor(getResources().getColor(android.R.color.primary_text_light));
+
+            ls = new LinearLayout(getActivity());
+            createTextView("Stand: " + planm.loadDate, 15, inflater, ls);
+            l4.addView(ls);
             if(list.size() == 0) {
                 createTextView("Es fällt nichts für dich aus!", 14, inflater, l4);
             } else
-                createTable(list, false, inflater, l4);
+                createTable(list, false, inflater, l4, planm);
 
             if(!planm.special.isEmpty()) {
                 TextView tv5 = new TextView(getActivity());
@@ -258,6 +266,7 @@ public class GGFragment extends Fragment {
             }
 
         } else if(type == TYPE_OVERVIEW && planh.throwable == null && planm.throwable == null) {
+            //Keine Klasse
             createButtonWithText(l, "Du musst eine Klasse wählen!", "Einstellungen", new View.OnClickListener() {
 
                 @Override
@@ -269,7 +278,7 @@ public class GGFragment extends Fragment {
 
 
         } else if((type == TYPE_OVERVIEW && (planm.throwable != null || planh.throwable != null)) || (plan != null && plan.throwable != null)) {
-
+            //Irgendein Error
             LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             boolean b = planm.throwable != null && planm.throwable instanceof VPUrlFileException;
             if(!b)
@@ -441,7 +450,11 @@ public class GGFragment extends Fragment {
             c7.addView(l7);
             f7.addView(c7);
             l.addView(f7);
-            createTable(plan.entries, true, inflater, l7);
+
+            LinearLayout ls = new LinearLayout(getActivity());
+            createTextView("Stand: " + plan.loadDate, 15, inflater, ls);
+            l7.addView(ls);
+            createTable(plan.entries, true, inflater, l7, plan);
         }
         sv.addView(l);
     }

@@ -43,19 +43,19 @@ public class GGSwipeLayout extends SwipeRefreshLayout {
                 MotionEvent m = MotionEvent.obtain(event);
                 mPrevX = m.getX();
                 m.recycle();
-                int i = ((MainActivity) getContext()).mContent.mViewPager.getCurrentItem();
-                GGFragment frag = (GGFragment) ((FragmentPagerAdapter) ((MainActivity) getContext()).mContent.mViewPager.getAdapter()).getItem(i);
-                ScrollView sv = (ScrollView) frag.getView().findViewWithTag("ggfrag_scrollview");
 
-                if(sv.getScrollY() != 0)
-                    return false;
                 break;
 
             case MotionEvent.ACTION_MOVE:
                 float xd = Math.abs(event.getX() - mPrevX);
                 if (xd > mTouchSlop)
                     return false;
+                int i = ((MainActivity) getContext()).mContent.mViewPager.getCurrentItem();
+                GGFragment frag = (GGFragment) ((FragmentPagerAdapter) ((MainActivity) getContext()).mContent.mViewPager.getAdapter()).getItem(i);
+                ScrollView sv = (ScrollView) frag.getView().findViewWithTag("ggfrag_scrollview");
 
+                if(sv.getScrollY() != 0)
+                    return false;
         }
 
         return super.onInterceptTouchEvent(event);

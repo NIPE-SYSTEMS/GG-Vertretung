@@ -25,6 +25,8 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,7 +101,8 @@ public class GGProvider implements VPProvider {
                 }
             }
 
-
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+            target.loadDate = sdf.format(new Date());
         } catch (Exception e) {
             e.printStackTrace();
             target.throwable = e;
@@ -126,9 +129,25 @@ public class GGProvider implements VPProvider {
 
 
     @Override
-    public GGPlan getVPSync(String url) {
+    public GGPlan getVPSync(String url, boolean toast) {
         GGPlan p = new GGPlan();
         load(p, url);
+        Log.w("ggvp", "getVpSync " + url);
+        if(p.throwable != null) {
+            if (p.load(GGApp.GG_APP, "ggvp" + (url == mTDUrl ? "td" : "tm"))) {
+                final String message = p.throwable.getMessage();
+                p.loadDate += " (Offline)";
+                p.throwable = null;
+                if(toast)
+                    GGApp.GG_APP.mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            GGApp.GG_APP.showToast("Fehler beim Laden: " + message);
+                        }
+                    });
+            }
+        } else
+            p.save(GGApp.GG_APP, "ggvp" + (url == mTDUrl ? "td" : "tm"));
         return p;
     }
 
