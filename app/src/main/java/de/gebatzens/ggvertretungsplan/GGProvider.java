@@ -159,4 +159,9 @@ public class GGProvider implements VPProvider {
         return GGApp.GG_APP.getResources().getColor(R.color.main_orange_dark);
     }
 
+    @Override
+    public int getTheme() {
+        return R.style.AppThemeOrange;
+    }
+
 }

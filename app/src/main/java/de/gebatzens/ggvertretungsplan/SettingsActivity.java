@@ -119,6 +119,7 @@ public class SettingsActivity extends Activity {
 
         }
 
+        setTheme(GGApp.GG_APP.mProvider.getTheme());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             GGApp.GG_APP.setStatusBarColor(getWindow());
         }
