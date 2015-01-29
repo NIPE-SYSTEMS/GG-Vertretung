@@ -17,56 +17,61 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-import android.app.Activity;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
 import android.widget.Toast;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Properties;
 
 public class GGApp extends Application {
 
     public GGPlan mVPToday, mVPTomorrow;
     public MainActivity mActivity;
-    public boolean created = false;
     public VPProvider mProvider;
-    private Properties mSettings;
     public static final String[] mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule"};
-
+    public final static int TYPE_GG = 0, TYPE_SWS = 1;
+    public static final int UPDATE_DISABLE = 0, UPDATE_WLAN = 1, UPDATE_ALL = 2;
+    private SharedPreferences preferences;
     public static GGApp GG_APP;
-
+    public boolean urlsLoaded;
+    public Properties urlProps;
 
     @Override
     public void onCreate() {
         super.onCreate();
         GG_APP = this;
+        urlsLoaded = loadURLFile();
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         GGBroadcast.createAlarm(this);
-        create();
+        createProvider(getSelectedProvider());
+        refreshAsync(null, false);
 
     }
 
-    private void create() {
-        created = true;
+    public boolean loadURLFile() {
+        Properties properties = new Properties();
+        try {
+            InputStream in = openFileInput("ggsec.conf");
+            properties.load(in);
+            in.close();
+        } catch(IOException io) {
+            io.printStackTrace();
+            return false;
+        }
 
-        loadSettings();
+        urlProps = properties;
 
-        createProvider(getDefaultSelection());
-        //mVPToday = mProvider.getVP(mProvider.getTodayURL());
-        //mVPTomorrow = mProvider.getVP(mProvider.getTomorrowURL());
-
-        refreshAsync(null, false);
-
+        return true;
     }
 
     public void createNotification(String title, String message, int id, String... strings) {
@@ -114,55 +119,25 @@ public class GGApp extends Application {
         mNotificationManager.notify(id, mBuilder.build());
     }
 
-    public String getVPClass() {
-        String str = mSettings.getProperty("gg_class", "");
-        return str;
+    public int translateStringToInt(String s) {
+        if(s.equals(mStrings[TYPE_GG]))
+            return TYPE_GG;
+        else if(s.equals(mStrings[TYPE_SWS]))
+            return TYPE_SWS;
+        else
+            return -1;
     }
 
-    public void setVPClass(String cl) {
-        mSettings.put("gg_class", cl);
+    public String getSelectedGrade() {
+        return preferences.getString("klasse", "");
     }
 
-    public void setDefaultSelection(int s) {
-        mSettings.put("gg_prev_selection", ""+s);
+    public int getSelectedProvider() {
+        return translateStringToInt(preferences.getString("schule", mStrings[TYPE_GG]));
     }
 
-    public int getDefaultSelection() {
-        return Integer.parseInt(mSettings.getProperty("gg_prev_selection", "0"));
-    }
-
-    public boolean getNotificationsEnabled() {
-        return Boolean.parseBoolean(mSettings.getProperty("gg_notifications", "true"));
-    }
-
-    public void setNotificationsEnabled(boolean b) {
-        mSettings.setProperty("gg_notifications", "" + b);
-    }
-
-    public void loadSettings() {
-        mSettings = new Properties();
-        try {
-            InputStream in = getApplicationContext().openFileInput("ggsettings");
-            mSettings.load(in);
-            in.close();
-        } catch (IOException e) {
-            mSettings.put("gg_prev_selection", "0");
-            mSettings.put("gg_class", "");
-            mSettings.put("gg_notifications", "true");
-            saveSettings();
-
-        }
-    }
-
-    public void saveSettings() {
-        try {
-            OutputStream out = getApplicationContext().openFileOutput("ggsettings", Context.MODE_PRIVATE);
-            mSettings.store(out, "GGSettings");
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            showToast(e.getClass().getName() + ": " + e.getMessage());
-        }
+    public boolean notificationsEnabled() {
+        return preferences.getBoolean("benachrichtigungen", false);
     }
 
     public void showToast(String s) {
@@ -171,13 +146,32 @@ public class GGApp extends Application {
 
     public void createProvider(int selected) {
         switch(selected) {
-            case 0:
-                mProvider = new GGProvider();
+            case TYPE_GG:
+                mProvider = new GGProvider(this);
                 break;
-            case 1:
-                mProvider = new SWSProvider();
+            case TYPE_SWS:
+                mProvider = new SWSProvider(this);
                 break;
         }
+    }
+
+    public int translateUpdateType(String s) {
+        if(s.equals("disable"))
+            return UPDATE_DISABLE;
+        else if(s.equals("wifi"))
+            return UPDATE_WLAN;
+        else if(s.equals("all"))
+            return UPDATE_ALL;
+        return UPDATE_DISABLE;
+    }
+
+    public String translateUpdateType(int i) {
+        String[] s = getResources().getStringArray(R.array.appupdatesArray);
+        return s[i];
+    }
+
+    public int getUpdateType() {
+        return translateUpdateType(preferences.getString("appupdates", "wifi"));
     }
 
     public void refreshAsync(final Runnable finished, final boolean updateFragments) {

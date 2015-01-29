@@ -23,9 +23,9 @@ import java.util.List;
 public class GGPlan {
 
     public ArrayList<String[]> entries = new ArrayList<String[]>();
-    public String date;
+    public String date = "";
+    public String special = "";
     public Throwable throwable = null;
-    public boolean loaded = false;
 
     public GGPlan() {
 

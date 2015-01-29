@@ -46,21 +46,26 @@ public class GGContentFragment extends Fragment {
         return inflater.inflate(R.layout.fragment, container, false);
     }
 
+    private int toPixels(int dp) {
+        float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        mGGFrag = new GGFragmentAdapter(getActivity().getSupportFragmentManager(), savedInstanceState);
+        mGGFrag = new GGFragmentAdapter(getActivity().getSupportFragmentManager(), savedInstanceState, (MainActivity) getActivity());
         mViewPager.setAdapter(mGGFrag);
 
         // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
         // it's PagerAdapter set.
         mSlidingTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE){
-            mSlidingTabLayout.setPadding(138,0,138,0);
+            mSlidingTabLayout.setPadding(toPixels(48),0,toPixels(48),0);
         }
         else if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            mSlidingTabLayout.setPadding(24,0,24,0);
+            mSlidingTabLayout.setPadding(toPixels(8),0,toPixels(8),0);
         }
         mSlidingTabLayout.setViewPager(mViewPager);
 
@@ -88,6 +93,7 @@ public class GGContentFragment extends Fragment {
                 R.color.custom_material_red,
                 R.color.custom_material_blue,
                 R.color.custom_material_orange);
+
     }
 
 }

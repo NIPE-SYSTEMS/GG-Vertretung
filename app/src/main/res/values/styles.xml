@@ -19,7 +19,7 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light">
-
+        <item name="android:textColor">#444444</item>
     </style>
 
     <style name="boldText">
@@ -29,7 +29,7 @@
 
     <style name="normalText">
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">#555</item>
+        <item name="android:textColor">#000</item>
     </style>
 
     <style name="ToolBarStyle" parent="Theme.AppCompat.Light">

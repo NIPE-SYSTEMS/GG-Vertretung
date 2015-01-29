@@ -1,10 +1,20 @@
 <resources>
-    <string-array name="listArray">
+    <string-array name="schuleArray">
         <item>Gymnasium Glinde</item>
         <item>Sachsenwaldschule</item>
     </string-array>
-    <string-array name="listValues">
+    <string-array name="schuleValues">
         <item>Gymnasium Glinde</item>
         <item>Sachsenwaldschule</item>
+    </string-array>
+    <string-array name="appupdatesArray">
+        <item>Keine automatischen Aktualisierungen des Vertretungsplans zulassen</item>
+        <item>Nur über WLAN automatisch aktualisieren</item>
+        <item>Jederzeit automatisch aktualisieren</item>
+    </string-array>
+    <string-array name="appupdatesValues">
+        <item>disable</item>
+        <item>wifi</item>
+        <item>all</item>
     </string-array>
 </resources>

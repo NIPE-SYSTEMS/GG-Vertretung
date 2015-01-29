@@ -18,13 +18,16 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.gebatzens.ggvertretungsplan"
-    android:versionCode="2"
-    android:versionName="0.2">
+    android:versionCode="5"
+    android:versionName="0.5">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-
-
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -50,10 +53,11 @@
 
         <receiver android:enabled="true" android:name="de.gebatzens.ggvertretungsplan.GGBroadcast"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED" />
+            <action android:name="android.net.wifi.supplicant.CONNECTION_CHANGE" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent-filter>
         </receiver>
         <receiver android:name=".GGWidgetProvider" >
             <intent-filter>

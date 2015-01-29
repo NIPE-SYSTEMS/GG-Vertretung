@@ -22,27 +22,45 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Properties;
 
 public class GGBroadcast extends BroadcastReceiver {
 
-    public void checkForUpdates(GGApp gg) {
-        if(!gg.getNotificationsEnabled())
+    public void checkForUpdates(final GGApp gg, boolean notification) {
+        if(!gg.notificationsEnabled() && notification)
             return;
-
+        if(gg.getUpdateType() == GGApp.UPDATE_DISABLE) {
+            Log.w("ggvp", "update disabled");
+            return;
+        }
+        boolean w = isWlanConnected(gg);
+        if(!w && gg.getUpdateType() == GGApp.UPDATE_WLAN ) {
+            Log.w("ggvp", "wlan not conected");
+            return;
+        }
         VPProvider prov = gg.mProvider;
         GGPlan today = prov.getVPSync(prov.getTodayURL());
         GGPlan tomo = prov.getVPSync(prov.getTomorrowURL());
 
         if(today.throwable != null || tomo.throwable != null)
             return;
+
+        gg.mVPToday = today;
+        gg.mVPTomorrow = tomo;
+        if(gg.mActivity != null)
+            gg.mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    gg.mActivity.mContent.mGGFrag.updateFragments();
+                }
+            });
 
         Properties p = new Properties();
         try {
@@ -59,9 +77,9 @@ public class GGBroadcast extends BroadcastReceiver {
         boolean b = false;
 
         String[] td = p.getProperty("todayles").split(";");
-        String[] tdn = new String[today.getAllForClass(gg.getVPClass()).size()];
+        String[] tdn = new String[today.getAllForClass(gg.getSelectedGrade()).size()];
         int i = 0;
-        for(String[] ss : today.getAllForClass(gg.getVPClass())) {
+        for(String[] ss : today.getAllForClass(gg.getSelectedGrade())) {
             tdn[i] = ss[1];
             i++;
         }
@@ -74,9 +92,9 @@ public class GGBroadcast extends BroadcastReceiver {
         }
 
         String[] tm = p.getProperty("tomoles").split(";");
-        String[] tmn = new String[tomo.getAllForClass(gg.getVPClass()).size()];
+        String[] tmn = new String[tomo.getAllForClass(gg.getSelectedGrade()).size()];
         i = 0;
-        for(String[] ss : tomo.getAllForClass(gg.getVPClass())) {
+        for(String[] ss : tomo.getAllForClass(gg.getSelectedGrade())) {
             tmn[i] = ss[1];
             i++;
         }
@@ -147,8 +165,15 @@ public class GGBroadcast extends BroadcastReceiver {
         am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, 60000, AlarmManager.INTERVAL_HALF_HOUR, pi);
     }
 
+    public static boolean isWlanConnected(Context c) {
+        ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnected();
+
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.w("ggvp", "onReceive " + intent.getAction());
         if(intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
             AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
@@ -162,10 +187,42 @@ public class GGBroadcast extends BroadcastReceiver {
 
                 @Override
                 protected Void doInBackground(GGApp... params) {
-                    checkForUpdates(params[0]);
+                    checkForUpdates(params[0], true);
                     return null;
                 }
             }.execute((GGApp) context.getApplicationContext());
+
+        } else if (intent.getAction().equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
+                new AsyncTask<GGApp, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(final GGApp... params) {
+                        int s = 0;
+                        while(!isWlanConnected(params[0])) {
+                            try {
+                                Thread.sleep(300);
+                            } catch (InterruptedException e) {
+
+                            }
+                            s++;
+                            if(s > 10)
+                                return null;
+                        }
+                        if(params[0].mActivity != null) {
+                            params[0].mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    params[0].mActivity.mContent.mGGFrag.setFragmentsLoading();
+                                }
+                            });
+
+                            params[0].refreshAsync(null, true);
+                        } else {
+                            checkForUpdates(params[0], false);
+                        }
+                        return null;
+                    }
+                }.execute((GGApp) context.getApplicationContext());
 
         }
     }

@@ -17,18 +17,15 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-public interface VPProvider {
+public class VPUrlFileException extends RuntimeException {
 
-    /**
-     * starts an async task
-     * @param url
-     * @return VP
-     */
-    public GGPlan getVPSync(String url);
+    public VPUrlFileException() {
+        super();
+    }
 
-    public String getTodayURL();
-    public String getTomorrowURL();
-
-    public String getDay(String date);
+    @Override
+    public String getMessage() {
+        return "The URL file ggsec.conf is invalid or missing!";
+    }
 
 }

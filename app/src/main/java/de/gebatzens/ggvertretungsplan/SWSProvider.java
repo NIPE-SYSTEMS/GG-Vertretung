@@ -26,12 +26,22 @@ import java.util.regex.Pattern;
 
 public class SWSProvider implements VPProvider {
 
+    String mTDUrl, mTMUrl;
+    GGApp ggapp;
+
+    public SWSProvider(GGApp gg) {
+        ggapp = gg;
+        mTDUrl = "http://www.sachsenwaldschule.org/index.php?id=262";
+        mTMUrl = "http://www.sachsenwaldschule.org/index.php?id=263";
+    }
+
     @Override
     public GGPlan getVPSync(String url) {
         GGPlan plan = new GGPlan();
-        plan.date = null;
 
         try {
+            if(url == null || url.isEmpty())
+                throw new VPUrlFileException();
             URLConnection con = new URL(url).openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
 
@@ -46,7 +56,7 @@ public class SWSProvider implements VPProvider {
             while ((line = GGProvider.decode(reader.readLine())) != null) {
                 ln++;
 
-                if(plan.date == null) {
+                if(plan.date.isEmpty()) {
                     Matcher md = date.matcher(line);
                     if (md.find())
                         plan.date = md.group(1).trim();
@@ -105,17 +115,26 @@ public class SWSProvider implements VPProvider {
         }
 
 
-        plan.loaded = true;
         return plan;
     }
 
     @Override
+    public String getDay(String s) {
+        if(s.isEmpty())
+            return "Bug";
+        String[] strs = s.split(" ");
+        if(strs.length < 2)
+            return "Bug";
+        return strs[1];
+    }
+
+    @Override
     public String getTodayURL() {
-        return "http://www.sachsenwaldschule.org/index.php?id=262";
+        return mTDUrl;
     }
 
     @Override
     public String getTomorrowURL() {
-        return "http://www.sachsenwaldschule.org/index.php?id=263";
+        return mTMUrl;
     }
 }

@@ -27,10 +27,12 @@ import android.view.ViewGroup;
 public class GGFragmentAdapter extends FragmentPagerAdapter {
 
     GGFragment heute, morgen, overview;
+    MainActivity mActivity;
 
-    public GGFragmentAdapter(FragmentManager m, Bundle savedState) {
+    public GGFragmentAdapter(FragmentManager m, Bundle savedState, MainActivity ma) {
         super(m);
         createFragments();
+        mActivity = ma;
 
     }
 
@@ -51,12 +53,14 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
         heute.recreate();
         morgen.recreate();
         overview.recreate();
+        mActivity.mContent.mSlidingTabLayout.setViewPager(mActivity.mContent.mViewPager);
     }
 
     public void setFragmentsLoading() {
         heute.createLoadingFragment();
         morgen.createLoadingFragment();
         overview.createLoadingFragment();
+        mActivity.mContent.mSlidingTabLayout.setViewPager(mActivity.mContent.mViewPager);
     }
 
     @Override
@@ -86,9 +90,9 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
             case 0:
                 return "Übersicht";
             case 1:
-                return "Heute";
+                return GGApp.GG_APP.mVPToday == null ? "Heute" : GGApp.GG_APP.mVPToday.date.isEmpty() ? "Heute" : GGApp.GG_APP.mProvider.getDay(GGApp.GG_APP.mVPToday.date);
             case 2:
-                return "Morgen";
+                return GGApp.GG_APP.mVPTomorrow == null ? "Morgen" : GGApp.GG_APP.mVPTomorrow.date.isEmpty() ? "Morgen" : GGApp.GG_APP.mProvider.getDay(GGApp.GG_APP.mVPTomorrow.date);
             default:
                 return null;
         }

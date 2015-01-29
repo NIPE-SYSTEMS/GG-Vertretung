@@ -17,6 +17,8 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,14 +31,28 @@ import java.util.regex.Pattern;
 
 public class GGProvider implements VPProvider {
 
+    String mTDUrl, mTMUrl;
+    GGApp ggapp;
+
+    public GGProvider(GGApp gg) {
+        ggapp = gg;
+        mTDUrl = gg.urlProps == null ? null : gg.urlProps.getProperty("ggurltd");
+        mTMUrl = gg.urlProps == null ? null : gg.urlProps.getProperty("ggurltm");
+    }
+
     public static void load(GGPlan target, String s) {
         try {
+            if(s == null || s.isEmpty())
+                throw new VPUrlFileException();
             URLConnection con = new URL(s).openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
 
             Pattern title = Pattern.compile("<title>(.*?)</title>");
             Pattern tr = Pattern.compile("<tr .*>");
             Pattern tdata = Pattern.compile(">(.*)</td>");
+            Pattern special = Pattern.compile("<h2>.*?</h2>");
+            Pattern send = Pattern.compile("</div>");
+            Pattern extr = Pattern.compile("<p>(.*?)</p>");
             int h = 0;
             String lastClass = "Bug";
 
@@ -45,7 +61,7 @@ public class GGProvider implements VPProvider {
 
                 Matcher m = title.matcher(line);
                 if(m.find()) {
-                    target.date = m.group(1);
+                    target.date = m.group(1).substring(21).replaceAll("den", "der");
                 } else {
                     Matcher row = tr.matcher(line);
                     if(row.find()) {
@@ -66,16 +82,28 @@ public class GGProvider implements VPProvider {
 
                             target.entries.add(values);
                         }
+                    } else {
+                        Matcher sm = special.matcher(line);
+                        if(sm.find()) {
+                            String spv = "";
+                            String sp = "";
+                            while(!send.matcher(sp = reader.readLine()).find()) {
+                                Matcher mm = extr.matcher(sp);
+                                if(mm.find())
+                                    spv += mm.group(1) + " ";
+
+                            }
+                            target.special = spv;
+                        }
                     }
                 }
             }
 
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             target.throwable = e;
         }
-        target.loaded = true;
     }
 
     public static String decode(String html) {
@@ -106,12 +134,19 @@ public class GGProvider implements VPProvider {
 
     @Override
     public String getTodayURL() {
-        return "http://gymglinde.de/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_heute.htm";
+        return mTDUrl;
     }
 
     @Override
     public String getTomorrowURL() {
-        return "http://gymglinde.de/typo40/fileadmin/vertretungsplan/VertretungAktuell/PH_morgen.htm";
+        return mTMUrl;
+    }
+
+    @Override
+    public String getDay(String date) {
+        if(date.isEmpty() || date.length() < 20)
+            return "(Bug)";
+        return date.substring(0, date.length() - 17);
     }
 
 }
