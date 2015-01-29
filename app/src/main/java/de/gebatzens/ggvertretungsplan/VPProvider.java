@@ -30,5 +30,7 @@ public interface VPProvider {
     public String getTomorrowURL();
 
     public String getDay(String date);
+    public int getColor();
+    public int getDarkColor();
 
 }
