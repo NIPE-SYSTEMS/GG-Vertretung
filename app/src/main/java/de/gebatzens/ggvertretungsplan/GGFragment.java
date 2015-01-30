@@ -201,6 +201,21 @@ public class GGFragment extends Fragment {
             String clas = GGApp.GG_APP.getSelectedGrade();
 
             List<String[]> list = planh.getAllForClass(clas);
+
+
+            FrameLayout f2s = new FrameLayout(getActivity());
+            CardView c2s = new CardView(getActivity());
+            CardView.LayoutParams c2sparams = new CardView.LayoutParams(
+                    CardView.LayoutParams.MATCH_PARENT,
+                    CardView.LayoutParams.WRAP_CONTENT
+            );
+            c2sparams.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
+            c2s.setLayoutParams(c2sparams);
+            c2s.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
+            createTextView(planh.loadDate, 15, inflater, c2s);
+            f2s.addView(c2s);
+            l.addView(f2s);
+
             FrameLayout f2 = new FrameLayout(getActivity());
             CardView c2 = new CardView(getActivity());
             CardView.LayoutParams c2params = new CardView.LayoutParams(
@@ -218,9 +233,6 @@ public class GGFragment extends Fragment {
             TextView tv2 = createTextView(planh.date + " für "+clas+":", 20, inflater, l2);
             tv2.setPadding(0, 0, 0, toPixels(8));
             tv2.setTextColor(getResources().getColor(android.R.color.primary_text_light));
-            LinearLayout ls = new LinearLayout(getActivity());
-            createTextView("Stand: " + planh.loadDate, 15, inflater, ls);
-            l2.addView(ls);
             if(list.size() == 0) {
                 createTextView("Es fällt nichts für dich aus!", 14, inflater, l2);
             } else
@@ -250,10 +262,6 @@ public class GGFragment extends Fragment {
             TextView tv4 = createTextView(planm.date + " für "+clas+":", 20, inflater, l4);
             tv4.setPadding(0, 0, 0, toPixels(8));
             tv4.setTextColor(getResources().getColor(android.R.color.primary_text_light));
-
-            ls = new LinearLayout(getActivity());
-            createTextView("Stand: " + planm.loadDate, 15, inflater, ls);
-            l4.addView(ls);
             if(list.size() == 0) {
                 createTextView("Es fällt nichts für dich aus!", 14, inflater, l4);
             } else
@@ -411,6 +419,20 @@ public class GGFragment extends Fragment {
                     }
                 });
         } else {
+
+            FrameLayout f6s = new FrameLayout(getActivity());
+            CardView c6s = new CardView(getActivity());
+            CardView.LayoutParams c6sparams = new CardView.LayoutParams(
+                    CardView.LayoutParams.MATCH_PARENT,
+                    CardView.LayoutParams.WRAP_CONTENT
+            );
+            c6sparams.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
+            c6s.setLayoutParams(c6sparams);
+            c6s.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
+            createTextView(plan.loadDate, 15, inflater, c6s);
+            f6s.addView(c6s);
+            l.addView(f6s);
+
             if(!plan.special.isEmpty()) {
                 FrameLayout f6 = new FrameLayout(getActivity());
                 CardView c6 = new CardView(getActivity());
@@ -427,7 +449,7 @@ public class GGFragment extends Fragment {
                 f6.addView(c6);
                 l.addView(f6);
                 TextView tv6 = new TextView(getActivity());
-                tv6.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + planm.special));
+                tv6.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + plan.special));
                 l6.addView(tv6);
             }
 
@@ -451,9 +473,6 @@ public class GGFragment extends Fragment {
             f7.addView(c7);
             l.addView(f7);
 
-            LinearLayout ls = new LinearLayout(getActivity());
-            createTextView("Stand: " + plan.loadDate, 15, inflater, ls);
-            l7.addView(ls);
             createTable(plan.entries, true, inflater, l7, plan);
         }
         sv.addView(l);
