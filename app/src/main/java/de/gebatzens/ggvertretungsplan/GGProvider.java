@@ -31,22 +31,22 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GGProvider implements VPProvider {
+public class GGProvider extends VPProvider {
 
-    String mTDUrl, mTMUrl;
     GGApp ggapp;
 
     public GGProvider(GGApp gg) {
-        ggapp = gg;
-        mTDUrl = gg.urlProps == null ? null : gg.urlProps.getProperty("ggurltd");
-        mTMUrl = gg.urlProps == null ? null : gg.urlProps.getProperty("ggurltm");
+        super(gg);
     }
 
-    public static void load(GGPlan target, String s) {
+
+    @Override
+    public GGPlan getVPSync(String url, boolean toast) {
+        GGPlan p = new GGPlan();
         try {
-            if(s == null || s.isEmpty())
+            if(url == null || url.isEmpty())
                 throw new VPUrlFileException();
-            URLConnection con = new URL(s).openConnection();
+            URLConnection con = new URL(url).openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
 
             Pattern title = Pattern.compile("<title>(.*?)</title>");
@@ -63,7 +63,7 @@ public class GGProvider implements VPProvider {
 
                 Matcher m = title.matcher(line);
                 if(m.find()) {
-                    target.date = m.group(1).substring(21).replaceAll("den", "der");
+                    p.date = m.group(1).substring(21).replaceAll("den", "der");
                 } else {
                     Matcher row = tr.matcher(line);
                     if(row.find()) {
@@ -82,7 +82,7 @@ public class GGProvider implements VPProvider {
                                 values[0] = lastClass;
                             lastClass = values[0];
 
-                            target.entries.add(values);
+                            p.entries.add(values);
                         }
                     } else {
                         Matcher sm = special.matcher(line);
@@ -95,46 +95,23 @@ public class GGProvider implements VPProvider {
                                     spv += mm.group(1) + " ";
 
                             }
-                            target.special = spv;
+                            p.special = spv;
                         }
                     }
                 }
             }
 
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-            target.loadDate = sdf.format(new Date());
+            p.loadDate = sdf.format(new Date());
         } catch (Exception e) {
             e.printStackTrace();
-            target.throwable = e;
+            p.throwable = e;
         }
-    }
 
-    public static String decode(String html) {
-        if(html == null)
-            return null;
+        boolean b = url != null && url.equals(getTodayURL());
 
-        html = html.replaceAll("&uuml;", "ü");
-        html = html.replaceAll("&auml;", "ä");
-        html = html.replaceAll("&ouml;", "ö");
-
-        html = html.replaceAll("&Uuml;", "Ü");
-        html = html.replaceAll("&Auml;", "Ä");
-        html = html.replaceAll("&Ouml;", "Ö");
-
-        html = html.replaceAll("&nbsp;", "");
-        html = html.replaceAll("---", ""); //SWS '---'
-
-        return html;
-    }
-
-
-    @Override
-    public GGPlan getVPSync(String url, boolean toast) {
-        GGPlan p = new GGPlan();
-        load(p, url);
-        Log.w("ggvp", "getVpSync " + url);
         if(p.throwable != null) {
-            if (p.load(GGApp.GG_APP, "ggvp" + (url == mTDUrl ? "td" : "tm"))) {
+            if (p.load(GGApp.GG_APP, "ggvp" + (b ? "td" : "tm"))) {
                 final String message = p.throwable.getMessage();
                 p.loadDate = "Keine Internetverbindung\nStand: " + p.loadDate;
                 p.throwable = null;
@@ -147,18 +124,18 @@ public class GGProvider implements VPProvider {
                     });
             }
         } else
-            p.save(GGApp.GG_APP, "ggvp" + (url == mTDUrl ? "td" : "tm"));
+            p.save(GGApp.GG_APP, "ggvp" + (b ? "td" : "tm"));
         return p;
     }
 
     @Override
     public String getTodayURL() {
-        return mTDUrl;
+        return gg.urlProps == null ? null : gg.urlProps.getProperty("ggurltd");
     }
 
     @Override
     public String getTomorrowURL() {
-        return mTMUrl;
+        return gg.urlProps == null ? null : gg.urlProps.getProperty("ggurltm");
     }
 
     @Override
@@ -181,6 +158,11 @@ public class GGProvider implements VPProvider {
     @Override
     public int getTheme() {
         return R.style.AppThemeOrange;
+    }
+
+    @Override
+    public String getFullName() {
+        return "Gynmasium Glinde";
     }
 
 }

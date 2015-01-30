@@ -36,6 +36,8 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 
 public class GGApp extends Application {
@@ -43,24 +45,30 @@ public class GGApp extends Application {
     public GGPlan mVPToday, mVPTomorrow;
     public MainActivity mActivity;
     public VPProvider mProvider;
-    public static final String[] mStrings = new String[] {"Gymnasium Glinde", "Sachsenwaldschule"};
-    public final static int TYPE_GG = 0, TYPE_SWS = 1;
     public static final int UPDATE_DISABLE = 0, UPDATE_WLAN = 1, UPDATE_ALL = 2;
     private SharedPreferences preferences;
     public static GGApp GG_APP;
     public boolean urlsLoaded;
     public Properties urlProps;
+    public HashMap<String, Class<? extends VPProvider>> mProviderList = new HashMap<String, Class<? extends VPProvider>>();
 
     @Override
     public void onCreate() {
         super.onCreate();
         GG_APP = this;
+        registerProviders();
         urlsLoaded = loadURLFile();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         GGBroadcast.createAlarm(this);
-        createProvider(getSelectedProvider());
+        recreateProvider();
         refreshAsync(null, false);
 
+    }
+
+    public void registerProviders() {
+        mProviderList.clear();
+        mProviderList.put("gg", GGProvider.class);
+        mProviderList.put("sws", SWSProvider.class);
     }
 
     public boolean loadURLFile() {
@@ -124,21 +132,12 @@ public class GGApp extends Application {
         mNotificationManager.notify(id, mBuilder.build());
     }
 
-    public int translateStringToInt(String s) {
-        if(s.equals(mStrings[TYPE_GG]))
-            return TYPE_GG;
-        else if(s.equals(mStrings[TYPE_SWS]))
-            return TYPE_SWS;
-        else
-            return -1;
-    }
-
     public String getSelectedGrade() {
         return preferences.getString("klasse", "");
     }
 
-    public int getSelectedProvider() {
-        return translateStringToInt(preferences.getString("schule", mStrings[TYPE_GG]));
+    public String getSelectedProvider() {
+        return preferences.getString("schule", "gg");
     }
 
     public boolean notificationsEnabled() {
@@ -149,14 +148,19 @@ public class GGApp extends Application {
         Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
     }
 
-    public void createProvider(int selected) {
-        switch(selected) {
-            case TYPE_GG:
-                mProvider = new GGProvider(this);
-                break;
-            case TYPE_SWS:
-                mProvider = new SWSProvider(this);
-                break;
+    public void recreateProvider() {
+        createProvider(getSelectedProvider());
+    }
+
+    public void createProvider(String id) {
+        Class<? extends VPProvider> clas = mProviderList.get(id);
+        if(clas == null)
+            throw new RuntimeException("Provider for " + id + " not found");
+
+        try {
+            mProvider = (VPProvider) clas.getConstructors()[0].newInstance(this);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

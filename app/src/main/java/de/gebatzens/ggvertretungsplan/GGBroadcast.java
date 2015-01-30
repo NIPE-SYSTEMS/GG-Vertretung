@@ -200,12 +200,12 @@ public class GGBroadcast extends BroadcastReceiver {
                         int s = 0;
                         while(!isWlanConnected(params[0])) {
                             try {
-                                Thread.sleep(300);
+                                Thread.sleep(100);
                             } catch (InterruptedException e) {
 
                             }
                             s++;
-                            if(s > 10)
+                            if(s > 100)
                                 return null;
                         }
                         if(params[0].mActivity != null) {

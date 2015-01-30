@@ -4,8 +4,8 @@
         <item>Sachsenwaldschule</item>
     </string-array>
     <string-array name="schuleValues">
-        <item>Gymnasium Glinde</item>
-        <item>Sachsenwaldschule</item>
+        <item>gg</item>
+        <item>sws</item>
     </string-array>
     <string-array name="appupdatesArray">
         <item>Keine automatischen Aktualisierungen des Vertretungsplans zulassen</item>

@@ -36,15 +36,12 @@ import java.util.List;
 public class MainActivity extends FragmentActivity {
 
     Toolbar mToolbar;
-    int selected = 0;
     public GGContentFragment mContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GGApp.GG_APP.mActivity = this;
-
-        selected = GGApp.GG_APP.getSelectedProvider();
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
@@ -87,7 +84,7 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
-        mToolbar.setTitle(GGApp.mStrings[selected]);
+        mToolbar.setTitle(GGApp.GG_APP.mProvider.getFullName());
         mToolbar.inflateMenu(R.menu.toolbar_menu);
         mToolbar.setTitleTextColor(Color.WHITE);
         //toolbar.setNavigationIcon(R.drawable.ic_menu_white);
@@ -122,9 +119,8 @@ public class MainActivity extends FragmentActivity {
 
         if(requestCode == 1 && resultCode == RESULT_OK) { //Settings changed
             mContent.mGGFrag.setFragmentsLoading();
-            selected = GGApp.GG_APP.getSelectedProvider();
-            GGApp.GG_APP.createProvider(selected);
-            mToolbar.setTitle(GGApp.mStrings[selected]);
+            GGApp.GG_APP.recreateProvider();
+            mToolbar.setTitle(GGApp.GG_APP.mProvider.getFullName());
             setTheme(GGApp.GG_APP.mProvider.getTheme());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 GGApp.GG_APP.setStatusBarColor(getWindow());

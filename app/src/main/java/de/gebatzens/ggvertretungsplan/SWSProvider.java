@@ -26,15 +26,12 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SWSProvider implements VPProvider {
+public class SWSProvider extends VPProvider {
 
-    String mTDUrl, mTMUrl;
     GGApp ggapp;
 
     public SWSProvider(GGApp gg) {
-        ggapp = gg;
-        mTDUrl = "http://www.sachsenwaldschule.org/index.php?id=262";
-        mTMUrl = "http://www.sachsenwaldschule.org/index.php?id=263";
+        super(gg);
     }
 
     @Override
@@ -55,7 +52,7 @@ public class SWSProvider implements VPProvider {
             int ln = 0;
 
             String line;
-            while ((line = GGProvider.decode(reader.readLine())) != null) {
+            while ((line = decode(reader.readLine())) != null) {
                 ln++;
 
                 if(plan.date.isEmpty()) {
@@ -69,7 +66,7 @@ public class SWSProvider implements VPProvider {
                         ln++;
                         String tline;
                         String current = null;
-                        while(!(tline = GGProvider.decode(reader.readLine())).equals("</table>")) {
+                        while(!(tline = decode(reader.readLine())).equals("</table>")) {
                             ln++;
                             if(tline.contains("colspan=\"6\"")) {
                                 Matcher m = tdata.matcher(tline);
@@ -118,11 +115,12 @@ public class SWSProvider implements VPProvider {
             plan.throwable = e;
         }
 
+        boolean b = url != null && url.equals(getTodayURL());
 
         if(plan.throwable == null)
-            plan.save(GGApp.GG_APP, url == mTDUrl ? "swstd" : "swstm");
+            plan.save(GGApp.GG_APP, b ? "swstd" : "swstm");
         else {
-            if(plan.load(GGApp.GG_APP, url == mTDUrl ? "swstd" : "swstm")) {
+            if(plan.load(GGApp.GG_APP, b ? "swstd" : "swstm")) {
                 final String message = plan.throwable.getMessage();
                 plan.loadDate = "Keine Internetverbindung\nStand: " + plan.loadDate;
                 plan.throwable = null;
@@ -151,12 +149,12 @@ public class SWSProvider implements VPProvider {
 
     @Override
     public String getTodayURL() {
-        return mTDUrl;
+        return "http://www.sachsenwaldschule.org/index.php?id=262";
     }
 
     @Override
     public String getTomorrowURL() {
-        return mTMUrl;
+        return "http://www.sachsenwaldschule.org/index.php?id=263";
     }
 
     @Override
@@ -172,5 +170,10 @@ public class SWSProvider implements VPProvider {
     @Override
     public int getTheme() {
         return R.style.AppThemeBlue;
+    }
+
+    @Override
+    public String getFullName() {
+        return "Sachsenwaldschule";
     }
 }

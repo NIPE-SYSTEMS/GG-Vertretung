@@ -152,6 +152,19 @@ public class GGFragment extends Fragment {
         return table;
     }
 
+
+    private CardView createCardView() {
+        CardView c2 = new CardView(getActivity());
+        CardView.LayoutParams c2params = new CardView.LayoutParams(
+                CardView.LayoutParams.MATCH_PARENT,
+                CardView.LayoutParams.WRAP_CONTENT
+        );
+        c2params.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
+        c2.setLayoutParams(c2params);
+        c2.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
+        return c2;
+    }
+
     private void createButtonWithText(LinearLayout l, String text, String button, View.OnClickListener onclick) {
         RelativeLayout r = new RelativeLayout(getActivity());
         r.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -204,27 +217,13 @@ public class GGFragment extends Fragment {
 
 
             FrameLayout f2s = new FrameLayout(getActivity());
-            CardView c2s = new CardView(getActivity());
-            CardView.LayoutParams c2sparams = new CardView.LayoutParams(
-                    CardView.LayoutParams.MATCH_PARENT,
-                    CardView.LayoutParams.WRAP_CONTENT
-            );
-            c2sparams.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
-            c2s.setLayoutParams(c2sparams);
-            c2s.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
-            createTextView(planh.loadDate, 15, inflater, c2s);
+            CardView c2s = createCardView();
+            createTextView("Stand: " + planh.loadDate, 15, inflater, c2s);
             f2s.addView(c2s);
             l.addView(f2s);
 
             FrameLayout f2 = new FrameLayout(getActivity());
-            CardView c2 = new CardView(getActivity());
-            CardView.LayoutParams c2params = new CardView.LayoutParams(
-                    CardView.LayoutParams.MATCH_PARENT,
-                    CardView.LayoutParams.WRAP_CONTENT
-            );
-            c2params.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
-            c2.setLayoutParams(c2params);
-            c2.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
+            CardView c2 = createCardView();
             LinearLayout l2 = new LinearLayout(getActivity());
             l2.setOrientation(LinearLayout.VERTICAL);
             c2.addView(l2);
@@ -246,14 +245,7 @@ public class GGFragment extends Fragment {
 
             list = planm.getAllForClass(clas);
             FrameLayout f4 = new FrameLayout(getActivity());
-            CardView c4 = new CardView(getActivity());
-            CardView.LayoutParams c4params = new CardView.LayoutParams(
-                    CardView.LayoutParams.MATCH_PARENT,
-                    CardView.LayoutParams.WRAP_CONTENT
-            );
-            c4params.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
-            c4.setLayoutParams(c4params);
-            c4.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
+            CardView c4 = createCardView();
             LinearLayout l4 = new LinearLayout(getActivity());
             l4.setOrientation(LinearLayout.VERTICAL);
             c4.addView(l4);
@@ -373,7 +365,7 @@ public class GGFragment extends Fragment {
                                                 if(!GGApp.GG_APP.loadURLFile())
                                                     publishProgress(30);
                                                 else {
-                                                    GGApp.GG_APP.createProvider(GGApp.GG_APP.getSelectedProvider());
+                                                    GGApp.GG_APP.recreateProvider();
                                                     getActivity().runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
@@ -421,28 +413,14 @@ public class GGFragment extends Fragment {
         } else {
 
             FrameLayout f6s = new FrameLayout(getActivity());
-            CardView c6s = new CardView(getActivity());
-            CardView.LayoutParams c6sparams = new CardView.LayoutParams(
-                    CardView.LayoutParams.MATCH_PARENT,
-                    CardView.LayoutParams.WRAP_CONTENT
-            );
-            c6sparams.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
-            c6s.setLayoutParams(c6sparams);
-            c6s.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
-            createTextView(plan.loadDate, 15, inflater, c6s);
+            CardView c6s = createCardView();
+            createTextView("Stand: " + plan.loadDate, 15, inflater, c6s);
             f6s.addView(c6s);
             l.addView(f6s);
 
             if(!plan.special.isEmpty()) {
                 FrameLayout f6 = new FrameLayout(getActivity());
-                CardView c6 = new CardView(getActivity());
-                CardView.LayoutParams c6params = new CardView.LayoutParams(
-                        CardView.LayoutParams.MATCH_PARENT,
-                        CardView.LayoutParams.WRAP_CONTENT
-                );
-                c6params.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
-                c6.setLayoutParams(c6params);
-                c6.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
+                CardView c6 = createCardView();
                 LinearLayout l6 = new LinearLayout(getActivity());
                 l6.setOrientation(LinearLayout.VERTICAL);
                 c6.addView(l6);
@@ -459,21 +437,17 @@ public class GGFragment extends Fragment {
                     FrameLayout.LayoutParams.WRAP_CONTENT
             );
             f7.setLayoutParams(f7params);
-            CardView c7 = new CardView(getActivity());
-            CardView.LayoutParams c7params = new CardView.LayoutParams(
-                    CardView.LayoutParams.MATCH_PARENT,
-                    CardView.LayoutParams.WRAP_CONTENT
-            );
-            c7params.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
-            c7.setLayoutParams(c7params);
-            c7.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
+            CardView c7 = createCardView();
             LinearLayout l7 = new LinearLayout(getActivity());
             l7.setOrientation(LinearLayout.VERTICAL);
             c7.addView(l7);
             f7.addView(c7);
             l.addView(f7);
 
-            createTable(plan.entries, true, inflater, l7, plan);
+            if(plan.entries.size() == 0)
+                createTextView("Keine Einträge!", 15, inflater, l7);
+            else
+                createTable(plan.entries, true, inflater, l7, plan);
         }
         sv.addView(l);
     }

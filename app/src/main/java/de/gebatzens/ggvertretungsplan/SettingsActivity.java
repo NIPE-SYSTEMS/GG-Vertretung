@@ -32,8 +32,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 public class SettingsActivity extends Activity {
@@ -52,7 +50,7 @@ public class SettingsActivity extends Activity {
             addPreferencesFromResource(R.xml.preferences);
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
             sp.registerOnSharedPreferenceChangeListener(this);
-            String pref_schule_content = gg.getSelectedProvider() == 0 ? "Gymnasium Glinde" : "Sachsenwaldschule";
+            String pref_schule_content = gg.mProvider.getFullName();
             String pref_klasse_content = gg.getSelectedGrade();
             if(pref_klasse_content.equals(""))
                 pref_klasse_content = "Keine ausgewählt";

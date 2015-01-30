@@ -17,21 +17,42 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-public interface VPProvider {
+public abstract class VPProvider {
 
-    /**
-     * starts an async task
-     * @param url
-     * @return VP
-     */
-    public GGPlan getVPSync(String url, boolean toast);
+    GGApp gg;
 
-    public String getTodayURL();
-    public String getTomorrowURL();
+    public VPProvider(GGApp app) {
+        this.gg = app;
+    }
 
-    public String getDay(String date);
-    public int getColor();
-    public int getDarkColor();
-    public int getTheme();
+    public static String decode(String html) {
+        if(html == null)
+            return null;
+
+        html = html.replaceAll("&uuml;", "ü");
+        html = html.replaceAll("&auml;", "ä");
+        html = html.replaceAll("&ouml;", "ö");
+
+        html = html.replaceAll("&Uuml;", "Ü");
+        html = html.replaceAll("&Auml;", "Ä");
+        html = html.replaceAll("&Ouml;", "Ö");
+
+        html = html.replaceAll("&nbsp;", "");
+        html = html.replaceAll("---", ""); //SWS '---'
+
+        return html;
+    }
+
+    public abstract GGPlan getVPSync(String url, boolean toast);
+
+    public abstract String getTodayURL();
+    public abstract String getTomorrowURL();
+    public abstract String getFullName();
+    public abstract String getDay(String date);
+    public abstract int getColor();
+    public abstract int getDarkColor();
+    public abstract int getTheme();
+
+
 
 }
