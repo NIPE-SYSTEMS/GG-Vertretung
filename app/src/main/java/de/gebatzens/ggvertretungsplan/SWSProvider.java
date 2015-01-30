@@ -124,7 +124,7 @@ public class SWSProvider implements VPProvider {
         else {
             if(plan.load(GGApp.GG_APP, url == mTDUrl ? "swstd" : "swstm")) {
                 final String message = plan.throwable.getMessage();
-                plan.loadDate += " (Offline)";
+                plan.loadDate = "Keine Internetverbindung\nStand: " + plan.loadDate;
                 plan.throwable = null;
                 if(toast)
                     GGApp.GG_APP.mActivity.runOnUiThread(new Runnable() {

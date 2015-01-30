@@ -136,7 +136,7 @@ public class GGProvider implements VPProvider {
         if(p.throwable != null) {
             if (p.load(GGApp.GG_APP, "ggvp" + (url == mTDUrl ? "td" : "tm"))) {
                 final String message = p.throwable.getMessage();
-                p.loadDate += " (Offline)";
+                p.loadDate = "Keine Internetverbindung\nStand: " + p.loadDate;
                 p.throwable = null;
                 if(toast)
                     GGApp.GG_APP.mActivity.runOnUiThread(new Runnable() {
