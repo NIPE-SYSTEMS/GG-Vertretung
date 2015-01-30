@@ -427,7 +427,7 @@ public class GGFragment extends Fragment {
                 f6.addView(c6);
                 l.addView(f6);
                 TextView tv6 = new TextView(getActivity());
-                tv6.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + planm.special));
+                tv6.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + plan.special));
                 l6.addView(tv6);
             }
 
