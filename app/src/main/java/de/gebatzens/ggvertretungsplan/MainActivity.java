@@ -118,7 +118,6 @@ public class MainActivity extends FragmentActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == 1 && resultCode == RESULT_OK) { //Settings changed
-            mContent.mGGFrag.setFragmentsLoading();
             GGApp.GG_APP.recreateProvider();
             mToolbar.setTitle(GGApp.GG_APP.mProvider.getFullName());
             setTheme(GGApp.GG_APP.mProvider.getTheme());
@@ -127,6 +126,7 @@ public class MainActivity extends FragmentActivity {
             }
             mToolbar.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
             mContent.mSlidingTabLayout.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
+            mContent.mGGFrag.setFragmentsLoading();
             GGApp.GG_APP.refreshAsync(null, true);
         }
 

@@ -93,14 +93,7 @@ public class GGFragment extends Fragment {
 
     }
 
-    public void createLoadingFragment() {
-        if(getView() == null)
-            return;
-
-        ViewGroup vg = (ViewGroup) getView();
-        vg.removeAllViews();
-
-
+    private View createLoaddingView() {
         LinearLayout l = new LinearLayout(getActivity());
         l.setGravity(Gravity.CENTER);
 
@@ -110,8 +103,17 @@ public class GGFragment extends Fragment {
         pb.setVisibility(ProgressBar.VISIBLE);
 
         l.addView(pb);
+        return l;
+    }
 
-        vg.addView(l);
+    public void createLoadingFragment() {
+        if(getView() == null)
+            return;
+
+        ViewGroup vg = (ViewGroup) getView();
+        vg.removeAllViews();
+
+        vg.addView(createLoaddingView());
     }
 
     private int toPixels(int dp) {
@@ -456,7 +458,12 @@ public class GGFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
         LinearLayout l = new LinearLayout(getActivity());
         l.setOrientation(LinearLayout.VERTICAL);
-        createView(inflater, l);
         return l;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle saved) {
+        super.onViewCreated(view, saved);
+        ((ViewGroup)view).addView(createLoaddingView());
     }
 }
