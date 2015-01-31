@@ -50,7 +50,6 @@
 
     <style name="Theme.AlertDialog.Blue" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">#2196F3</item>
-        <item name="android:background">#ffffff</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
@@ -58,7 +57,6 @@
     </style>
     <style name="Theme.AlertDialog.Orange" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">#FF9800</item>
-        <item name="android:background">#ffffff</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
