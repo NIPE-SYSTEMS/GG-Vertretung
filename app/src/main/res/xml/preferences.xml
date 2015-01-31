@@ -5,7 +5,7 @@
         android:key="schule"
         android:entries="@array/schuleArray"
         android:entryValues="@array/schuleValues"
-        android:defaultValue="Gymnasium Glinde" />
+        android:defaultValue="gg" />
     <EditTextPreference android:title="Klasse"
         android:key="klasse"
         android:summary="Keine ausgewählt" />

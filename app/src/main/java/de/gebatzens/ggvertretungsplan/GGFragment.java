@@ -399,7 +399,7 @@ public class GGFragment extends Fragment {
                         });
 
 
-                        builder.setNegativeButton("Abbrenchen", new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
