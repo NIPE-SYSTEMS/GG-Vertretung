@@ -27,6 +27,7 @@
     <EditText android:layout_height="wrap_content"
         android:id="@+id/usernameInput"
         android:hint="Benutzername"
+        android:singleLine="true"
         android:layout_width="match_parent"/>
 
     <EditText android:layout_height="wrap_content"
