@@ -19,8 +19,10 @@ package de.gebatzens.ggvertretungsplan;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,6 +42,7 @@ public class SettingsActivity extends Activity {
     private GGPFragment mFrag;
     private static boolean changed;
     int selected = 0;
+    static String version;
 
     public static class GGPFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -63,6 +66,10 @@ public class SettingsActivity extends Activity {
 
             Preference update = findPreference("appupdates");
             update.setSummary(gg.translateUpdateType(gg.getUpdateType()));
+
+            Preference pref_buildversion = findPreference("buildversion");
+            String versionName = BuildConfig.VERSION_NAME;
+            pref_buildversion.setSummary("Version: " + versionName);
 
         }
 
