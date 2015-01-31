@@ -34,6 +34,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -295,6 +296,7 @@ public class GGFragment extends Fragment {
                     @Override
                     public void onClick(View c) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        AlertDialog dialog;
                         builder.setTitle("Login");
                         builder.setView(inflater.inflate(R.layout.login_dialog, null));
 
@@ -408,7 +410,9 @@ public class GGFragment extends Fragment {
                             }
                         });
 
-                        builder.create().show();
+                        dialog = builder.create();
+                        dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                        dialog.show();
 
                     }
                 });
