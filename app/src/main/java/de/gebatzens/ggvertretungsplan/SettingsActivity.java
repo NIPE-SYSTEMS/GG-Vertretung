@@ -19,10 +19,8 @@ package de.gebatzens.ggvertretungsplan;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,10 +36,8 @@ import android.widget.LinearLayout;
 
 public class SettingsActivity extends Activity {
 
-    private Toolbar mToolBar;
-    private GGPFragment mFrag;
+    Toolbar mToolBar;
     private static boolean changed;
-    int selected = 0;
     static String version;
 
     public static class GGPFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {

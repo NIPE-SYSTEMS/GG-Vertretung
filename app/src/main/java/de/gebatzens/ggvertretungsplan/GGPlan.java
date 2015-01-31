@@ -19,13 +19,9 @@ package de.gebatzens.ggvertretungsplan;
 
 import android.content.Context;
 import android.util.Log;
-
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;

@@ -32,11 +32,8 @@ import android.support.v4.app.TaskStackBuilder;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.annotation.Target;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 
