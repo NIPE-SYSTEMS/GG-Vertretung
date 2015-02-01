@@ -62,3 +62,7 @@ build/
 
 ## OS Specific
 .DS_Store
+
+
+app/app-release.apk
+app/manifest-merger-release-report.txt
