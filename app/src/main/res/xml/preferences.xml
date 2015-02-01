@@ -44,6 +44,10 @@
         <Preference android:title="Build-Version"
             android:summary="Version: x.x.x"
             android:key="buildversion"/>
+
+        <Preference android:title="Lizenz"
+            android:summary="GNU GPL"
+            android:key="license"/>
     </PreferenceCategory>
 
 </PreferenceScreen>

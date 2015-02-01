@@ -18,7 +18,9 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -33,6 +35,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import java.io.IOException;
+import java.util.Scanner;
 
 public class SettingsActivity extends Activity {
 
@@ -65,7 +70,36 @@ public class SettingsActivity extends Activity {
 
             Preference pref_buildversion = findPreference("buildversion");
             String versionName = BuildConfig.VERSION_NAME;
-            pref_buildversion.setSummary("Version: " + versionName);
+            pref_buildversion.setSummary("Version: " + versionName + " (" + BuildConfig.BUILD_TYPE + ")");
+
+            findPreference("license").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Lizenz");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    String s = "";
+                    try {
+                        Scanner scan = new Scanner(getActivity().getAssets().open("COPYING"));
+                        while(scan.hasNextLine()) {
+                            s += scan.nextLine() + "\n";
+                        }
+                    } catch (IOException e) {
+
+                    }
+
+                    builder.setMessage(s);
+                    builder.create().show();
+                    return true;
+                }
+
+            });
 
         }
 
