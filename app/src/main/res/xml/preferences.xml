@@ -50,13 +50,12 @@
         <Preference android:title="Github"
             android:summary="https://github.com/Gebatzens/GG-Vertretung"
             android:key="githublink"/>
-        <Preference android:title="Build-Version"
-            android:summary="Version: x.x.x"
-            android:key="buildversion"/>
-
         <Preference android:title="Lizenz"
             android:summary="GNU GPL"
             android:key="license"/>
+        <Preference android:title="Build-Version"
+            android:summary="Version: x.x.x"
+            android:key="buildversion"/>
     </PreferenceCategory>
 
 </PreferenceScreen>
