@@ -107,7 +107,7 @@ public class SettingsActivity extends Activity {
             pref_githublink.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
                     Intent linkIntent = new Intent(Intent.ACTION_VIEW);
-                    linkIntent.setData(Uri.parse("http://www.example.com"));
+                    linkIntent.setData(Uri.parse("https://github.com/Gebatzens/GG-Vertretung"));
                     startActivity(linkIntent);
                     return true;
                 }
