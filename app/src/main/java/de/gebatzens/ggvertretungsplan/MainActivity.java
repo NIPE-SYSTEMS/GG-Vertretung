@@ -77,10 +77,6 @@ public class MainActivity extends FragmentActivity {
                 } else if(menuItem.getItemId() == R.id.action_settings) {
                     Intent i = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivityForResult(i, 1);
-                } else if(menuItem.getItemId() == R.id.action_git) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Gebatzens/GG-Vertretung"));
-                    startActivity(browserIntent);
-
                 }
 
                 return false;

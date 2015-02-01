@@ -24,12 +24,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -100,6 +102,16 @@ public class SettingsActivity extends Activity {
                 }
 
             });*/
+
+            Preference pref_githublink = findPreference("githublink");
+            pref_githublink.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent linkIntent = new Intent(Intent.ACTION_VIEW);
+                    linkIntent.setData(Uri.parse("http://www.example.com"));
+                    startActivity(linkIntent);
+                    return true;
+                }
+            });
 
         }
 

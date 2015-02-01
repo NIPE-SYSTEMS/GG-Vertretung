@@ -41,6 +41,15 @@
             android:defaultValue="wifi" />
     </PreferenceCategory>
     <PreferenceCategory android:title="Info">
+        <de.gebatzens.ggvertretungsplan.DialogExPreference
+            android:title="Entwickler"
+            android:summary="Informationen über die Entwickler der App"
+            android:key="entwickler"
+            android:dialogMessage="Hauke Oldsen\nLasse Rosenow\nLennart Schmidt"
+            android:negativeButtonText=""/>
+        <Preference android:title="Github"
+            android:summary="https://github.com/Gebatzens/GG-Vertretung"
+            android:key="githublink"/>
         <Preference android:title="Build-Version"
             android:summary="Version: x.x.x"
             android:key="buildversion"/>
