@@ -94,7 +94,7 @@ public class GGFragment extends Fragment {
 
     }
 
-    private View createLoaddingView() {
+    private View createLoadingView() {
         LinearLayout l = new LinearLayout(getActivity());
         l.setGravity(Gravity.CENTER);
 
@@ -114,7 +114,7 @@ public class GGFragment extends Fragment {
         ViewGroup vg = (ViewGroup) getView();
         vg.removeAllViews();
 
-        vg.addView(createLoaddingView());
+        vg.addView(createLoadingView());
     }
 
     private int toPixels(int dp) {
@@ -308,29 +308,37 @@ public class GGFragment extends Fragment {
 
                                     @Override
                                     public void onProgressUpdate(Integer... values) {
-                                        if(values.length == 0)
+                                        if (values.length == 0)
                                             return;
-                                        if(values[0] == 10)
+                                        if (values[0] == 10)
                                             GGApp.GG_APP.showToast("Benutzername oder Passwort falsch");
-                                        else if(values[0] == 20)
+                                        else if (values[0] == 20)
                                             GGApp.GG_APP.showToast("Konnte keine Verbindung zum Anmeldeserver herstellen");
-                                        else if(values[0] == 30)
+                                        else if (values[0] == 30)
                                             GGApp.GG_APP.showToast("Unbekannter Fehler bei der Anmeldung");
                                     }
 
                                     @Override
                                     protected Integer doInBackground(Integer... params) {
-                                        String user = ((EditText)((Dialog)dialog).findViewById(R.id.usernameInput)).getText().toString();
-                                        String pass = ((EditText)((Dialog)dialog).findViewById(R.id.passwordInput)).getText().toString();
+                                        String user = ((EditText) ((Dialog) dialog).findViewById(R.id.usernameInput)).getText().toString();
+                                        String pass = ((EditText) ((Dialog) dialog).findViewById(R.id.passwordInput)).getText().toString();
                                         try {
-                                            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-                                                @Override
-                                                public java.security.cert.X509Certificate[] getAcceptedIssuers() { return null; }
-                                                @Override
-                                                public void checkClientTrusted(X509Certificate[] certs, String authType) {}
-                                                @Override
-                                                public void checkServerTrusted(X509Certificate[] certs, String authType) {}
-                                            }
+                                            TrustManager[] trustAllCerts = new TrustManager[]{ new X509TrustManager() {
+                                                    @Override
+                                                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                                                        return null;
+                                                    }
+
+                                                    @Override
+                                                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
+
+                                                    }
+                                                }
                                             };
                                             SSLContext sc = SSLContext.getInstance("TLS");
                                             sc.init(null, trustAllCerts, new java.security.SecureRandom());
@@ -338,7 +346,9 @@ public class GGFragment extends Fragment {
                                                 @Override
                                                 public boolean verify(String hostname, SSLSession session) {
                                                     return true;
-                                                };
+                                                }
+
+                                                ;
                                             };
 
                                             HttpsURLConnection con = (HttpsURLConnection) new URL("https://gebatzens.de/api/getgg.php").openConnection();
@@ -354,10 +364,10 @@ public class GGFragment extends Fragment {
                                             wr.close();
 
                                             int resp = con.getResponseCode();
-                                            if(resp == 200) {
+                                            if (resp == 200) {
                                                 Scanner scan = new Scanner(new BufferedInputStream(con.getInputStream()));
                                                 String data = "";
-                                                while(scan.hasNextLine())
+                                                while (scan.hasNextLine())
                                                     data += scan.nextLine() + "\n";
                                                 scan.close();
 
@@ -366,7 +376,7 @@ public class GGFragment extends Fragment {
                                                 out.flush();
                                                 out.close();
 
-                                                if(!GGApp.GG_APP.loadURLFile())
+                                                if (!GGApp.GG_APP.loadURLFile())
                                                     publishProgress(30);
                                                 else {
                                                     GGApp.GG_APP.recreateProvider();
@@ -386,10 +396,9 @@ public class GGFragment extends Fragment {
                                             }
 
 
-
-                                        } catch(Exception e) {
+                                        } catch (Exception e) {
                                             e.printStackTrace();
-                                            if(e instanceof IOException)
+                                            if (e instanceof IOException)
                                                 publishProgress(20);
                                             else
                                                 publishProgress(30);
@@ -462,12 +471,18 @@ public class GGFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
         LinearLayout l = new LinearLayout(getActivity());
         l.setOrientation(LinearLayout.VERTICAL);
+        if(GGApp.GG_APP.mVPToday != null && GGApp.GG_APP.mVPTomorrow != null)
+            createView(inflater, l);
         return l;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle saved) {
-        super.onViewCreated(view, saved);
-        ((ViewGroup)view).addView(createLoaddingView());
+    public void onViewCreated(View v, Bundle b) {
+        super.onViewCreated(v, b);
+
+        if(GGApp.GG_APP.mVPToday == null || GGApp.GG_APP.mVPTomorrow == null) {
+            ((ViewGroup) getView()).addView(createLoadingView());
+        }
     }
+
 }
