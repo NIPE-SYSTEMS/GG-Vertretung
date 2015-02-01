@@ -72,7 +72,7 @@ public class SettingsActivity extends Activity {
             String versionName = BuildConfig.VERSION_NAME;
             pref_buildversion.setSummary("Version: " + versionName + " (" + BuildConfig.BUILD_TYPE + ")");
 
-            findPreference("license").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            /*findPreference("license").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -99,7 +99,7 @@ public class SettingsActivity extends Activity {
                     return true;
                 }
 
-            });
+            });*/
 
         }
 
