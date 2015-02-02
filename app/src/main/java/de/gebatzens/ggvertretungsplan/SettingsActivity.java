@@ -18,9 +18,7 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -37,9 +35,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
-import java.io.IOException;
-import java.util.Scanner;
 
 public class SettingsActivity extends Activity {
 
