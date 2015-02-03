@@ -109,7 +109,7 @@ public class SWSProvider extends VPProvider {
 
             }
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-            plan.loadDate = sdf.format(new Date());
+            plan.loadDate = "Stand: " + sdf.format(new Date());
         } catch (Exception e) {
             e.printStackTrace();
             plan.throwable = e;
@@ -122,7 +122,7 @@ public class SWSProvider extends VPProvider {
         else {
             if(plan.load(GGApp.GG_APP, b ? "swstd" : "swstm")) {
                 final String message = plan.throwable.getMessage();
-                plan.loadDate = "Keine Internetverbindung\nStand: " + plan.loadDate;
+                plan.loadDate = "Keine Internetverbindung\n" + plan.loadDate;
                 plan.throwable = null;
                 if(toast)
                     GGApp.GG_APP.mActivity.runOnUiThread(new Runnable() {

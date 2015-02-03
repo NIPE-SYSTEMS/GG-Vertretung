@@ -221,7 +221,7 @@ public class GGFragment extends Fragment {
 
             FrameLayout f2s = new FrameLayout(getActivity());
             CardView c2s = createCardView();
-            createTextView("Stand: " + planh.loadDate, 15, inflater, c2s);
+            createTextView(planh.loadDate, 15, inflater, c2s);
             f2s.addView(c2s);
             l.addView(f2s);
 
@@ -429,7 +429,7 @@ public class GGFragment extends Fragment {
 
             FrameLayout f6s = new FrameLayout(getActivity());
             CardView c6s = createCardView();
-            createTextView("Stand: " + plan.loadDate, 15, inflater, c6s);
+            createTextView(plan.loadDate, 15, inflater, c6s);
             f6s.addView(c6s);
             l.addView(f6s);
 

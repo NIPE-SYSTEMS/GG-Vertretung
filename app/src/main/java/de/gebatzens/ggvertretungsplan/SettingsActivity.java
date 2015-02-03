@@ -74,35 +74,6 @@ public class SettingsActivity extends Activity {
             String versionName = BuildConfig.VERSION_NAME;
             pref_buildversion.setSummary("Version: " + versionName + " (" + BuildConfig.BUILD_TYPE + ")");
 
-            /*findPreference("license").setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Lizenz");
-                    builder.setCancelable(false);
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    String s = "";
-                    try {
-                        Scanner scan = new Scanner(getActivity().getAssets().open("COPYING"));
-                        while(scan.hasNextLine()) {
-                            s += scan.nextLine() + "\n";
-                        }
-                    } catch (IOException e) {
-
-                    }
-
-                    builder.setMessage(s);
-                    builder.create().show();
-                    return true;
-                }
-
-            });*/
-
             Preference pref_githublink = findPreference("githublink");
             pref_githublink.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 public boolean onPreferenceClick(Preference preference) {
