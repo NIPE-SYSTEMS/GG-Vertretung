@@ -114,7 +114,7 @@ public class GGProvider extends VPProvider {
                     GGApp.GG_APP.mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            GGApp.GG_APP.showToast("Fehler beim Laden: " + message);
+                            GGApp.GG_APP.showToast("Keine Internetverbindung");
                         }
                     });
             }
