@@ -47,6 +47,8 @@ public class SWSProvider extends VPProvider {
             Pattern date = Pattern.compile("<div class=\"mon_title\">(.*)</div>");
             Pattern tables = Pattern.compile("<table class=\"mon_list\">");
             Pattern tdata = Pattern.compile("<td .*?>(.*?)</td>");
+            String specialBegin = "<tr class=\"info\"><th class=\"info\" align=\"center\" colspan=\"2\">Nachrichten zum Tag</th></tr>";
+            Pattern specialCont = Pattern.compile("<tr class=\"info\"><td class=\"info\" colspan=\"2\">(.*?)</td></tr>");
             int h = 0;
             String lastClass = "Bug";
             int ln = 0;
@@ -59,7 +61,15 @@ public class SWSProvider extends VPProvider {
                     Matcher md = date.matcher(line);
                     if (md.find())
                         plan.date = md.group(1).trim();
-                } else { //find table start
+                } else if(line.equals(specialBegin)) { //Nachrichten
+                    String line2 = "";
+                    while(!(line = decode(reader.readLine())).equals("</table>")) {
+                        Matcher mc = specialCont.matcher(line);
+                        if(mc.find()) {
+                            plan.special += mc.group(1);
+                        }
+                    }
+                } else {
                     Matcher mt = tables.matcher(line);
                     if(mt.find()) {
                         reader.readLine(); //ignore header
