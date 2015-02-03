@@ -21,6 +21,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -37,7 +38,7 @@ public class GGProvider extends VPProvider {
 
     @Override
     public GGPlan getVPSync(String url, boolean toast) {
-        GGPlan p = new GGPlan();
+        final GGPlan p = new GGPlan();
         try {
             if(url == null || url.isEmpty())
                 throw new VPUrlFileException();
@@ -114,7 +115,8 @@ public class GGProvider extends VPProvider {
                     GGApp.GG_APP.mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            GGApp.GG_APP.showToast("Keine Internetverbindung");
+                            GGApp.GG_APP.showToast(p.throwable instanceof UnknownHostException ? "Konnte gymglinde.de nicht auflösen" :
+                                    p.throwable instanceof GGInvalidSourceException ? "Ungültige Antwort vom Server" : "Konnte keine Verbindung zu http://gymglinde.de aufbauen");
                         }
                     });
             }
