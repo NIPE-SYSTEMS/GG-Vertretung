@@ -45,7 +45,7 @@ public class SWSProvider extends VPProvider {
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
 
             Pattern date = Pattern.compile("<div class=\"mon_title\">(.*)</div>");
-            Pattern tables = Pattern.compile("<table class=\"mon_list\">");
+            Pattern tables = Pattern.compile("<table class=\"mon_list\" >");
             Pattern tdata = Pattern.compile("<td .*?>(.*?)</td>");
             String specialBegin = "<tr class=\"info\"><th class=\"info\" align=\"center\" colspan=\"2\">Nachrichten zum Tag</th></tr>";
             Pattern specialCont = Pattern.compile("<tr class=\"info\"><td class=\"info\" colspan=\"2\">(.*?)</td></tr>");
@@ -159,12 +159,12 @@ public class SWSProvider extends VPProvider {
 
     @Override
     public String getTodayURL() {
-        return "http://www.sachsenwaldschule.org/index.php?id=262";
+        return "http://contao.sachsenwaldschule.org/files/dateiablage_extern/vertretungsplanung/schueler_online/subst_001.htm";
     }
 
     @Override
     public String getTomorrowURL() {
-        return "http://www.sachsenwaldschule.org/index.php?id=263";
+        return "http://contao.sachsenwaldschule.org/files/dateiablage_extern/vertretungsplanung/schueler_online/subst_001.htm";
     }
 
     @Override
