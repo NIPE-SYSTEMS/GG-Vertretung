@@ -117,7 +117,7 @@ public class GGFragment extends Fragment {
         vg.addView(createLoadingView());
     }
 
-    private int toPixels(int dp) {
+    private int toPixels(float dp) {
         float scale = getResources().getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }
@@ -162,8 +162,8 @@ public class GGFragment extends Fragment {
                 CardView.LayoutParams.MATCH_PARENT,
                 CardView.LayoutParams.WRAP_CONTENT
         );
-        c2params.setMargins(toPixels(8), toPixels(8), toPixels(8), toPixels(8));
         c2.setLayoutParams(c2params);
+        c2.setUseCompatPadding(true);
         c2.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
         return c2;
     }
@@ -206,6 +206,7 @@ public class GGFragment extends Fragment {
         sv.setTag("ggfrag_scrollview");
         LinearLayout l = new LinearLayout(getActivity());
         l.setOrientation(LinearLayout.VERTICAL);
+        l.setPadding(toPixels(4),toPixels(4),toPixels(4),toPixels(4));
         group.addView(sv);
         if(planh == null || planm == null) {
             TextView tv = new TextView(getActivity());
@@ -220,12 +221,14 @@ public class GGFragment extends Fragment {
 
 
             FrameLayout f2s = new FrameLayout(getActivity());
+            f2s.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
             CardView c2s = createCardView();
             createTextView(planh.loadDate, 15, inflater, c2s);
             f2s.addView(c2s);
             l.addView(f2s);
 
             FrameLayout f2 = new FrameLayout(getActivity());
+            f2.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
             CardView c2 = createCardView();
             LinearLayout l2 = new LinearLayout(getActivity());
             l2.setOrientation(LinearLayout.VERTICAL);
@@ -248,6 +251,7 @@ public class GGFragment extends Fragment {
 
             list = planm.getAllForClass(clas);
             FrameLayout f4 = new FrameLayout(getActivity());
+            f4.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
             CardView c4 = createCardView();
             LinearLayout l4 = new LinearLayout(getActivity());
             l4.setOrientation(LinearLayout.VERTICAL);
@@ -428,6 +432,7 @@ public class GGFragment extends Fragment {
         } else {
 
             FrameLayout f6s = new FrameLayout(getActivity());
+            f6s.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
             CardView c6s = createCardView();
             createTextView(plan.loadDate, 15, inflater, c6s);
             f6s.addView(c6s);
@@ -435,6 +440,7 @@ public class GGFragment extends Fragment {
 
             if(!plan.special.isEmpty()) {
                 FrameLayout f6 = new FrameLayout(getActivity());
+                f6.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
                 CardView c6 = createCardView();
                 LinearLayout l6 = new LinearLayout(getActivity());
                 l6.setOrientation(LinearLayout.VERTICAL);
@@ -447,11 +453,7 @@ public class GGFragment extends Fragment {
             }
 
             FrameLayout f7 = new FrameLayout(getActivity());
-            FrameLayout.LayoutParams f7params = new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT
-            );
-            f7.setLayoutParams(f7params);
+            f7.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
             CardView c7 = createCardView();
             LinearLayout l7 = new LinearLayout(getActivity());
             l7.setOrientation(LinearLayout.VERTICAL);

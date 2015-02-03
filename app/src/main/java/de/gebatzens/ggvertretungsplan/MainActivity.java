@@ -19,7 +19,6 @@ package de.gebatzens.ggvertretungsplan;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
