@@ -166,7 +166,7 @@ public class SWSProvider extends VPProvider {
 
     @Override
     public String getTomorrowURL() {
-        return "http://contao.sachsenwaldschule.org/files/dateiablage_extern/vertretungsplanung/schueler_online/subst_001.htm";
+        return "http://contao.sachsenwaldschule.org/files/dateiablage_extern/vertretungsplanung/schueler_online/subst_002.htm";
     }
 
     @Override
