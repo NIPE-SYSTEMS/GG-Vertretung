@@ -19,17 +19,12 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-public class GGInvalidSourceException extends Exception {
+import android.content.Context;
+import android.preference.DialogPreference;
+import android.util.AttributeSet;
 
-    String extra;
-
-    public GGInvalidSourceException(String extra) {
-        this.extra = extra;
+public class GGDialogPreference extends DialogPreference {
+    public GGDialogPreference(Context context, AttributeSet attrs) {
+        super(context, attrs);
     }
-
-    @Override
-    public String getMessage() {
-        return extra == null ? "The received HTML is invalid." : "The received HTML is invalid: " + extra;
-    }
-
 }

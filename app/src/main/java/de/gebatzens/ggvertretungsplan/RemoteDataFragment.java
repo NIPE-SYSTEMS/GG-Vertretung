@@ -19,17 +19,11 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-public class GGInvalidSourceException extends Exception {
+import android.support.v4.app.Fragment;
 
-    String extra;
+public abstract class RemoteDataFragment extends Fragment{
 
-    public GGInvalidSourceException(String extra) {
-        this.extra = extra;
-    }
-
-    @Override
-    public String getMessage() {
-        return extra == null ? "The received HTML is invalid." : "The received HTML is invalid: " + extra;
-    }
+    public abstract void setFragmentLoading();
+    public abstract void updateFragment();
 
 }

@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2015 Hauke Oldsen
+ *
  * This file is part of GGVertretungsplan.
  *
  * GGVertretungsplan is free software: you can redistribute it and/or modify
@@ -16,6 +18,8 @@
  */
 
 package de.gebatzens.ggvertretungsplan;
+
+import android.os.AsyncTask;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -41,7 +45,7 @@ public class SWSProvider extends VPProvider {
 
         try {
             if(url == null || url.isEmpty())
-                throw new VPUrlFileException();
+                throw new VPLoginException();
             URLConnection con = new URL(url).openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
 
@@ -182,6 +186,21 @@ public class SWSProvider extends VPProvider {
     @Override
     public int getTheme() {
         return R.style.AppThemeBlue;
+    }
+
+    @Override
+    public boolean loginNeeded() {
+        return false;
+    }
+
+    @Override
+    public int login(AsyncTask<Integer, Integer, Integer> task, String u, String p) {
+        return 0;
+    }
+
+    @Override
+    public boolean loadLogin() {
+        return true;
     }
 
     @Override

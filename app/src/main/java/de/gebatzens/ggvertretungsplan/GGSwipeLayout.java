@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2015 Hauke Oldsen
+ *
  * This file is part of GGVertretungsplan.
  *
  * GGVertretungsplan is free software: you can redistribute it and/or modify
@@ -50,12 +52,15 @@ public class GGSwipeLayout extends SwipeRefreshLayout {
                 float xd = Math.abs(event.getX() - mPrevX);
                 if (xd > mTouchSlop)
                     return false;
-                int i = ((MainActivity) getContext()).mContent.mViewPager.getCurrentItem();
-                GGFragment frag = (GGFragment) ((FragmentPagerAdapter) ((MainActivity) getContext()).mContent.mViewPager.getAdapter()).getItem(i);
-                ScrollView sv = (ScrollView) frag.getView().findViewWithTag("ggfrag_scrollview");
 
-                if(sv != null && sv.getScrollY() != 0)
-                    return false;
+                if(GGApp.GG_APP.getFragmentType() == GGApp.FragmentType.PLAN) {
+                    int i = ((GGContentFragment) ((MainActivity) getContext()).mContent).mViewPager.getCurrentItem();
+                    GGFragment frag = (GGFragment) ((FragmentPagerAdapter) ((GGContentFragment) ((MainActivity) getContext()).mContent).mViewPager.getAdapter()).getItem(i);
+                    ScrollView sv = (ScrollView) frag.getView().findViewWithTag("ggfrag_scrollview");
+
+                    if (sv != null && sv.getScrollY() != 0)
+                        return false;
+                }
         }
 
         return super.onInterceptTouchEvent(event);

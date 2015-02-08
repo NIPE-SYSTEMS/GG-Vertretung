@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2015 Hauke Oldsen
+ *
  * This file is part of GGVertretungsplan.
  *
  * GGVertretungsplan is free software: you can redistribute it and/or modify
@@ -19,8 +21,8 @@ package de.gebatzens.ggvertretungsplan;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
 public class GGFragmentAdapter extends FragmentPagerAdapter {
@@ -52,14 +54,14 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
         heute.recreate();
         morgen.recreate();
         overview.recreate();
-        mActivity.mContent.mSlidingTabLayout.setViewPager(mActivity.mContent.mViewPager);
+        ((GGContentFragment)mActivity.mContent).mSlidingTabLayout.setViewPager(((GGContentFragment)mActivity.mContent).mViewPager);
     }
 
     public void setFragmentsLoading() {
         heute.createLoadingFragment();
         morgen.createLoadingFragment();
         overview.createLoadingFragment();
-        mActivity.mContent.mSlidingTabLayout.setViewPager(mActivity.mContent.mViewPager);
+        ((GGContentFragment)mActivity.mContent).mSlidingTabLayout.setViewPager(((GGContentFragment)mActivity.mContent).mViewPager);
     }
 
     @Override

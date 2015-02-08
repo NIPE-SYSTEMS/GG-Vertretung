@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2015 Hauke Oldsen
+ *
  * This file is part of GGVertretungsplan.
  *
  * GGVertretungsplan is free software: you can redistribute it and/or modify
@@ -20,7 +22,6 @@ package de.gebatzens.ggvertretungsplan;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class GGContentFragment extends Fragment {
+public class GGContentFragment extends RemoteDataFragment {
 
     Toolbar mToolbar;
     ViewPager mViewPager;
@@ -53,13 +54,9 @@ public class GGContentFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        // Get the ViewPager and set it's PagerAdapter so that it can display items
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mGGFrag = new GGFragmentAdapter(getActivity().getSupportFragmentManager(), savedInstanceState, (MainActivity) getActivity());
         mViewPager.setAdapter(mGGFrag);
-
-        // Give the SlidingTabLayout the ViewPager, this must be done AFTER the ViewPager has had
-        // it's PagerAdapter set.
 
         mToolbar = (Toolbar) ((MainActivity) this.getActivity()).mToolbar;
         ColorDrawable mToolbarColor = (ColorDrawable) mToolbar.getBackground();
@@ -102,4 +99,13 @@ public class GGContentFragment extends Fragment {
 
     }
 
+    @Override
+    public void setFragmentLoading() {
+        mGGFrag.setFragmentsLoading();
+    }
+
+    @Override
+    public void updateFragment() {
+        mGGFrag.updateFragments();
+    }
 }

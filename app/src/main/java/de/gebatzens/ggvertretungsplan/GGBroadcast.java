@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2015 Hauke Oldsen
+ *
  * This file is part of GGVertretungsplan.
  *
  * GGVertretungsplan is free software: you can redistribute it and/or modify
@@ -54,11 +56,11 @@ public class GGBroadcast extends BroadcastReceiver {
 
         gg.mVPToday = today;
         gg.mVPTomorrow = tomo;
-        if(gg.mActivity != null)
+        if(gg.mActivity != null && gg.getFragmentType() == GGApp.FragmentType.PLAN)
             gg.mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    gg.mActivity.mContent.mGGFrag.updateFragments();
+                    ((GGContentFragment)gg.mActivity.mContent).mGGFrag.updateFragments();
                 }
             });
 
@@ -208,11 +210,11 @@ public class GGBroadcast extends BroadcastReceiver {
                             if(s > 100)
                                 return null;
                         }
-                        if(params[0].mActivity != null) {
+                        if(params[0].mActivity != null && params[0].getFragmentType() == GGApp.FragmentType.PLAN) {
                             params[0].mActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    params[0].mActivity.mContent.mGGFrag.setFragmentsLoading();
+                                    ((GGContentFragment)params[0].mActivity.mContent).mGGFrag.setFragmentsLoading();
                                 }
                             });
 

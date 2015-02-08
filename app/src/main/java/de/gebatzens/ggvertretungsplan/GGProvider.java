@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2015 Hauke Oldsen
+ *
  * This file is part of GGVertretungsplan.
  *
  * GGVertretungsplan is free software: you can redistribute it and/or modify
@@ -17,19 +19,41 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.os.AsyncTask;
+import android.widget.EditText;
+
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Properties;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class GGProvider extends VPProvider {
 
     GGApp ggapp;
+    Properties urls;
 
     public GGProvider(GGApp gg) {
         super(gg);
@@ -41,7 +65,7 @@ public class GGProvider extends VPProvider {
         final GGPlan p = new GGPlan();
         try {
             if(url == null || url.isEmpty())
-                throw new VPUrlFileException();
+                throw new VPLoginException();
             URLConnection con = new URL(url).openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
 
@@ -127,12 +151,12 @@ public class GGProvider extends VPProvider {
 
     @Override
     public String getTodayURL() {
-        return gg.urlProps == null ? null : gg.urlProps.getProperty("ggurltd");
+        return urls == null ? null : urls.getProperty("ggurltd");
     }
 
     @Override
     public String getTomorrowURL() {
-        return gg.urlProps == null ? null : gg.urlProps.getProperty("ggurltm");
+        return urls == null ? null : urls.getProperty("ggurltm");
     }
 
     @Override
@@ -155,6 +179,115 @@ public class GGProvider extends VPProvider {
     @Override
     public int getTheme() {
         return R.style.AppThemeOrange;
+    }
+
+    @Override
+    public boolean loginNeeded() {
+        return true;
+    }
+
+    @Override
+    public int login(AsyncTask<Integer, Integer, Integer> task, String user, String pass) {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{ new X509TrustManager() {
+                @Override
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                @Override
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+
+                }
+            }
+            };
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HostnameVerifier hv = new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+
+                ;
+            };
+
+            HttpsURLConnection con = (HttpsURLConnection) new URL("https://gebatzens.de/api/getgg.php").openConnection();
+            con.setRequestMethod("POST");
+
+            con.setSSLSocketFactory(sc.getSocketFactory());
+            con.setHostnameVerifier(hv);
+
+            con.setDoOutput(true);
+            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+            wr.writeBytes("user=" + user + "&pw=" + pass);
+            wr.flush();
+            wr.close();
+
+            int resp = con.getResponseCode();
+            if (resp == 200) {
+                Scanner scan = new Scanner(new BufferedInputStream(con.getInputStream()));
+                String data = "";
+                while (scan.hasNextLine())
+                    data += scan.nextLine() + "\n";
+                scan.close();
+
+                Writer out = new OutputStreamWriter(gg.openFileOutput("ggsec.conf", Context.MODE_PRIVATE));
+                out.write(data);
+                out.flush();
+                out.close();
+
+                if (!loadLogin()) {
+                    return 3;
+                } else {
+                    GGApp.GG_APP.recreateProvider();
+                    gg.mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            gg.mActivity.mContent.setFragmentLoading();
+                        }
+                    });
+                    GGApp.GG_APP.refreshAsync(null, true);
+                }
+
+
+            } else {
+                return 1;
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (e instanceof IOException)
+                return 2;
+            else
+                return 3;
+
+
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean loadLogin() {
+        Properties properties = new Properties();
+        try {
+            InputStream in = gg.openFileInput("ggsec.conf");
+            properties.load(in);
+            in.close();
+        } catch(IOException io) {
+            io.printStackTrace();
+            return false;
+        }
+
+        urls = properties;
+
+        return true;
     }
 
     @Override

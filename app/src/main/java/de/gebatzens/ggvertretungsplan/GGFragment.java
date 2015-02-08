@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2015 Hauke Oldsen
+ *
  * This file is part of GGVertretungsplan.
  *
  * GGVertretungsplan is free software: you can redistribute it and/or modify
@@ -287,7 +289,7 @@ public class GGFragment extends Fragment {
         } else if((type == TYPE_OVERVIEW && (planm.throwable != null || planh.throwable != null)) || (plan != null && plan.throwable != null)) {
             //Irgendein Error
             LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            boolean b = planm.throwable != null && planm.throwable instanceof VPUrlFileException;
+            boolean b = planm.throwable != null && planm.throwable instanceof VPLoginException;
             if(!b)
                 createButtonWithText(l, "Verbindung überprüfen und wiederholen", "Nochmal", new View.OnClickListener() {
                     @Override
@@ -314,11 +316,11 @@ public class GGFragment extends Fragment {
                                     public void onProgressUpdate(Integer... values) {
                                         if (values.length == 0)
                                             return;
-                                        if (values[0] == 10)
+                                        if (values[0] == 1)
                                             GGApp.GG_APP.showToast("Benutzername oder Passwort falsch");
-                                        else if (values[0] == 20)
+                                        else if (values[0] == 2)
                                             GGApp.GG_APP.showToast("Konnte keine Verbindung zum Anmeldeserver herstellen");
-                                        else if (values[0] == 30)
+                                        else if (values[0] == 3)
                                             GGApp.GG_APP.showToast("Unbekannter Fehler bei der Anmeldung");
                                     }
 
@@ -326,90 +328,14 @@ public class GGFragment extends Fragment {
                                     protected Integer doInBackground(Integer... params) {
                                         String user = ((EditText) ((Dialog) dialog).findViewById(R.id.usernameInput)).getText().toString();
                                         String pass = ((EditText) ((Dialog) dialog).findViewById(R.id.passwordInput)).getText().toString();
-                                        try {
-                                            TrustManager[] trustAllCerts = new TrustManager[]{ new X509TrustManager() {
-                                                    @Override
-                                                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                                                        return null;
-                                                    }
-
-                                                    @Override
-                                                    public void checkClientTrusted(X509Certificate[] certs, String authType) {
-
-                                                    }
-
-                                                    @Override
-                                                    public void checkServerTrusted(X509Certificate[] certs, String authType) {
-
-                                                    }
-                                                }
-                                            };
-                                            SSLContext sc = SSLContext.getInstance("TLS");
-                                            sc.init(null, trustAllCerts, new java.security.SecureRandom());
-                                            HostnameVerifier hv = new HostnameVerifier() {
-                                                @Override
-                                                public boolean verify(String hostname, SSLSession session) {
-                                                    return true;
-                                                }
-
-                                                ;
-                                            };
-
-                                            HttpsURLConnection con = (HttpsURLConnection) new URL("https://gebatzens.de/api/getgg.php").openConnection();
-                                            con.setRequestMethod("POST");
-
-                                            con.setSSLSocketFactory(sc.getSocketFactory());
-                                            con.setHostnameVerifier(hv);
-
-                                            con.setDoOutput(true);
-                                            DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                                            wr.writeBytes("user=" + user + "&pw=" + pass);
-                                            wr.flush();
-                                            wr.close();
-
-                                            int resp = con.getResponseCode();
-                                            if (resp == 200) {
-                                                Scanner scan = new Scanner(new BufferedInputStream(con.getInputStream()));
-                                                String data = "";
-                                                while (scan.hasNextLine())
-                                                    data += scan.nextLine() + "\n";
-                                                scan.close();
-
-                                                Writer out = new OutputStreamWriter(getActivity().openFileOutput("ggsec.conf", Context.MODE_PRIVATE));
-                                                out.write(data);
-                                                out.flush();
-                                                out.close();
-
-                                                if (!GGApp.GG_APP.loadURLFile())
-                                                    publishProgress(30);
-                                                else {
-                                                    GGApp.GG_APP.recreateProvider();
-                                                    getActivity().runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            ((MainActivity) getActivity()).mContent.mGGFrag.setFragmentsLoading();
-                                                        }
-                                                    });
-                                                    GGApp.GG_APP.refreshAsync(null, true);
-                                                }
-
-
-                                            } else {
-                                                publishProgress(10);
-
-                                            }
-
-
-                                        } catch (Exception e) {
-                                            e.printStackTrace();
-                                            if (e instanceof IOException)
-                                                publishProgress(20);
-                                            else
-                                                publishProgress(30);
-
-                                        }
+                                        publishProgress(GGApp.GG_APP.mProvider.login(this, user, pass));
                                         return null;
                                     }
+
+                                    public void publishProgressP(Integer... is) {
+                                        super.publishProgress(is);
+                                    }
+
                                 }.execute();
                                 dialog.dismiss();
                             }

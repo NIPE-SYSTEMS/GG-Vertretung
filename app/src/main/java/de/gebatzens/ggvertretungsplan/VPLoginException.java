@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2015 Hauke Oldsen
+ *
  * This file is part of GGVertretungsplan.
  *
  * GGVertretungsplan is free software: you can redistribute it and/or modify
@@ -17,15 +19,15 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-public class VPUrlFileException extends RuntimeException {
+public class VPLoginException extends RuntimeException {
 
-    public VPUrlFileException() {
+    public VPLoginException() {
         super();
     }
 
     @Override
     public String getMessage() {
-        return "The URL file ggsec.conf is invalid or missing!";
+        return "Not logged in!";
     }
 
 }

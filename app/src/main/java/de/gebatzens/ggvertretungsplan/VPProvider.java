@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2015 Hauke Oldsen
+ *
  * This file is part of GGVertretungsplan.
  *
  * GGVertretungsplan is free software: you can redistribute it and/or modify
@@ -14,8 +16,9 @@
  * You should have received a copy of the GNU General Public License
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package de.gebatzens.ggvertretungsplan;
+
+import android.os.AsyncTask;
 
 public abstract class VPProvider {
 
@@ -52,7 +55,8 @@ public abstract class VPProvider {
     public abstract int getColor();
     public abstract int getDarkColor();
     public abstract int getTheme();
-
-
+    public abstract boolean loginNeeded();
+    public abstract int login(AsyncTask<Integer, Integer, Integer> task, String u, String p);
+    public abstract boolean loadLogin();
 
 }

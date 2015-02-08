@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2015 Hauke Oldsen
+ *
  * This file is part of GGVertretungsplan.
  *
  * GGVertretungsplan is free software: you can redistribute it and/or modify
@@ -32,6 +34,7 @@ import android.support.v4.app.TaskStackBuilder;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -45,8 +48,6 @@ public class GGApp extends Application {
     public static final int UPDATE_DISABLE = 0, UPDATE_WLAN = 1, UPDATE_ALL = 2;
     private SharedPreferences preferences;
     public static GGApp GG_APP;
-    public boolean urlsLoaded;
-    public Properties urlProps;
     public HashMap<String, Class<? extends VPProvider>> mProviderList = new HashMap<String, Class<? extends VPProvider>>();
 
     @Override
@@ -54,7 +55,6 @@ public class GGApp extends Application {
         super.onCreate();
         GG_APP = this;
         registerProviders();
-        urlsLoaded = loadURLFile();
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         GGBroadcast.createAlarm(this);
         recreateProvider();
@@ -66,22 +66,6 @@ public class GGApp extends Application {
         mProviderList.clear();
         mProviderList.put("gg", GGProvider.class);
         mProviderList.put("sws", SWSProvider.class);
-    }
-
-    public boolean loadURLFile() {
-        Properties properties = new Properties();
-        try {
-            InputStream in = openFileInput("ggsec.conf");
-            properties.load(in);
-            in.close();
-        } catch(IOException io) {
-            io.printStackTrace();
-            return false;
-        }
-
-        urlProps = properties;
-
-        return true;
     }
 
     public void createNotification(String title, String message, int id, String... strings) {
@@ -159,6 +143,7 @@ public class GGApp extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        mProvider.loadLogin();
     }
 
     public int translateUpdateType(String s) {
@@ -180,6 +165,14 @@ public class GGApp extends Application {
         return translateUpdateType(preferences.getString("appupdates", "wifi"));
     }
 
+    public FragmentType getFragmentType() {
+        return FragmentType.valueOf(preferences.getString("fragtype", "PLAN"));
+    }
+
+    public void setFragmentType(FragmentType type) {
+        preferences.edit().putString("fragtype", type.toString()).commit();
+    }
+
     public void refreshAsync(final Runnable finished, final boolean updateFragments) {
         new AsyncTask<Object, Void, Void>() {
 
@@ -189,11 +182,13 @@ public class GGApp extends Application {
                 mVPToday = mProvider.getVPSync(mProvider.getTodayURL(), updateFragments);
                 mVPTomorrow = mProvider.getVPSync(mProvider.getTomorrowURL(), updateFragments);
 
+                //TODO news und mensa
+
                 if(updateFragments)
                     mActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mActivity.mContent.mGGFrag.updateFragments();
+                        mActivity.mContent.updateFragment();
                         }
                     });
 
@@ -209,6 +204,10 @@ public class GGApp extends Application {
         w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         w.setStatusBarColor(GGApp.GG_APP.mProvider.getDarkColor());
+    }
+
+    public static enum FragmentType {
+        PLAN, NEWS, MENSA
     }
 
 
