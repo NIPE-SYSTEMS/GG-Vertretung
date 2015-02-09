@@ -127,6 +127,7 @@ public class MainActivity extends FragmentActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.drawer_list_item, mStrings);
         mDrawerList.setAdapter(aa);
+        mDrawerList.setItemChecked(0, true);
         mDrawerList.setSelection(savedInstanceState == null ? 0 : fragTypeToInt(GGApp.GG_APP.getFragmentType()));
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
