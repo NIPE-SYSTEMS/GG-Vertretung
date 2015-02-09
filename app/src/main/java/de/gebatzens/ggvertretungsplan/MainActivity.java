@@ -19,7 +19,6 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -47,7 +46,7 @@ public class MainActivity extends FragmentActivity {
     public RemoteDataFragment mContent;
     Toolbar mToolbar;
     ListView mDrawerList;
-    TextView mDraverSettings;
+    TextView mDrawerSettings;
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mToggle;
     String[] mStrings = new String[] {"Vertretungsplan", "News", "Mensa"};
@@ -149,7 +148,6 @@ public class MainActivity extends FragmentActivity {
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mDrawerLayout.closeDrawers();
                 GGApp.GG_APP.setFragmentType(GGApp.FragmentType.values()[position]);
                 mDrawerLayout.closeDrawers();
                 mToolbar.setSubtitle(mStrings[position]);
@@ -164,8 +162,8 @@ public class MainActivity extends FragmentActivity {
             }
         });
 
-        mDraverSettings = (TextView) findViewById(R.id.left_draver_settings);
-        mDraverSettings.setOnClickListener(new View.OnClickListener() {
+        mDrawerSettings = (TextView) findViewById(R.id.left_drawer_settings);
+        mDrawerSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View viewIn) {
                 mDrawerLayout.closeDrawers();
