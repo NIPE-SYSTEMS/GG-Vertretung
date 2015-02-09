@@ -50,7 +50,26 @@ public class MainActivity extends FragmentActivity {
     String[] mStrings = new String[] {"Vertretungsplan", "News", "Mensa"};
 
     public RemoteDataFragment createFragment() {
-        return new GGContentFragment();
+        switch(GGApp.GG_APP.getFragmentType()) {
+            case PLAN:
+                return new GGContentFragment();
+            case NEWS:
+                return new NewsFragment();
+            case MENSA:
+                return new MensaFragment();
+            default:
+                return null;
+        }
+
+    }
+
+    public void removeAllFragments() {
+        List<Fragment> frags = getSupportFragmentManager().getFragments();
+        if(frags != null)
+            for(Fragment frag : frags) {
+                if(frag != null && !frag.getTag().equals("gg_content_fragment"))
+                    getSupportFragmentManager().beginTransaction().remove(frag).commit();
+            }
     }
 
     @Override
@@ -65,19 +84,12 @@ public class MainActivity extends FragmentActivity {
             GGApp.GG_APP.setStatusBarColor(getWindow());
         }
 
-        List<Fragment> frags = getSupportFragmentManager().getFragments();
-        if(frags != null)
-            for(Fragment frag : frags) {
-                getSupportFragmentManager().beginTransaction().remove(frag).commit();
-            }
+        removeAllFragments();
 
-        //if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            mContent = createFragment();
-            transaction.replace(R.id.content_fragment, mContent, "gg_content_fragment");
-            transaction.commit();
-        //} else
-        //    mContent = (GGContentFragment) getSupportFragmentManager().findFragmentByTag("gg_content_fragment");
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        mContent = createFragment();
+        transaction.replace(R.id.content_fragment, mContent, "gg_content_fragment");
+        transaction.commit();
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -99,8 +111,10 @@ public class MainActivity extends FragmentActivity {
         });
 
         mToolbar.setTitle(GGApp.GG_APP.mProvider.getFullName());
+        mToolbar.setSubtitle(mStrings[fragTypeToInt(GGApp.GG_APP.getFragmentType())]);
         mToolbar.inflateMenu(R.menu.toolbar_menu);
         mToolbar.setTitleTextColor(Color.WHITE);
+        mToolbar.setSubtitleTextColor(Color.WHITE);
         //toolbar.setNavigationIcon(R.drawable.ic_menu_white);
 
 
@@ -127,12 +141,22 @@ public class MainActivity extends FragmentActivity {
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.drawer_list_item, mStrings);
         mDrawerList.setAdapter(aa);
-        mDrawerList.setSelection(savedInstanceState == null ? 0 : fragTypeToInt(GGApp.GG_APP.getFragmentType()));
+        mDrawerList.setItemChecked(fragTypeToInt(GGApp.GG_APP.getFragmentType()), true);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 GGApp.GG_APP.setFragmentType(GGApp.FragmentType.values()[position]);
+                mDrawerLayout.closeDrawers();
+                mToolbar.setSubtitle(mStrings[position]);
+
+                removeAllFragments();
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                mContent = createFragment();
+                transaction.replace(R.id.content_fragment, mContent, "gg_content_fragment");
+                transaction.commit();
+
             }
         });
 
