@@ -121,8 +121,8 @@ public class MainActivity extends FragmentActivity {
         mToolbar.inflateMenu(R.menu.toolbar_menu);
         mToolbar.setTitleTextColor(Color.WHITE);
         mToolbar.setSubtitleTextColor(Color.WHITE);
-        //toolbar.setNavigationIcon(R.drawable.ic_menu_white);
 
+        ((TextView) findViewById(R.id.drawer_image_text)).setText(GGApp.GG_APP.mProvider.getFullName());
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
@@ -267,7 +267,7 @@ public class MainActivity extends FragmentActivity {
             }
             mToolbar.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
             mToolbar.setTitle(GGApp.GG_APP.mProvider.getFullName());
-
+            ((TextView) findViewById(R.id.drawer_image_text)).setText(GGApp.GG_APP.mProvider.getFullName());
 
             if(GGApp.GG_APP.getFragmentType() == GGApp.FragmentType.PLAN) {
                 ((GGContentFragment)mContent).mSlidingTabLayout.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());

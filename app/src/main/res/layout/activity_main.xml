@@ -42,14 +42,37 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/navigation_schoolpicture"
+                <RelativeLayout
                     android:layout_width="270dp"
-                    android:layout_height="172dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/sws_logo"
-                    android:layout_gravity="center"/>
+                    android:layout_height="172dp">
+                    <ImageView
+                        android:id="@+id/navigation_schoolpicture"
+                        android:layout_width="270dp"
+                        android:layout_height="172dp"
+                        android:adjustViewBounds="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/sws_logo"
+                        android:layout_gravity="center"/>
+
+                    <View
+                        android:layout_width="270dp"
+                        android:layout_height="172dp"
+                        android:background="#47000000"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="15dp"
+                        android:textSize="14sp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#ffffff"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="Gymnasium Glinde"
+                        android:id="@+id/drawer_image_text"/>
+                </RelativeLayout>
+
 
                 <ListView android:id="@+id/left_drawer"
                     android:layout_width="match_parent"

@@ -19,9 +19,6 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-/**
- * Created by hauke on 09.02.15.
- */
 public class MensaFragment extends RemoteDataFragment {
     @Override
     public void setFragmentLoading() {
