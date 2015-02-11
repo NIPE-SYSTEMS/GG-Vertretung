@@ -81,7 +81,7 @@
                     android:clickable="true"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:textColor="@color/drawer_list_button_text"
+                    android:textColor="#3e3e3e"
                     android:background="?android:selectableItemBackground"
                     android:minHeight="?android:attr/listPreferredItemHeightSmall" />
 

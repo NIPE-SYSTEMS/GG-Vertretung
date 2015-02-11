@@ -58,11 +58,6 @@ public class MainActivity extends FragmentActivity {
     ScrollView mDrawerContent;
     ImageView navigation_schoolpicture;
 
-    private int toPixels(float dp) {
-        float scale = getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
-
     public RemoteDataFragment createFragment() {
         switch(GGApp.GG_APP.getFragmentType()) {
             case PLAN:
