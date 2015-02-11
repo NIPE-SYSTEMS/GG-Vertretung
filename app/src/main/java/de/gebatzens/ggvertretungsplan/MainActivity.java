@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -35,7 +36,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -50,6 +55,13 @@ public class MainActivity extends FragmentActivity {
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mToggle;
     String[] mStrings = new String[] {"Vertretungsplan", "News", "Mensa"};
+    ScrollView mDrawerContent;
+    ImageView navigation_schoolpicture;
+
+    private int toPixels(float dp) {
+        float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
+    }
 
     public RemoteDataFragment createFragment() {
         switch(GGApp.GG_APP.getFragmentType()) {
@@ -82,9 +94,6 @@ public class MainActivity extends FragmentActivity {
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
         setTheme(GGApp.GG_APP.mProvider.getTheme());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            GGApp.GG_APP.setStatusBarColor(getWindow());
-        }
 
         removeAllFragments();
 
@@ -121,6 +130,12 @@ public class MainActivity extends FragmentActivity {
 
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            GGApp.GG_APP.setStatusBarColorTransparent(getWindow());
+            mDrawerLayout.setStatusBarBackgroundColor(GGApp.GG_APP.mProvider.getDarkColor());
+        }
 
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 mToolbar, R.string.drawer_open, R.string.drawer_close) {
@@ -137,6 +152,9 @@ public class MainActivity extends FragmentActivity {
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
             }
         };
+
+        navigation_schoolpicture = (ImageView) findViewById(R.id.navigation_schoolpicture);
+        navigation_schoolpicture.setImageResource(GGApp.GG_APP.mProvider.getImage());
 
         mDrawerLayout.setDrawerListener(mToggle);
 
@@ -161,6 +179,7 @@ public class MainActivity extends FragmentActivity {
 
             }
         });
+        ListviewHelper.getListViewSize(mDrawerList);
 
         mDrawerSettings = (TextView) findViewById(R.id.left_drawer_settings);
         mDrawerSettings.setOnClickListener(new View.OnClickListener() {
@@ -245,8 +264,11 @@ public class MainActivity extends FragmentActivity {
         if(requestCode == 1 && resultCode == RESULT_OK) { //Settings changed
             GGApp.GG_APP.recreateProvider();
             setTheme(GGApp.GG_APP.mProvider.getTheme());
+            navigation_schoolpicture = (ImageView) findViewById(R.id.navigation_schoolpicture);
+            navigation_schoolpicture.setImageResource(GGApp.GG_APP.mProvider.getImage());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                GGApp.GG_APP.setStatusBarColor(getWindow());
+                GGApp.GG_APP.setStatusBarColorTransparent(getWindow());
+                mDrawerLayout.setStatusBarBackgroundColor(GGApp.GG_APP.mProvider.getDarkColor());
             }
             mToolbar.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
             mToolbar.setTitle(GGApp.GG_APP.mProvider.getFullName());

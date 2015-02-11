@@ -206,6 +206,13 @@ public class GGApp extends Application {
         w.setStatusBarColor(GGApp.GG_APP.mProvider.getDarkColor());
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public void setStatusBarColorTransparent(Window w) {
+        w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        w.setStatusBarColor(getResources().getColor(R.color.transparent));
+    }
+
     public static enum FragmentType {
         PLAN, NEWS, MENSA
     }

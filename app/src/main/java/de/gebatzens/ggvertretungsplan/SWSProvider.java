@@ -189,6 +189,11 @@ public class SWSProvider extends VPProvider {
     }
 
     @Override
+    public int getImage() {
+        return R.drawable.sws_logo;
+    }
+
+    @Override
     public boolean loginNeeded() {
         return false;
     }

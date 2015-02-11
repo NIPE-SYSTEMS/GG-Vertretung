@@ -182,6 +182,11 @@ public class GGProvider extends VPProvider {
     }
 
     @Override
+    public int getImage() {
+        return R.drawable.gg_logo;
+    }
+
+    @Override
     public boolean loginNeeded() {
         return true;
     }
