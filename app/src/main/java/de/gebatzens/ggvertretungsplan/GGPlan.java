@@ -20,11 +20,17 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.content.Context;
+import android.util.JsonReader;
+import android.util.JsonWriter;
 import android.util.Log;
+
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +40,7 @@ public class GGPlan {
 
     public ArrayList<String[]> entries = new ArrayList<String[]>();
     public String date = "";
-    public String special = "";
+    public List<String> special = new ArrayList<String>();
     public Throwable throwable = null;
     public String loadDate = "";
 
@@ -45,27 +51,55 @@ public class GGPlan {
     public boolean load(Context c, String file) {
         Log.w("ggvp", "Lade " + file);
         entries.clear();
+        special.clear();
+        date = "";
+        loadDate = "";
+
         try {
             InputStream in = c.openFileInput(file);
-            Scanner scan = new Scanner(new BufferedInputStream(in));
+            JsonReader reader = new JsonReader(new InputStreamReader(in));
+            reader.beginObject();
+            while(reader.hasNext()) {
+                String name = reader.nextName();
+                if(name.equals("loadDate"))
+                    loadDate = reader.nextString();
+                else if(name.equals("date"))
+                    date = reader.nextString();
+                else if(name.equals("messages")) {
+                    reader.beginArray();
+                    while(reader.hasNext()) {
+                        special.add(reader.nextString());
+                    }
+                    reader.endArray();
+                } else if(name.equals("entries")) {
+                    reader.beginArray();
+                    while(reader.hasNext()) {
+                        reader.beginObject();
+                        String[] d = new String[5];
+                        while(reader.hasNext()) {
+                            String name2 = reader.nextName();
+                            if(name2.equals("klasse"))
+                                d[0] = reader.nextString();
+                            else if(name2.equals("stunde"))
+                                d[1] = reader.nextString();
+                            else if(name2.equals("vertr"))
+                                d[2] = reader.nextString();
+                            else if(name2.equals("fach"))
+                                d[3] = reader.nextString();
+                            else if(name2.equals("bemerk"))
+                                d[4] = reader.nextString();
+                            else
+                                reader.skipValue();
 
-            loadDate = scan.nextLine();
-            date = scan.nextLine();
-            special = scan.nextLine();
-
-            while(scan.hasNextLine()) {
-                String[] sr = new String[5];
-
-                for(int i = 0; i < 5; i++)
-                    sr[i] = scan.nextLine();
-
-                entries.add(sr);
+                        }
+                        entries.add(d);
+                        reader.endObject();
+                    }
+                    reader.endArray();
+                } else
+                    reader.skipValue();
             }
-
-            scan.close();
-
-            if(date == null || date.isEmpty())
-                return false;
+            reader.endObject();
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -78,15 +112,32 @@ public class GGPlan {
         Log.w("ggvp", "Speichere " + file);
         try {
             OutputStream out = c.openFileOutput(file, Context.MODE_PRIVATE);
-            PrintStream wr = new PrintStream(out);
-            wr.println(loadDate);
-            wr.println(date);
-            wr.println(special);
-            for(String[] s : entries) {
-                for(int i = 0; i < 5; i++)
-                    wr.println(s[i]);
+            JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
+
+            writer.setIndent("  ");
+            writer.beginObject();
+            writer.name("loadDate").value(loadDate);
+            writer.name("date").value(date);
+            writer.name("messages");
+            writer.beginArray();
+            for(String s : special)
+                writer.value(s);
+            writer.endArray();
+
+            writer.name("entries");
+            writer.beginArray();
+            for(String[] ss : entries){
+                writer.beginObject();
+                writer.name("klasse").value(ss[0]);
+                writer.name("stunde").value(ss[1]);
+                writer.name("vertr").value(ss[2]);
+                writer.name("fach").value(ss[3]);
+                writer.name("bemerk").value(ss[4]);
+                writer.endObject();
             }
-            wr.close();
+            writer.endArray();
+            writer.endObject();
+            writer.close();
         } catch(Exception e) {
             e.printStackTrace();
 

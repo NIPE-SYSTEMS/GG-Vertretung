@@ -112,10 +112,10 @@ public class GGProvider extends VPProvider {
                             while(!send.matcher(sp = reader.readLine()).find()) {
                                 Matcher mm = extr.matcher(sp);
                                 if(mm.find())
-                                    spv += mm.group(1) + " ";
+                                    p.special.add(mm.group(1));
 
                             }
-                            p.special = spv;
+
                         }
                     }
                 }
@@ -292,7 +292,7 @@ public class GGProvider extends VPProvider {
 
     @Override
     public String getFullName() {
-        return "Gynmasium Glinde";
+        return "Gymnasium Glinde";
     }
 
 }

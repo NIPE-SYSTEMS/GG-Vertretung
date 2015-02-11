@@ -55,6 +55,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -121,7 +122,7 @@ public class GGFragment extends Fragment {
 
     private int toPixels(float dp) {
         float scale = getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
+        return (int) (dp * scale);
     }
 
     private LinearLayout createLinearLayoutText(String text, int size, ViewGroup g) {
@@ -168,6 +169,31 @@ public class GGFragment extends Fragment {
         c2.setUseCompatPadding(true);
         c2.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
         return c2;
+    }
+
+    private ArrayList<TextView> createSMViews(GGPlan plan, boolean margin) {
+        ArrayList<TextView> tvl = new ArrayList<TextView>();
+
+        TextView tv = new TextView(getActivity());
+        if(margin) {
+            LinearLayout.LayoutParams tv1p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            tv1p.setMargins(0, toPixels(10), 0, 0);
+            tv.setLayoutParams(tv1p);
+        }
+        tv.setText(Html.fromHtml("<b>Besondere Mitteilungen</b>"));
+        tvl.add(tv);
+
+        for(String special : plan.special) {
+            TextView tv2 = new TextView(getActivity());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(0, toPixels(2), 0, 0);
+            tv2.setLayoutParams(params);
+            tv2.setText(Html.fromHtml(special));
+            tvl.add(tv2);
+
+        }
+
+        return tvl;
     }
 
     private void createButtonWithText(LinearLayout l, String text, String button, View.OnClickListener onclick) {
@@ -237,18 +263,17 @@ public class GGFragment extends Fragment {
             c2.addView(l2);
             f2.addView(c2);
             l.addView(f2);
-            TextView tv2 = createTextView(planh.date + " für "+clas+":", 20, inflater, l2);
+            TextView tv2 = createTextView(planh.date + " ("+clas+")", 20, inflater, l2);
             tv2.setPadding(0, 0, 0, toPixels(8));
             tv2.setTextColor(getResources().getColor(android.R.color.primary_text_light));
             if(list.size() == 0) {
-                createTextView("Es fällt nichts für dich aus!", 14, inflater, l2);
+                createTextView("Es fällt nichts für "+clas+" aus!", 14, inflater, l2);
             } else
                 createTable(list, false, inflater, l2, planh);
 
             if(!planh.special.isEmpty()) {
-                TextView tv3 = new TextView(getActivity());
-                tv3.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + planh.special));
-                l2.addView(tv3);
+                for(TextView tv : createSMViews(planh, true))
+                    l2.addView(tv);
             }
 
             list = planm.getAllForClass(clas);
@@ -260,18 +285,17 @@ public class GGFragment extends Fragment {
             c4.addView(l4);
             f4.addView(c4);
             l.addView(f4);
-            TextView tv4 = createTextView(planm.date + " für "+clas+":", 20, inflater, l4);
+            TextView tv4 = createTextView(planm.date + " ("+clas+")", 20, inflater, l4);
             tv4.setPadding(0, 0, 0, toPixels(8));
             tv4.setTextColor(getResources().getColor(android.R.color.primary_text_light));
             if(list.size() == 0) {
-                createTextView("Es fällt nichts für dich aus!", 14, inflater, l4);
+                createTextView("Es fällt nichts für "+clas+" aus!", 14, inflater, l4);
             } else
                 createTable(list, false, inflater, l4, planm);
 
             if(!planm.special.isEmpty()) {
-                TextView tv5 = new TextView(getActivity());
-                tv5.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + planm.special));
-                l4.addView(tv5);
+                for(TextView tv : createSMViews(planm, true))
+                    l4.addView(tv);
             }
 
         } else if(type == TYPE_OVERVIEW && planh.throwable == null && planm.throwable == null) {
@@ -373,9 +397,8 @@ public class GGFragment extends Fragment {
                 c6.addView(l6);
                 f6.addView(c6);
                 l.addView(f6);
-                TextView tv6 = new TextView(getActivity());
-                tv6.setText(Html.fromHtml("<b>Besondere Mitteilungen</b><br>" + plan.special));
-                l6.addView(tv6);
+                for(TextView tv : createSMViews(plan, false))
+                    l6.addView(tv);
             }
 
             FrameLayout f7 = new FrameLayout(getActivity());
