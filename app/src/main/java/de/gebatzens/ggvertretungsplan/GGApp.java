@@ -170,7 +170,7 @@ public class GGApp extends Application {
     }
 
     public void setFragmentType(FragmentType type) {
-        preferences.edit().putString("fragtype", type.toString()).commit();
+        preferences.edit().putString("fragtype", type.toString()).apply();
     }
 
     public void refreshAsync(final Runnable finished, final boolean updateFragments) {

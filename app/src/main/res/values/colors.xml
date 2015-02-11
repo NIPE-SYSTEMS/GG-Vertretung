@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <color name="main">#2196F3</color>
     <color name="custom_material_green">#0f9d58</color>
     <color name="custom_material_red">#db4437</color>
     <color name="custom_material_blue">#4285f4</color>

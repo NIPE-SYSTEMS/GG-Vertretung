@@ -68,7 +68,7 @@
                     android:layout_marginBottom="6.6dp"
                     android:background="#f0f0f0"/>
 
-                <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                <TextView
                     android:id="@+id/left_drawer_settings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

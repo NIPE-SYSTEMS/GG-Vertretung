@@ -19,6 +19,7 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -191,6 +192,7 @@ public class GGProvider extends VPProvider {
         return true;
     }
 
+    @SuppressLint("TrulyRandom")
     @Override
     public int login(AsyncTask<Integer, Integer, Integer> task, String user, String pass) {
         try {
