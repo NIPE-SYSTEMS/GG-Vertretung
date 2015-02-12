@@ -56,6 +56,7 @@ public abstract class VPProvider {
     public abstract int getDarkColor();
     public abstract int getTheme();
     public abstract int getImage();
+    public abstract String getWebsite();
     public abstract boolean loginNeeded();
     public abstract int login(AsyncTask<Integer, Integer, Integer> task, String u, String p);
     public abstract boolean loadLogin();

@@ -22,9 +22,11 @@ package de.gebatzens.ggvertretungsplan;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -55,8 +57,8 @@ public class MainActivity extends FragmentActivity {
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mToggle;
     String[] mStrings = new String[] {"Vertretungsplan", "News", "Mensa"};
-    ScrollView mDrawerContent;
-    ImageView navigation_schoolpicture;
+    ImageView mNavigationSchoolpicture;
+    View mNavigationSchoolpictureLink;
 
     public RemoteDataFragment createFragment() {
         switch(GGApp.GG_APP.getFragmentType()) {
@@ -148,8 +150,18 @@ public class MainActivity extends FragmentActivity {
             }
         };
 
-        navigation_schoolpicture = (ImageView) findViewById(R.id.navigation_schoolpicture);
-        navigation_schoolpicture.setImageResource(GGApp.GG_APP.mProvider.getImage());
+        mNavigationSchoolpicture = (ImageView) findViewById(R.id.navigation_schoolpicture);
+        mNavigationSchoolpicture.setImageResource(GGApp.GG_APP.mProvider.getImage());
+        mNavigationSchoolpictureLink = (View) findViewById(R.id.navigation_schoolpicture_link);
+        mNavigationSchoolpictureLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View viewIn) {
+                mDrawerLayout.closeDrawers();
+                Intent linkIntent = new Intent(Intent.ACTION_VIEW);
+                linkIntent.setData(Uri.parse(GGApp.GG_APP.mProvider.getWebsite()));
+                startActivity(linkIntent);
+            }
+        });
 
         mDrawerLayout.setDrawerListener(mToggle);
 
@@ -259,8 +271,8 @@ public class MainActivity extends FragmentActivity {
         if(requestCode == 1 && resultCode == RESULT_OK) { //Settings changed
             GGApp.GG_APP.recreateProvider();
             setTheme(GGApp.GG_APP.mProvider.getTheme());
-            navigation_schoolpicture = (ImageView) findViewById(R.id.navigation_schoolpicture);
-            navigation_schoolpicture.setImageResource(GGApp.GG_APP.mProvider.getImage());
+            mNavigationSchoolpicture = (ImageView) findViewById(R.id.navigation_schoolpicture);
+            mNavigationSchoolpicture.setImageResource(GGApp.GG_APP.mProvider.getImage());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 GGApp.GG_APP.setStatusBarColorTransparent(getWindow());
                 mDrawerLayout.setStatusBarBackgroundColor(GGApp.GG_APP.mProvider.getDarkColor());

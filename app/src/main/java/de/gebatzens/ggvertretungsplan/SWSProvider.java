@@ -194,6 +194,11 @@ public class SWSProvider extends VPProvider {
     }
 
     @Override
+    public String getWebsite() {
+        return "http://www.sachsenwaldschule.de/";
+    }
+
+    @Override
     public boolean loginNeeded() {
         return false;
     }

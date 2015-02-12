@@ -188,6 +188,11 @@ public class GGProvider extends VPProvider {
     }
 
     @Override
+    public String getWebsite() {
+        return "http://gymglinde.de/";
+    }
+
+    @Override
     public boolean loginNeeded() {
         return true;
     }

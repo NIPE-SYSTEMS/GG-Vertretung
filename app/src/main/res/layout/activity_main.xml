@@ -55,6 +55,7 @@
                         android:layout_gravity="center"/>
 
                     <View
+                        android:id="@+id/navigation_schoolpicture_link"
                         android:layout_width="270dp"
                         android:layout_height="172dp"
                         android:background="#47000000"/>
