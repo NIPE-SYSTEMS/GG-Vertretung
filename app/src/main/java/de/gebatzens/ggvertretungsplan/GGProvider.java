@@ -112,8 +112,8 @@ public class GGProvider extends VPProvider {
                             String sp = "";
                             while(!send.matcher(sp = reader.readLine()).find()) {
                                 Matcher mm = extr.matcher(sp);
-                                if(mm.find())
-                                    p.special.add(mm.group(1));
+                                if(mm.find() && !mm.group(1).trim().isEmpty())
+                                    p.special.add("&#8226;  " + mm.group(1).trim());
 
                             }
 

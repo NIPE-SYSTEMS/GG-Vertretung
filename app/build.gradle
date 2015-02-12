@@ -8,8 +8,8 @@ android {
         applicationId "de.gebatzens.ggvertretungsplan"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 7
-        versionName "0.6.1"
+        versionCode 8
+        versionName "0.7"
     }
     buildTypes {
         release {
@@ -27,4 +27,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:cardview-v7:21.0.3'
+    //compile 'org.apache.pdfbox:pdfbox:1.8.8'
 }
