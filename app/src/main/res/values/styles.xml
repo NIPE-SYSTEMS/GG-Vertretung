@@ -46,6 +46,7 @@
     <style name="Theme.AlertDialog.Orange" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">#FF9800</item>
         <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:popupBackground">@android:color/white</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
