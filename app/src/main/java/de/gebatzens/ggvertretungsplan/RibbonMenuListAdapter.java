@@ -25,6 +25,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -46,6 +47,7 @@ public class RibbonMenuListAdapter extends BaseAdapter {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.ribbon_drawer_list_item, parent, false);
         TextView txtTitle = (TextView) itemView.findViewById(R.id.menuTitle);
+        ArrayAdapter a;
         ImageView imgIcon = (ImageView) itemView.findViewById(R.id.menuIcon);
         txtTitle.setText(mTitle[position]);
         imgIcon.setImageResource(mIcon[position]);

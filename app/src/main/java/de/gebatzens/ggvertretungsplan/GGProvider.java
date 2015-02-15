@@ -114,6 +114,8 @@ public class GGProvider extends VPProvider {
     @Override
     public void logout() {
         GGApp.GG_APP.deleteFile("gguserinfo");
+        GGApp.GG_APP.deleteFile("ggvptoday");
+        GGApp.GG_APP.deleteFile("ggvptomorrow");
         props.clear();
         new AsyncTask<String, String, String>() {
             @Override
@@ -282,7 +284,7 @@ public class GGProvider extends VPProvider {
     @Override
     public String getDay(String date) {
         if (date.isEmpty())
-            return "";
+            return date;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
         try {

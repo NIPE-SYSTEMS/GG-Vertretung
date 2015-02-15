@@ -144,6 +144,9 @@ public class GGFragment extends Fragment {
         return table;
     }
 
+    private CardView createCardItem() {
+        return null;
+    }
 
     private CardView createCardView() {
         CardView c2 = new CardView(getActivity());
