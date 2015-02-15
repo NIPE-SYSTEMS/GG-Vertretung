@@ -21,7 +21,6 @@ package de.gebatzens.ggvertretungsplan;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.PorterDuff;
@@ -48,23 +47,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.io.BufferedInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.net.URL;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 public class GGFragment extends Fragment {
 
@@ -76,8 +60,10 @@ public class GGFragment extends Fragment {
 
     public void setParams(int type) {
         this.type = type;
-        planh = GGApp.GG_APP.mVPToday;
-        planm = GGApp.GG_APP.mVPTomorrow;
+        if(GGApp.GG_APP.plans != null) {
+            planh = GGApp.GG_APP.plans[0];
+            planm = GGApp.GG_APP.plans[1];
+        }
         if(type == TYPE_TODAY)
             plan = planh;
         else if(type == TYPE_TOMORROW)
@@ -102,7 +88,7 @@ public class GGFragment extends Fragment {
         l.setGravity(Gravity.CENTER);
 
         ProgressBar pb = new ProgressBar(getActivity());
-        pb.getIndeterminateDrawable().setColorFilter(GGApp.GG_APP.mProvider.getColor(),PorterDuff.Mode.SRC_IN);
+        pb.getIndeterminateDrawable().setColorFilter(GGApp.GG_APP.provider.getColor(),PorterDuff.Mode.SRC_IN);
         pb.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         pb.setVisibility(ProgressBar.VISIBLE);
 
@@ -133,7 +119,7 @@ public class GGFragment extends Fragment {
     }
 
     private TextView createTextView(String text, int size, LayoutInflater inflater, ViewGroup group) {
-       // TextView t = (TextView) inflater.inflate(R.layout.plan_text, group, true).findViewById(R.id.plan_entry);
+        // TextView t = (TextView) inflater.inflate(R.layout.plan_text, group, true).findViewById(R.id.plan_entry);
         TextView t = new TextView(getActivity());
         t.setText(text);
         t.setPadding(0, 0, toPixels(20), 0);
@@ -241,9 +227,9 @@ public class GGFragment extends Fragment {
             tv.setText("Error: " + type);
             l.addView(tv);
             Log.w("ggvp", "setParams not called " + type + " " + this + " " + getParentFragment());
-        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getSelectedGrade().equals("") && planh.throwable == null && planm.throwable == null) {
+        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getSelectedClass().equals("") && planh.throwable == null && planm.throwable == null) {
             //normale Übersicht
-            String clas = GGApp.GG_APP.getSelectedGrade();
+            String clas = GGApp.GG_APP.getSelectedClass();
 
             List<String[]> list = planh.getAllForClass(clas);
 
@@ -337,27 +323,27 @@ public class GGFragment extends Fragment {
                                 new AsyncTask<Integer, Integer, Integer>() {
 
                                     @Override
-                                    public void onProgressUpdate(Integer... values) {
-                                        if (values.length == 0)
-                                            return;
-                                        if (values[0] == 1)
-                                            GGApp.GG_APP.showToast("Benutzername oder Passwort falsch");
-                                        else if (values[0] == 2)
-                                            GGApp.GG_APP.showToast("Konnte keine Verbindung zum Anmeldeserver herstellen");
-                                        else if (values[0] == 3)
-                                            GGApp.GG_APP.showToast("Unbekannter Fehler bei der Anmeldung");
+                                    public void onPostExecute(Integer v) {
+                                        switch(v) {
+                                            case 1:
+                                                GGApp.GG_APP.showToast("Benutzername oder Passwort falsch");
+                                                break;
+                                            case 2:
+                                                GGApp.GG_APP.showToast("Konnte keine Verbindung zum Anmeldeserver herstellen");
+                                                break;
+                                            case 3:
+                                                GGApp.GG_APP.showToast("Unbekannter Fehler bei der Anmeldung");
+                                                break;
+                                        }
+
                                     }
 
                                     @Override
                                     protected Integer doInBackground(Integer... params) {
                                         String user = ((EditText) ((Dialog) dialog).findViewById(R.id.usernameInput)).getText().toString();
                                         String pass = ((EditText) ((Dialog) dialog).findViewById(R.id.passwordInput)).getText().toString();
-                                        publishProgress(GGApp.GG_APP.mProvider.login(this, user, pass));
-                                        return null;
-                                    }
+                                        return GGApp.GG_APP.provider.login(user, pass);
 
-                                    public void publishProgressP(Integer... is) {
-                                        super.publishProgress(is);
                                     }
 
                                 }.execute();
@@ -422,7 +408,7 @@ public class GGFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
         LinearLayout l = new LinearLayout(getActivity());
         l.setOrientation(LinearLayout.VERTICAL);
-        if(GGApp.GG_APP.mVPToday != null && GGApp.GG_APP.mVPTomorrow != null)
+        if(GGApp.GG_APP.plans != null)
             createView(inflater, l);
         return l;
     }
@@ -431,7 +417,7 @@ public class GGFragment extends Fragment {
     public void onViewCreated(View v, Bundle b) {
         super.onViewCreated(v, b);
 
-        if(GGApp.GG_APP.mVPToday == null || GGApp.GG_APP.mVPTomorrow == null) {
+        if(GGApp.GG_APP.plans == null) {
             ((ViewGroup) getView()).addView(createLoadingView());
         }
     }

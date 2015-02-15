@@ -91,9 +91,9 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
             case 0:
                 return "Übersicht";
             case 1:
-                return GGApp.GG_APP.mVPToday == null ? "Heute" : GGApp.GG_APP.mVPToday.date.isEmpty() ? "Heute" : GGApp.GG_APP.mProvider.getDay(GGApp.GG_APP.mVPToday.date);
+                return GGApp.GG_APP.plans == null ? "Heute"  : GGApp.GG_APP.provider.getDay(GGApp.GG_APP.plans[0].date);
             case 2:
-                return GGApp.GG_APP.mVPTomorrow == null ? "Morgen" : GGApp.GG_APP.mVPTomorrow.date.isEmpty() ? "Morgen" : GGApp.GG_APP.mProvider.getDay(GGApp.GG_APP.mVPTomorrow.date);
+                return GGApp.GG_APP.plans == null ? "Morgen" : GGApp.GG_APP.provider.getDay(GGApp.GG_APP.plans[1].date);
             default:
                 return null;
         }

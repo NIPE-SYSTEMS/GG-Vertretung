@@ -19,7 +19,7 @@
 
 package de.gebatzens.ggvertretungsplan;
 
-import android.os.AsyncTask;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -39,13 +39,20 @@ public class SWSProvider extends VPProvider {
         super(gg);
     }
 
-    @Override
-    public GGPlan getVPSync(String url, boolean toast) {
+    public GGPlan[] getPlans(boolean toast) {
+        Log.w("ggvp", "Lade SWS PLäne");
+        GGPlan[] plans = new GGPlan[2];
+
+        plans[0] = getPlan("http://contao.sachsenwaldschule.org/files/dateiablage_extern/vertretungsplanung/schueler_online/subst_001.htm", toast);
+        plans[1] = getPlan("http://contao.sachsenwaldschule.org/files/dateiablage_extern/vertretungsplanung/schueler_online/subst_002.htm", false);
+
+        return plans;
+    }
+
+    public GGPlan getPlan(String url, boolean toast) {
         final GGPlan plan = new GGPlan();
 
         try {
-            if(url == null || url.isEmpty())
-                throw new VPLoginException();
             URLConnection con = new URL(url).openConnection();
             BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
 
@@ -130,7 +137,7 @@ public class SWSProvider extends VPProvider {
             plan.throwable = e;
         }
 
-        boolean b = url != null && url.equals(getTodayURL());
+        boolean b = url.contains("001.htm");
 
         if(plan.throwable == null)
             plan.save(GGApp.GG_APP, b ? "swstd" : "swstm");
@@ -140,7 +147,7 @@ public class SWSProvider extends VPProvider {
                 plan.loadDate = "Keine Internetverbindung\n" + plan.loadDate;
                 plan.throwable = null;
                 if(toast)
-                    GGApp.GG_APP.mActivity.runOnUiThread(new Runnable() {
+                    GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             GGApp.GG_APP.showToast(plan.throwable instanceof UnknownHostException ? "Konnte contao.sachsenwaldschule.org nicht auflösen" :
@@ -156,21 +163,11 @@ public class SWSProvider extends VPProvider {
     @Override
     public String getDay(String s) {
         if(s.isEmpty())
-            return "Bug";
+            return "";
         String[] strs = s.split(" ");
         if(strs.length < 2)
-            return "Bug";
+            return "";
         return strs[1];
-    }
-
-    @Override
-    public String getTodayURL() {
-        return "http://contao.sachsenwaldschule.org/files/dateiablage_extern/vertretungsplanung/schueler_online/subst_001.htm";
-    }
-
-    @Override
-    public String getTomorrowURL() {
-        return "http://contao.sachsenwaldschule.org/files/dateiablage_extern/vertretungsplanung/schueler_online/subst_002.htm";
     }
 
     @Override
@@ -181,6 +178,11 @@ public class SWSProvider extends VPProvider {
     @Override
     public int getDarkColor() {
         return GGApp.GG_APP.getResources().getColor(R.color.main_blue_dark);
+    }
+
+    @Override
+    public void logout() {
+
     }
 
     @Override
@@ -204,14 +206,10 @@ public class SWSProvider extends VPProvider {
     }
 
     @Override
-    public int login(AsyncTask<Integer, Integer, Integer> task, String u, String p) {
+    public int login(String u, String p) {
         return 0;
     }
 
-    @Override
-    public boolean loadLogin() {
-        return true;
-    }
 
     @Override
     public String getFullName() {

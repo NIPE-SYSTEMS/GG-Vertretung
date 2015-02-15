@@ -26,7 +26,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -38,11 +37,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -57,7 +53,7 @@ public class MainActivity extends FragmentActivity {
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mToggle;
     String[] mStrings = new String[] {"Vertretungsplan", "News", "Mensa"};
-    ImageView mNavigationSchoolpicture;
+    ImageView mNacvigationImage;
     View mNavigationSchoolpictureLink;
 
     public RemoteDataFragment createFragment() {
@@ -86,11 +82,11 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GGApp.GG_APP.mActivity = this;
+        GGApp.GG_APP.activity = this;
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
-        setTheme(GGApp.GG_APP.mProvider.getTheme());
+        setTheme(GGApp.GG_APP.provider.getTheme());
 
         removeAllFragments();
 
@@ -101,7 +97,7 @@ public class MainActivity extends FragmentActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        mToolbar.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
+        mToolbar.setBackgroundColor(GGApp.GG_APP.provider.getColor());
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -112,26 +108,28 @@ public class MainActivity extends FragmentActivity {
                 } else if(menuItem.getItemId() == R.id.action_settings) {
                     Intent i = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivityForResult(i, 1);
+                } else if(menuItem.getItemId() == R.id.action_logout) {
+                    GGApp.GG_APP.provider.logout();
                 }
 
                 return false;
             }
         });
 
-        mToolbar.setTitle(GGApp.GG_APP.mProvider.getFullName());
+        mToolbar.setTitle(GGApp.GG_APP.provider.getFullName());
         mToolbar.setSubtitle(mStrings[fragTypeToInt(GGApp.GG_APP.getFragmentType())]);
         mToolbar.inflateMenu(R.menu.toolbar_menu);
         mToolbar.setTitleTextColor(Color.WHITE);
         mToolbar.setSubtitleTextColor(Color.WHITE);
 
-        ((TextView) findViewById(R.id.drawer_image_text)).setText(GGApp.GG_APP.mProvider.getFullName());
+        ((TextView) findViewById(R.id.drawer_image_text)).setText(GGApp.GG_APP.provider.getFullName());
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             GGApp.GG_APP.setStatusBarColorTransparent(getWindow());
-            mDrawerLayout.setStatusBarBackgroundColor(GGApp.GG_APP.mProvider.getDarkColor());
+            mDrawerLayout.setStatusBarBackgroundColor(GGApp.GG_APP.provider.getDarkColor());
         }
 
         mToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
@@ -150,15 +148,15 @@ public class MainActivity extends FragmentActivity {
             }
         };
 
-        mNavigationSchoolpicture = (ImageView) findViewById(R.id.navigation_schoolpicture);
-        mNavigationSchoolpicture.setImageResource(GGApp.GG_APP.mProvider.getImage());
+        mNacvigationImage = (ImageView) findViewById(R.id.navigation_schoolpicture);
+        mNacvigationImage.setImageResource(GGApp.GG_APP.provider.getImage());
         mNavigationSchoolpictureLink = (View) findViewById(R.id.navigation_schoolpicture_link);
         mNavigationSchoolpictureLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View viewIn) {
                 mDrawerLayout.closeDrawers();
                 Intent linkIntent = new Intent(Intent.ACTION_VIEW);
-                linkIntent.setData(Uri.parse(GGApp.GG_APP.mProvider.getWebsite()));
+                linkIntent.setData(Uri.parse(GGApp.GG_APP.provider.getWebsite()));
                 startActivity(linkIntent);
             }
         });
@@ -208,7 +206,7 @@ public class MainActivity extends FragmentActivity {
                 while(b) {
                     switch(GGApp.GG_APP.getFragmentType()) {
                         case PLAN:
-                            b = GGApp.GG_APP.mVPToday == null || GGApp.GG_APP.mVPTomorrow == null;
+                            b = GGApp.GG_APP.plans == null;
                             break;
                         case NEWS:
                             //TODO
@@ -261,7 +259,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        GGApp.GG_APP.mActivity = null;
+        GGApp.GG_APP.activity = null;
     }
 
     @Override
@@ -270,19 +268,19 @@ public class MainActivity extends FragmentActivity {
 
         if(requestCode == 1 && resultCode == RESULT_OK) { //Settings changed
             GGApp.GG_APP.recreateProvider();
-            setTheme(GGApp.GG_APP.mProvider.getTheme());
-            mNavigationSchoolpicture = (ImageView) findViewById(R.id.navigation_schoolpicture);
-            mNavigationSchoolpicture.setImageResource(GGApp.GG_APP.mProvider.getImage());
+            setTheme(GGApp.GG_APP.provider.getTheme());
+            mNacvigationImage = (ImageView) findViewById(R.id.navigation_schoolpicture);
+            mNacvigationImage.setImageResource(GGApp.GG_APP.provider.getImage());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 GGApp.GG_APP.setStatusBarColorTransparent(getWindow());
-                mDrawerLayout.setStatusBarBackgroundColor(GGApp.GG_APP.mProvider.getDarkColor());
+                mDrawerLayout.setStatusBarBackgroundColor(GGApp.GG_APP.provider.getDarkColor());
             }
-            mToolbar.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
-            mToolbar.setTitle(GGApp.GG_APP.mProvider.getFullName());
-            ((TextView) findViewById(R.id.drawer_image_text)).setText(GGApp.GG_APP.mProvider.getFullName());
+            mToolbar.setBackgroundColor(GGApp.GG_APP.provider.getColor());
+            mToolbar.setTitle(GGApp.GG_APP.provider.getFullName());
+            ((TextView) findViewById(R.id.drawer_image_text)).setText(GGApp.GG_APP.provider.getFullName());
 
             if(GGApp.GG_APP.getFragmentType() == GGApp.FragmentType.PLAN) {
-                ((GGContentFragment)mContent).mSlidingTabLayout.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
+                ((GGContentFragment)mContent).mSlidingTabLayout.setBackgroundColor(GGApp.GG_APP.provider.getColor());
                 mContent.setFragmentLoading();
             }
             GGApp.GG_APP.refreshAsync(null, true);
