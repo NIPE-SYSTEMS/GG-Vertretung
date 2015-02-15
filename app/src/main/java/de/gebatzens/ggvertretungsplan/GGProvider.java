@@ -365,7 +365,7 @@ public class GGProvider extends VPProvider {
                         if (name.equals("sessid")) {
                             sessId = parser.nextText();
                             props.setProperty("sessid", sessId);
-                        } else if(name.equals("token") || name.equals("firstname") || name.equals("lastname") || name.equals("group")) {
+                        } else if(name.equals("username") || name.equals("token") || name.equals("firstname") || name.equals("lastname") || name.equals("group")) {
                             props.setProperty(name, parser.nextText());
                         }
                     }
