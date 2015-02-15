@@ -97,14 +97,14 @@ public class SettingsActivity extends Activity {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     GGApp.GG_APP.provider.logout();
-                    preference.setSummary("Du bist nicht angemeldet!");
+                    preference.setSummary("Sie sind nicht angemeldet");
                     return false;
                 }
             });
             if(sessId!=null) {
                 String username = props.getProperty("username");
                 if(username!=null) {
-                    pref_username.setSummary(username + " (Zum abmelden beruehren)");
+                    pref_username.setSummary(username + " (zum abmelden berühren)");
                 }
             }
 
