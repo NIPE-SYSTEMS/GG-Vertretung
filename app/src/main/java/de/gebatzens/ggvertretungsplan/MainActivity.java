@@ -53,6 +53,7 @@ public class MainActivity extends FragmentActivity {
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mToggle;
     String[] mStrings = new String[] {"Vertretungsplan", "News", "Mensa"};
+    int[] mIcons = new int[] {R.drawable.material_dot, R.drawable.material_dot, R.drawable.material_dot};
     ImageView mNacvigationImage;
     View mNavigationSchoolpictureLink;
 
@@ -164,7 +165,8 @@ public class MainActivity extends FragmentActivity {
         mDrawerLayout.setDrawerListener(mToggle);
 
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.drawer_list_item, mStrings);
+        //ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.drawer_list_item, mStrings);
+        RibbonMenuListAdapter aa = new RibbonMenuListAdapter(this, mStrings, mIcons);
         mDrawerList.setAdapter(aa);
         mDrawerList.setItemChecked(fragTypeToInt(GGApp.GG_APP.getFragmentType()), true);
 
