@@ -10,6 +10,10 @@
         <EditTextPreference android:title="Klasse"
             android:key="klasse"
             android:summary="Keine ausgewählt" />
+        <Preference android:title="Benutzername"
+            android:key="authentication_username"
+            android:summary="Sie sind nicht angemeldet">
+        </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="Allgemein">
         <CheckBoxPreference android:title="Benachrichtigungen anzeigen"
@@ -22,12 +26,6 @@
             android:entries="@array/appupdatesArray"
             android:entryValues="@array/appupdatesValues"
             android:defaultValue="wifi" />
-    </PreferenceCategory>
-    <PreferenceCategory android:title="Authentifizierung">
-        <Preference android:title="Benutzername"
-            android:key="authentication_username"
-            android:summary="Du bist nicht angemeldet!">
-        </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="Info">
         <de.gebatzens.ggvertretungsplan.GGDialogPreference
