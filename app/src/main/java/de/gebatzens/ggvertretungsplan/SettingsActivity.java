@@ -53,8 +53,8 @@ public class SettingsActivity extends Activity {
             addPreferencesFromResource(R.xml.preferences);
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
             sp.registerOnSharedPreferenceChangeListener(this);
-            String pref_schule_content = gg.mProvider.getFullName();
-            String pref_klasse_content = gg.getSelectedGrade();
+            String pref_schule_content = gg.provider.getFullName();
+            String pref_klasse_content = gg.getSelectedClass();
             if(pref_klasse_content.equals(""))
                 pref_klasse_content = "Keine ausgewählt";
 
@@ -134,13 +134,13 @@ public class SettingsActivity extends Activity {
 
         }
 
-        setTheme(GGApp.GG_APP.mProvider.getTheme());
+        setTheme(GGApp.GG_APP.provider.getTheme());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             GGApp.GG_APP.setStatusBarColor(getWindow());
         }
 
         mToolBar = (Toolbar) contentView.findViewById(R.id.toolbar);
-        mToolBar.setBackgroundColor(GGApp.GG_APP.mProvider.getColor());
+        mToolBar.setBackgroundColor(GGApp.GG_APP.provider.getColor());
         mToolBar.setTitleTextColor(Color.WHITE);
         mToolBar.setNavigationIcon(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         mToolBar.setNavigationOnClickListener(new View.OnClickListener() {

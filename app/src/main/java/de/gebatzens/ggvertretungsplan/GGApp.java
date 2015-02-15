@@ -35,20 +35,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Properties;
 
 public class GGApp extends Application {
 
-    public GGPlan mVPToday, mVPTomorrow;
-    public MainActivity mActivity;
-    public VPProvider mProvider;
+    public GGPlan[] plans = null;
+    public MainActivity activity;
+    public VPProvider provider;
     public static final int UPDATE_DISABLE = 0, UPDATE_WLAN = 1, UPDATE_ALL = 2;
     private SharedPreferences preferences;
     public static GGApp GG_APP;
-    public HashMap<String, Class<? extends VPProvider>> mProviderList = new HashMap<String, Class<? extends VPProvider>>();
+    private HashMap<String, Class<? extends VPProvider>> mProviderList = new HashMap<String, Class<? extends VPProvider>>();
 
     @Override
     public void onCreate() {
@@ -88,7 +85,7 @@ public class GGApp extends Application {
 
             mBuilder.setStyle(inboxStyle);
         }
-        mBuilder.setColor(GGApp.GG_APP.mProvider.getDarkColor());
+        mBuilder.setColor(GGApp.GG_APP.provider.getDarkColor());
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, MainActivity.class);
 
@@ -113,8 +110,12 @@ public class GGApp extends Application {
         mNotificationManager.notify(id, mBuilder.build());
     }
 
-    public String getSelectedGrade() {
+    public String getSelectedClass() {
         return preferences.getString("klasse", "");
+    }
+
+    public void setSelectedClass(String c) {
+        preferences.edit().putString("klasse", c).apply();
     }
 
     public String getSelectedProvider() {
@@ -139,11 +140,10 @@ public class GGApp extends Application {
             throw new RuntimeException("Provider for " + id + " not found");
 
         try {
-            mProvider = (VPProvider) clas.getConstructors()[0].newInstance(this);
+            provider = (VPProvider) clas.getConstructors()[0].newInstance(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mProvider.loadLogin();
     }
 
     public int translateUpdateType(String s) {
@@ -179,21 +179,20 @@ public class GGApp extends Application {
             @Override
             protected Void doInBackground(Object... params) {
 
-                mVPToday = mProvider.getVPSync(mProvider.getTodayURL(), updateFragments);
-                mVPTomorrow = mProvider.getVPSync(mProvider.getTomorrowURL(), updateFragments);
+                plans = provider.getPlans(updateFragments);
 
                 //TODO news und mensa
 
                 if(updateFragments)
-                    mActivity.runOnUiThread(new Runnable() {
+                    activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                        mActivity.mContent.updateFragment();
+                        activity.mContent.updateFragment();
                         }
                     });
 
                 if(finished != null)
-                    mActivity.runOnUiThread(finished);
+                    activity.runOnUiThread(finished);
                 return null;
             }
         }.execute();
@@ -203,7 +202,7 @@ public class GGApp extends Application {
     public void setStatusBarColor(Window w) {
         w.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         w.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        w.setStatusBarColor(GGApp.GG_APP.mProvider.getDarkColor());
+        w.setStatusBarColor(GGApp.GG_APP.provider.getDarkColor());
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

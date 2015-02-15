@@ -18,8 +18,6 @@
  */
 package de.gebatzens.ggvertretungsplan;
 
-import android.os.AsyncTask;
-
 public abstract class VPProvider {
 
     GGApp gg;
@@ -31,6 +29,8 @@ public abstract class VPProvider {
     public static String decode(String html) {
         if(html == null)
             return null;
+
+        html = html.trim();
 
         html = html.replaceAll("&uuml;", "ü");
         html = html.replaceAll("&auml;", "ä");
@@ -46,10 +46,12 @@ public abstract class VPProvider {
         return html;
     }
 
-    public abstract GGPlan getVPSync(String url, boolean toast);
-
-    public abstract String getTodayURL();
-    public abstract String getTomorrowURL();
+    /**
+     *
+     * @param toast
+     * @return GGPlan[2], Elemente können null sein
+     */
+    public abstract GGPlan[] getPlans(boolean toast);
     public abstract String getFullName();
     public abstract String getDay(String date);
     public abstract int getColor();
@@ -58,7 +60,7 @@ public abstract class VPProvider {
     public abstract int getImage();
     public abstract String getWebsite();
     public abstract boolean loginNeeded();
-    public abstract int login(AsyncTask<Integer, Integer, Integer> task, String u, String p);
-    public abstract boolean loadLogin();
+    public abstract int login(String u, String p);
+    public abstract void logout();
 
 }

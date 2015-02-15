@@ -47,20 +47,20 @@ public class GGBroadcast extends BroadcastReceiver {
             Log.w("ggvp", "wlan not conected");
             return;
         }
-        VPProvider prov = gg.mProvider;
-        GGPlan today = prov.getVPSync(prov.getTodayURL(), false);
-        GGPlan tomo = prov.getVPSync(prov.getTomorrowURL(), false);
+        VPProvider prov = gg.provider;
+
+        GGPlan[] plans = gg.plans = prov.getPlans(false);
+        GGPlan today = plans[0];
+        GGPlan tomo = plans[1];
 
         if(today.throwable != null || tomo.throwable != null)
             return;
 
-        gg.mVPToday = today;
-        gg.mVPTomorrow = tomo;
-        if(gg.mActivity != null && gg.getFragmentType() == GGApp.FragmentType.PLAN)
-            gg.mActivity.runOnUiThread(new Runnable() {
+        if(gg.activity != null && gg.getFragmentType() == GGApp.FragmentType.PLAN)
+            gg.activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((GGContentFragment)gg.mActivity.mContent).mGGFrag.updateFragments();
+                    ((GGContentFragment)gg.activity.mContent).mGGFrag.updateFragments();
                 }
             });
 
@@ -79,9 +79,9 @@ public class GGBroadcast extends BroadcastReceiver {
         boolean b = false;
 
         String[] td = p.getProperty("todayles").split(";");
-        String[] tdn = new String[today.getAllForClass(gg.getSelectedGrade()).size()];
+        String[] tdn = new String[today.getAllForClass(gg.getSelectedClass()).size()];
         int i = 0;
-        for(String[] ss : today.getAllForClass(gg.getSelectedGrade())) {
+        for(String[] ss : today.getAllForClass(gg.getSelectedClass())) {
             tdn[i] = ss[1];
             i++;
         }
@@ -94,9 +94,9 @@ public class GGBroadcast extends BroadcastReceiver {
         }
 
         String[] tm = p.getProperty("tomoles").split(";");
-        String[] tmn = new String[tomo.getAllForClass(gg.getSelectedGrade()).size()];
+        String[] tmn = new String[tomo.getAllForClass(gg.getSelectedClass()).size()];
         i = 0;
-        for(String[] ss : tomo.getAllForClass(gg.getSelectedGrade())) {
+        for(String[] ss : tomo.getAllForClass(gg.getSelectedClass())) {
             tmn[i] = ss[1];
             i++;
         }
@@ -210,11 +210,11 @@ public class GGBroadcast extends BroadcastReceiver {
                             if(s > 100)
                                 return null;
                         }
-                        if(params[0].mActivity != null && params[0].getFragmentType() == GGApp.FragmentType.PLAN) {
-                            params[0].mActivity.runOnUiThread(new Runnable() {
+                        if(params[0].activity != null && params[0].getFragmentType() == GGApp.FragmentType.PLAN) {
+                            params[0].activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ((GGContentFragment)params[0].mActivity.mContent).mGGFrag.setFragmentsLoading();
+                                    ((GGContentFragment)params[0].activity.mContent).mGGFrag.setFragmentsLoading();
                                 }
                             });
 
