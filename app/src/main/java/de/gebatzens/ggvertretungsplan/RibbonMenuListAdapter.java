@@ -34,7 +34,6 @@ public class RibbonMenuListAdapter extends BaseAdapter {
         View itemView = inflater.inflate(R.layout.ribbon_drawer_list_item, parent, false);
         TextView txtTitle = (TextView) itemView.findViewById(R.id.menuTitle);
         ImageView imgIcon = (ImageView) itemView.findViewById(R.id.menuIcon);
-        //txtTitle.setTextColor(Color.rgb(0,0,0));
         txtTitle.setText(mTitle[position]);
         imgIcon.setImageResource(mIcon[position]);
         return itemView;
