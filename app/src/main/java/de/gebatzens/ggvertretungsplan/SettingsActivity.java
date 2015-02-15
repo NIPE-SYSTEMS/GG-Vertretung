@@ -33,10 +33,14 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
+import java.util.Properties;
 
 public class SettingsActivity extends Activity {
 
@@ -50,6 +54,15 @@ public class SettingsActivity extends Activity {
         public void onCreate(Bundle s) {
             super.onCreate(s);
             GGApp gg = GGApp.GG_APP;
+            Properties props = new Properties();
+            String sessId;
+            try {
+                props.load(GGApp.GG_APP.openFileInput("gguserinfo"));
+                sessId = props.getProperty("sessid");
+            } catch(Exception e) {
+                sessId = null;
+                e.printStackTrace();
+            }
             addPreferencesFromResource(R.xml.preferences);
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
             sp.registerOnSharedPreferenceChangeListener(this);
@@ -80,6 +93,22 @@ public class SettingsActivity extends Activity {
                     return true;
                 }
             });
+
+            Preference pref_username = findPreference("authentication_username");
+            pref_username.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    GGApp.GG_APP.provider.logout();
+                    preference.setSummary("Du bist nicht angemeldet!");
+                    return false;
+                }
+            });
+            if(sessId!=null) {
+                String username = props.getProperty("username");
+                if(username!=null) {
+                    pref_username.setSummary(username + " (Zum abmelden beruehren)");
+                }
+            }
 
         }
 
