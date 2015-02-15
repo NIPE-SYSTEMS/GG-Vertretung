@@ -23,6 +23,12 @@
             android:entryValues="@array/appupdatesValues"
             android:defaultValue="wifi" />
     </PreferenceCategory>
+    <PreferenceCategory android:title="Authentifizierung">
+        <Preference android:title="Benutzername"
+            android:key="authentication_username"
+            android:summary="Du bist nicht angemeldet!">
+        </Preference>
+    </PreferenceCategory>
     <PreferenceCategory android:title="Info">
         <de.gebatzens.ggvertretungsplan.GGDialogPreference
             android:title="Entwickler"
