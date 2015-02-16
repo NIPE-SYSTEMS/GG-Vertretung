@@ -323,6 +323,7 @@ public class GGFragment extends Fragment {
 
                             @Override
                             public void onClick(final DialogInterface dialog, int which) {
+                                GGApp.GG_APP.activity.mContent.setFragmentLoading();
                                 new AsyncTask<Integer, Integer, Integer>() {
 
                                     @Override
