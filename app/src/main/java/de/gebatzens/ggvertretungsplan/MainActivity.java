@@ -36,7 +36,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -53,7 +52,7 @@ public class MainActivity extends FragmentActivity {
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mToggle;
     String[] mStrings = new String[] {"Vertretungsplan", "News", "Mensa"};
-    int[] mIcons = new int[] {R.drawable.material_dot, R.drawable.material_dot, R.drawable.material_dot};
+    int[] mIcons = new int[] {R.drawable.drawer_list_button_image_vertretungsplan, R.drawable.drawer_list_button_image_news, R.drawable.drawer_list_button_image_mensa};
     ImageView mNacvigationImage;
     View mNavigationSchoolpictureLink;
 
