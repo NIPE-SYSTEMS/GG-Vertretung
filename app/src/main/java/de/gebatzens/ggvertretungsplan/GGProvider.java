@@ -20,6 +20,7 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Xml;
@@ -58,17 +59,13 @@ public class GGProvider extends VPProvider {
 
     GGApp ggapp;
     String sessId;
-    Properties props = new Properties();
+    SharedPreferences prefs;
 
     public GGProvider(GGApp gg) {
         super(gg);
 
-        try {
-            props.load(GGApp.GG_APP.openFileInput("gguserinfo"));
-            sessId = props.getProperty("sessid");
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
+        prefs = gg.getSharedPreferences("gguser", Context.MODE_PRIVATE);
+        sessId = prefs.getString("sessid", null);
 
     }
 
@@ -90,8 +87,7 @@ public class GGProvider extends VPProvider {
             Matcher m = p.matcher(resp);
             if(m.find()) {
                 sessId = m.group(1);
-                props.setProperty("sessid", sessId);
-                saveProps();
+                prefs.edit().putString("sessid", sessId).apply();
             } else {
                 sessId = null;
                 //Token invalid
@@ -103,25 +99,17 @@ public class GGProvider extends VPProvider {
         Log.w("ggvp", "sessid=" + sessId);
     }
 
-    private void saveProps() {
-        try {
-            props.store(GGApp.GG_APP.openFileOutput("gguserinfo", Context.MODE_PRIVATE), "GGUserInfo");
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void logout() {
         GGApp.GG_APP.deleteFile("gguserinfo");
         GGApp.GG_APP.deleteFile("ggvptoday");
         GGApp.GG_APP.deleteFile("ggvptomorrow");
-        props.clear();
+        prefs.edit().clear().apply();
         new AsyncTask<String, String, String>() {
             @Override
             public String doInBackground(String... s) {
 
-                if(sessId != null && !sessId.isEmpty()) {
+                if(s[0] != null && !s[0].isEmpty()) {
                     try {
                         HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/logout.php?sessid=" + s[0]).openConnection();
                         con.setRequestMethod("GET");
@@ -215,7 +203,7 @@ public class GGProvider extends VPProvider {
             e.printStackTrace();
 
             if(session && (e instanceof XmlPullParserException || e instanceof VPLoginException)) {
-                startNewSession(props.getProperty("token"));
+                startNewSession(prefs.getString("token", null));
                 return getPlans(toast, false);
             } else
                 plans[0].throwable = plans[1].throwable = e;
@@ -355,7 +343,7 @@ public class GGProvider extends VPProvider {
                     parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
                     parser.setInput(new StringReader(resp));
 
-                    props.clear();
+                    prefs.edit().apply();
 
                     while(parser.next() != XmlPullParser.END_DOCUMENT) {
                         if (parser.getEventType() != XmlPullParser.START_TAG)
@@ -364,15 +352,14 @@ public class GGProvider extends VPProvider {
                         String name = parser.getName();
                         if (name.equals("sessid")) {
                             sessId = parser.nextText();
-                            props.setProperty("sessid", sessId);
+                            prefs.edit().putString("sessid", sessId).apply();
                         } else if(name.equals("username") || name.equals("token") || name.equals("firstname") || name.equals("lastname") || name.equals("group")) {
-                            props.setProperty(name, parser.nextText());
+                            prefs.edit().putString(name, parser.nextText()).apply();
                         }
                     }
 
-                    saveProps();
-                    String group = props.getProperty("group");
-                    if(group != null & !group.equals("lehrer"))
+                    String group = prefs.getString("group", null);
+                    if(group != null && !group.equals("lehrer"))
                         gg.setSelectedClass(group);
                 }
 

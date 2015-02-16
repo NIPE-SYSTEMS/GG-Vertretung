@@ -20,7 +20,10 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -46,21 +49,18 @@ public class SettingsActivity extends Activity {
     private static boolean changed;
     static String version;
 
+
     public static class GGPFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+        SharedPreferences prefs;
 
         @Override
         public void onCreate(Bundle s) {
             super.onCreate(s);
             GGApp gg = GGApp.GG_APP;
-            Properties props = new Properties();
-            String sessId;
-            try {
-                props.load(GGApp.GG_APP.openFileInput("gguserinfo"));
-                sessId = props.getProperty("sessid");
-            } catch(Exception e) {
-                sessId = null;
-                e.printStackTrace();
-            }
+            prefs = getActivity().getSharedPreferences("gguser", Context.MODE_PRIVATE);
+            String sessId = prefs.getString("sessid", null);
+
             addPreferencesFromResource(R.xml.preferences);
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
             sp.registerOnSharedPreferenceChangeListener(this);
@@ -92,19 +92,37 @@ public class SettingsActivity extends Activity {
                 }
             });
 
-            Preference pref_username = findPreference("authentication_username");
+            final Preference pref_username = findPreference("authentication_username");
             pref_username.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    GGApp.GG_APP.provider.logout();
-                    preference.setSummary("Sie sind nicht angemeldet");
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Abmelden");
+                    builder.setMessage("Wirklich abmelden?");
+                    builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            GGApp.GG_APP.provider.logout();
+                            pref_username.setSummary("Du bist nicht angemeldet");
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+
                     return false;
                 }
             });
+
             if(sessId!=null) {
-                String username = props.getProperty("username");
+                String username = prefs.getString("username", null);
                 if(username!=null) {
-                    pref_username.setSummary(username + " (zum abmelden berühren)");
+                    pref_username.setSummary(username + " (Zum Abmelden berühren)");
                 }
             }
 
@@ -120,6 +138,10 @@ public class SettingsActivity extends Activity {
             if (key.equals("schule")) {
                 ListPreference listPref = (ListPreference) pref;
                 pref.setSummary(listPref.getEntry());
+                if(!listPref.getEntry().equals("gg"))
+                    findPreference("authentication_username").setSummary("Du bist nicht angemeldet");
+                else
+                    findPreference("authentication_username").setSummary(prefs.getString("username", null) + "(Zum Abmelden berühren)");
             } else if(key.equals("klasse")) {
                 EditTextPreference editTextPref = (EditTextPreference) pref;
                 if(editTextPref.getText().equals("")){ //Klasse
