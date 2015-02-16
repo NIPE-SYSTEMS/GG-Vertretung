@@ -22,14 +22,18 @@ package de.gebatzens.ggvertretungsplan;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.PowerManager;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -40,8 +44,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
-import java.util.Properties;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Scanner;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class SettingsActivity extends Activity {
 
@@ -80,7 +100,71 @@ public class SettingsActivity extends Activity {
 
             Preference pref_buildversion = findPreference("buildversion");
             String versionName = BuildConfig.VERSION_NAME;
-            pref_buildversion.setSummary("Version: " + versionName + " (" + BuildConfig.BUILD_TYPE + ")");
+            pref_buildversion.setSummary("Version: " + versionName + " (" + BuildConfig.BUILD_TYPE + ") (Zum aktualisieren berühren)");
+            pref_buildversion.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    new AsyncTask<Object, Void, Void>() {
+
+                        @Override
+                        protected Void doInBackground(Object... params) {
+                            try {
+                                int update_build_number =  getResources().getInteger(R.integer.update_build_number);
+
+                                HttpsURLConnection con = (HttpsURLConnection) new URL("https://gymnasium-glinde.logoip.de/infoapp/update.php?version").openConnection();
+                                con.setRequestMethod("POST");
+
+                                con.setSSLSocketFactory(sslSocketFactory);
+
+                                if (con.getResponseCode() == 200) {
+                                    BufferedInputStream in = new BufferedInputStream(con.getInputStream());
+                                    Scanner scan = new Scanner(in);
+                                    String resp = "";
+                                    while (scan.hasNextLine())
+                                        resp += scan.nextLine();
+                                    scan.close();
+                                    if (update_build_number < Integer.valueOf(resp)) {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                builder.setTitle("Aktualisierung verfügbar");
+                                                builder.setMessage("Soll die SchulinfoAPP aktualisiert werden?");
+                                                builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        UpdateActivity ua = new UpdateActivity(getActivity(), getActivity());
+                                                        ua.execute();
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                                builder.create().show();
+                                            }
+                                        });
+                                    } else {
+                                        getActivity().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getActivity().getApplication(), "Keine neue Version verfügbar.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            return null;
+                        }
+                    }.execute();
+                    return false;
+                }
+            });
 
             Preference pref_githublink = findPreference("githublink");
             pref_githublink.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -225,4 +309,50 @@ public class SettingsActivity extends Activity {
         super.finish();
     }
 
+    private static TrustManager[] ggTrustMgr = new TrustManager[]{new X509TrustManager() {
+
+        String pub_key = "fa095201ee4f03c32022f11b0c7352eba684d48c09220be0d26fa7c81c26d" +
+                "120cbf0fe6c3bdf669de6dd04046c3146641e4131f2113e18b59c01673fe222323" +
+                "8dcbd319e58939637affab79367ea3305b5f8ad6b723c6b1cadd5586cc108592d6" +
+                "d5fcd7c927909c42c5be56ac54152efaa18557333fc84bfb2d18a182fc66604139" +
+                "7873b991e8e6d37efb182c9afa5fcc841025d4d77e76ed9d49de89a0c20fc6eaa8" +
+                "09c52c789f15fe6807ab1c61ac5908b427d0ca9012ef86fe18eaf5fef684954c2b" +
+                "2e36e68d7b5f2a76500832df8a133e14a4b424bbd818da58f739da7a578e66dfe9" +
+                "4ba16506e7c88c66ff25f7f90ac8b2c3f9f347d5b54351dfd971f29";
+
+        @Override
+        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+
+        }
+
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            //Receive certificate information from the obtained certificate
+            String recveived_pub_key = chain[0].getPublicKey().toString();
+
+            //Extract the public key from the certificate information
+            String obtained_key = recveived_pub_key.split("\\{")[1].split("\\}")[0].split(",")[0].split("=")[1];
+            if (!pub_key.equals(obtained_key)) {
+                //If the public key is not correct throw an exception, to prevent connecting
+                // to this evil server
+                throw new CertificateException();
+            }
+        }
+    }};
+
+    private static SSLSocketFactory sslSocketFactory;
+    static {
+        try {
+            SSLContext sc;
+            sc = SSLContext.getInstance("TLS");
+            sc.init(null, ggTrustMgr, new java.security.SecureRandom());
+            sslSocketFactory = sc.getSocketFactory();
+        } catch(Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
