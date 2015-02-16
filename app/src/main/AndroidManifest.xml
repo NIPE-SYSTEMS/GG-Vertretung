@@ -16,6 +16,7 @@
   ~ along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
+<!--suppress ALL -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.gebatzens.ggvertretungsplan">
 
@@ -26,6 +27,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -45,6 +47,12 @@
 
         <activity android:name=".SettingsActivity"
             android:label="Einstellungen">
+
+
+        </activity>
+
+        <activity android:name=".UpdateActivity"
+            android:label="Update">
 
 
         </activity>
