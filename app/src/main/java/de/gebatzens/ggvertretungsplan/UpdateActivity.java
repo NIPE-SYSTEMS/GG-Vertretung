@@ -1,27 +1,20 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Environment;
-import android.os.PowerManager;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
@@ -33,14 +26,11 @@ import javax.net.ssl.X509TrustManager;
 
 public class UpdateActivity extends AsyncTask<String, String, String> {
     private ProgressDialog pDialog;
-    public static final int progress_bar_type = 0;
     private Activity mainActivity = null;
-    private Context mainContext = null;
 
-    public UpdateActivity(Activity a,Context c){
+    public UpdateActivity(Activity a,Context c) {
         this.mainActivity = a;
-        this.mainContext = c;
-        pDialog = new ProgressDialog(mainContext);
+        pDialog = new ProgressDialog(c);
     }
 
     protected void onPreExecute() {
