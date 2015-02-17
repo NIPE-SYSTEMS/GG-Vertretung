@@ -122,30 +122,43 @@ public class SettingsActivity extends Activity {
                                     while (scan.hasNextLine())
                                         resp += scan.nextLine();
                                     scan.close();
-                                    if (update_build_number < Integer.valueOf(resp)) {
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                                builder.setTitle("Aktualisierung verfügbar");
-                                                builder.setMessage("Soll die SchulinfoAPP aktualisiert werden?");
-                                                builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        UpdateActivity ua = new UpdateActivity(getActivity(), getActivity());
-                                                        ua.execute();
-                                                        dialog.dismiss();
-                                                    }
-                                                });
-                                                builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        dialog.dismiss();
-                                                    }
-                                                });
-                                                builder.create().show();
-                                            }
-                                        });
+                                    if (update_build_number-1 < Integer.valueOf(resp)) {
+                                        HttpsURLConnection con_changelog = (HttpsURLConnection) new URL("https://gymnasium-glinde.logoip.de/infoapp/update.php?changelog="+resp).openConnection();
+                                        con_changelog.setRequestMethod("GET");
+                                        con_changelog.setSSLSocketFactory(GGProvider.sslSocketFactory);
+
+                                        if(con_changelog.getResponseCode() == 200) {
+                                            BufferedInputStream in_changelog = new BufferedInputStream(con_changelog.getInputStream());
+                                            Scanner scan_changelog = new Scanner(in_changelog);
+                                            String resp_changelog = "";
+                                            while (scan_changelog.hasNextLine())
+                                                resp_changelog += scan_changelog.nextLine();
+                                            scan_changelog.close();
+                                            final String final_resp_changelog = resp_changelog;
+                                            getActivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                    builder.setTitle("Aktualisierung verfügbar");
+                                                    builder.setMessage("Soll die SchulinfoAPP aktualisiert werden?\n\nChangelog:\n"+final_resp_changelog.replace("|","\n"));
+                                                    builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            UpdateActivity ua = new UpdateActivity(getActivity(), getActivity());
+                                                            ua.execute();
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                    builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                                    builder.create().show();
+                                                }
+                                            });
+                                        }
                                     } else {
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
