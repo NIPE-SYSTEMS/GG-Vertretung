@@ -109,7 +109,6 @@ public class SettingsActivity extends Activity {
                         @Override
                         protected Void doInBackground(Object... params) {
                             try {
-                                int update_build_number = BuildConfig.VERSION_CODE;
 
                                 HttpsURLConnection con = (HttpsURLConnection) new URL("https://gymnasium-glinde.logoip.de/infoapp/update.php?version").openConnection();
                                 con.setRequestMethod("POST");
@@ -122,7 +121,7 @@ public class SettingsActivity extends Activity {
                                     while (scan.hasNextLine())
                                         resp += scan.nextLine();
                                     scan.close();
-                                    if (update_build_number < Integer.valueOf(resp)) {
+                                    if (!resp.equals(BuildConfig.VERSION_NAME)) {
                                         HttpsURLConnection con_changelog = (HttpsURLConnection) new URL("https://gymnasium-glinde.logoip.de/infoapp/update.php?changelog="+resp).openConnection();
                                         con_changelog.setRequestMethod("GET");
                                         con_changelog.setSSLSocketFactory(GGProvider.sslSocketFactory);
