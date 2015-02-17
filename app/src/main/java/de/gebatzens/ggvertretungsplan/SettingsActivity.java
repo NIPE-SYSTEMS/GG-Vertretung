@@ -40,6 +40,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,7 +140,8 @@ public class SettingsActivity extends Activity {
                                                 public void run() {
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                                     builder.setTitle("Aktualisierung verfügbar");
-                                                    builder.setMessage("Soll die SchulinfoAPP aktualisiert werden?\n\nChangelog:\n"+final_resp_changelog.replace("|","\n"));
+                                                    builder.setMessage(Html.fromHtml("Soll die SchulinfoAPP aktualisiert werden?<br><br>Changelog:<br>" +
+                                                            final_resp_changelog.replace("|","<br>").replace("*", "&#8226;")));
                                                     builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
