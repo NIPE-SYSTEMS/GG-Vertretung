@@ -109,12 +109,11 @@ public class SettingsActivity extends Activity {
                         @Override
                         protected Void doInBackground(Object... params) {
                             try {
-                                int update_build_number =  getResources().getInteger(R.integer.update_build_number);
+                                int update_build_number = BuildConfig.VERSION_CODE;
 
                                 HttpsURLConnection con = (HttpsURLConnection) new URL("https://gymnasium-glinde.logoip.de/infoapp/update.php?version").openConnection();
                                 con.setRequestMethod("POST");
-
-                                con.setSSLSocketFactory(sslSocketFactory);
+                                con.setSSLSocketFactory(GGProvider.sslSocketFactory);
 
                                 if (con.getResponseCode() == 200) {
                                     BufferedInputStream in = new BufferedInputStream(con.getInputStream());
@@ -158,6 +157,12 @@ public class SettingsActivity extends Activity {
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getActivity().getApplication(), "Keine Internetverindung", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             }
                             return null;
                         }
@@ -201,7 +206,8 @@ public class SettingsActivity extends Activity {
                         });
                         builder.create().show();
                     } else {
-                        Toast.makeText(getActivity(),"Sie sind nicht angemeldet", Toast.LENGTH_SHORT).show();
+                        //Überall in der App steht "Du", also sollte das mal einheitlich werden
+                        Toast.makeText(getActivity(),"Du bist nicht angemeldet", Toast.LENGTH_SHORT).show();
                     }
 
                     return false;
@@ -314,50 +320,4 @@ public class SettingsActivity extends Activity {
         super.finish();
     }
 
-    private static TrustManager[] ggTrustMgr = new TrustManager[]{new X509TrustManager() {
-
-        String pub_key = "fa095201ee4f03c32022f11b0c7352eba684d48c09220be0d26fa7c81c26d" +
-                "120cbf0fe6c3bdf669de6dd04046c3146641e4131f2113e18b59c01673fe222323" +
-                "8dcbd319e58939637affab79367ea3305b5f8ad6b723c6b1cadd5586cc108592d6" +
-                "d5fcd7c927909c42c5be56ac54152efaa18557333fc84bfb2d18a182fc66604139" +
-                "7873b991e8e6d37efb182c9afa5fcc841025d4d77e76ed9d49de89a0c20fc6eaa8" +
-                "09c52c789f15fe6807ab1c61ac5908b427d0ca9012ef86fe18eaf5fef684954c2b" +
-                "2e36e68d7b5f2a76500832df8a133e14a4b424bbd818da58f739da7a578e66dfe9" +
-                "4ba16506e7c88c66ff25f7f90ac8b2c3f9f347d5b54351dfd971f29";
-
-        @Override
-        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-            return null;
-        }
-
-        @Override
-        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-
-        }
-
-        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-            //Receive certificate information from the obtained certificate
-            String recveived_pub_key = chain[0].getPublicKey().toString();
-
-            //Extract the public key from the certificate information
-            String obtained_key = recveived_pub_key.split("\\{")[1].split("\\}")[0].split(",")[0].split("=")[1];
-            if (!pub_key.equals(obtained_key)) {
-                //If the public key is not correct throw an exception, to prevent connecting
-                // to this evil server
-                throw new CertificateException();
-            }
-        }
-    }};
-
-    private static SSLSocketFactory sslSocketFactory;
-    static {
-        try {
-            SSLContext sc;
-            sc = SSLContext.getInstance("TLS");
-            sc.init(null, ggTrustMgr, new java.security.SecureRandom());
-            sslSocketFactory = sc.getSocketFactory();
-        } catch(Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
 }

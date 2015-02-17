@@ -430,8 +430,8 @@ public class GGProvider extends VPProvider {
         }
     }
     };
-    private static SSLContext sc;
-    private static SSLSocketFactory sslSocketFactory;
+    public static SSLContext sc;
+    public static SSLSocketFactory sslSocketFactory;
     static {
         try {
             sc = SSLContext.getInstance("TLS");
