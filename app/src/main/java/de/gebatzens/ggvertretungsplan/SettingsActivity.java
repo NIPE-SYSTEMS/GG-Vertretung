@@ -122,7 +122,7 @@ public class SettingsActivity extends Activity {
                                     while (scan.hasNextLine())
                                         resp += scan.nextLine();
                                     scan.close();
-                                    if (update_build_number-1 < Integer.valueOf(resp)) {
+                                    if (update_build_number < Integer.valueOf(resp)) {
                                         HttpsURLConnection con_changelog = (HttpsURLConnection) new URL("https://gymnasium-glinde.logoip.de/infoapp/update.php?changelog="+resp).openConnection();
                                         con_changelog.setRequestMethod("GET");
                                         con_changelog.setSSLSocketFactory(GGProvider.sslSocketFactory);
