@@ -53,7 +53,7 @@ public class UpdateActivity extends AsyncTask<String, String, String> {
             connection.setSSLSocketFactory(GGProvider.sslSocketFactory);
             connection.connect();
             int lenghtOfFile = connection.getContentLength();
-            InputStream input = new BufferedInputStream(url.openStream(),8192);
+            InputStream input = new BufferedInputStream(connection.getInputStream(), 8192);
             OutputStream output = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/"+ "SchulinfoApp.apk");
             byte data[] = new byte[1024];
             long total = 0;
