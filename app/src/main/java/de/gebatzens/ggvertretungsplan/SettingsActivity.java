@@ -177,27 +177,32 @@ public class SettingsActivity extends Activity {
             });
 
             final Preference pref_username = findPreference("authentication_username");
+
             pref_username.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Abmelden");
-                    builder.setMessage("Wirklich abmelden?");
-                    builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            GGApp.GG_APP.provider.logout();
-                            pref_username.setSummary("Du bist nicht angemeldet");
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-                    builder.create().show();
+                    if(prefs.getString("sessid", null)!=null) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("Abmelden");
+                        builder.setMessage("Wirklich abmelden?");
+                        builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                GGApp.GG_APP.provider.logout();
+                                pref_username.setSummary("Du bist nicht angemeldet");
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.create().show();
+                    } else {
+                        Toast.makeText(getActivity(),"Sie sind nicht angemeldet", Toast.LENGTH_SHORT).show();
+                    }
 
                     return false;
                 }
