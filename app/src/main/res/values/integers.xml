@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="update_build_number">1</integer>
+    <integer name="update_build_number">2</integer>
 </resources>
