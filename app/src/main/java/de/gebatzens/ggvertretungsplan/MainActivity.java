@@ -84,8 +84,8 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         GGApp.GG_APP.activity = this;
 
-        setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
 
+        setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
         setTheme(GGApp.GG_APP.provider.getTheme());
 
         removeAllFragments();

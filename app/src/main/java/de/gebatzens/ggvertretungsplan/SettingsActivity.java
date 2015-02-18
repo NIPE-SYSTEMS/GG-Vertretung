@@ -118,11 +118,11 @@ public class SettingsActivity extends Activity {
                                 if (con.getResponseCode() == 200) {
                                     BufferedInputStream in = new BufferedInputStream(con.getInputStream());
                                     Scanner scan = new Scanner(in);
-                                    String resp = "";
+                                    final StringBuilder resp = new StringBuilder("");
                                     while (scan.hasNextLine())
-                                        resp += scan.nextLine();
+                                        resp.append(scan.nextLine());
                                     scan.close();
-                                    if (!resp.equals(BuildConfig.VERSION_NAME)) {
+                                    if (!resp.toString().equals(BuildConfig.VERSION_NAME)) {
                                         HttpsURLConnection con_changelog = (HttpsURLConnection) new URL("https://gymnasium-glinde.logoip.de/infoapp/update.php?changelog="+resp).openConnection();
                                         con_changelog.setRequestMethod("GET");
                                         con_changelog.setSSLSocketFactory(GGProvider.sslSocketFactory);
@@ -146,7 +146,7 @@ public class SettingsActivity extends Activity {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             UpdateActivity ua = new UpdateActivity(getActivity(), getActivity());
-                                                            ua.execute();
+                                                            ua.execute(resp.toString());
                                                             dialog.dismiss();
                                                         }
                                                     });

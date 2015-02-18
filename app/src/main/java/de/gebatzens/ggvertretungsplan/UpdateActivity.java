@@ -48,23 +48,25 @@ public class UpdateActivity extends AsyncTask<String, String, String> {
     protected String doInBackground(String... params) {
         int count;
         try {
-            URL url = new URL("https://gymnasium-glinde.logoip.de/downloads/InfoApp.apk");
+            URL url = new URL("https://gymnasium-glinde.logoip.de/downloads/InfoApp-" + params[0] + ".apk");
             HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
             connection.setSSLSocketFactory(GGProvider.sslSocketFactory);
             connection.connect();
             int lenghtOfFile = connection.getContentLength();
-            InputStream input = new BufferedInputStream(connection.getInputStream(), 8192);
-            OutputStream output = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/"+ "SchulinfoApp.apk");
-            byte data[] = new byte[1024];
-            long total = 0;
-            while ((count = input.read(data)) != -1) {
-                total += count;
-                publishProgress("" + (int) ((total * 100) / lenghtOfFile));
-                output.write(data, 0, count);
+            if(connection.getResponseCode() == 200) {
+                InputStream input = new BufferedInputStream(connection.getInputStream(), 8192);
+                OutputStream output = new FileOutputStream(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + "SchulinfoApp.apk");
+                byte data[] = new byte[1024];
+                long total = 0;
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+                    publishProgress("" + (int) ((total * 100) / lenghtOfFile));
+                    output.write(data, 0, count);
+                }
+                output.flush();
+                output.close();
+                input.close();
             }
-            output.flush();
-            output.close();
-            input.close();
         } catch (Exception e) {
             Log.w("ggvp","Download Error", e);
         }
@@ -75,7 +77,7 @@ public class UpdateActivity extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected void onPostExecute(String file_url) {
+    protected void onPostExecute(String result) {
         pDialog.dismiss();
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/SchulinfoAPP.apk")), "application/vnd.android.package-archive");

@@ -33,6 +33,7 @@ import java.util.List;
 
 public class GGPlan {
 
+    //TODO java.util.Date benutzen
     public ArrayList<String[]> entries = new ArrayList<String[]>();
     public String date = "";
     public List<String> special = new ArrayList<String>();
