@@ -19,6 +19,8 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -83,7 +85,9 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GGApp.GG_APP.activity = this;
-
+        NotificationManager nm =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        nm.cancel(123);
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
         setTheme(GGApp.GG_APP.provider.getTheme());
