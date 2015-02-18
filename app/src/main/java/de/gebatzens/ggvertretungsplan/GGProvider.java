@@ -392,8 +392,10 @@ public class GGProvider extends VPProvider {
         return "Gymnasium Glinde";
     }
 
-
-
+    @Override
+    public String getUsername() {
+        return prefs.getString("username", null);
+    }
 
     private static TrustManager[] ggTrustMgr = new TrustManager[]{ new X509TrustManager() {
 

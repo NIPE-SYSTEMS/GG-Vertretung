@@ -73,14 +73,10 @@ public class SettingsActivity extends Activity {
 
     public static class GGPFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-        SharedPreferences prefs;
-
         @Override
         public void onCreate(Bundle s) {
             super.onCreate(s);
-            GGApp gg = GGApp.GG_APP;
-            prefs = getActivity().getSharedPreferences("gguser", Context.MODE_PRIVATE);
-            String sessId = prefs.getString("sessid", null);
+            final GGApp gg = GGApp.GG_APP;
 
             addPreferencesFromResource(R.xml.preferences);
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
@@ -95,7 +91,7 @@ public class SettingsActivity extends Activity {
 
             Preference pref_klasse = findPreference("klasse");
             pref_klasse.setSummary(pref_klasse_content);
-
+            
             Preference update = findPreference("appupdates");
             update.setSummary(gg.translateUpdateType(gg.getUpdateType()));
 
@@ -200,7 +196,7 @@ public class SettingsActivity extends Activity {
             pref_username.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    if(prefs.getString("sessid", null)!=null) {
+                    if(gg.provider.getUsername() != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setTitle("Abmelden");
                         builder.setMessage("Wirklich abmelden?");
@@ -228,11 +224,9 @@ public class SettingsActivity extends Activity {
                 }
             });
 
-            if(sessId!=null) {
-                String username = prefs.getString("username", null);
-                if(username!=null) {
+            String username = gg.provider.getUsername();
+            if(username != null) {
                     pref_username.setSummary(username + " (Zum Abmelden berühren)");
-                }
             }
 
         }
@@ -247,10 +241,11 @@ public class SettingsActivity extends Activity {
             if (key.equals("schule")) {
                 ListPreference listPref = (ListPreference) pref;
                 pref.setSummary(listPref.getEntry());
-                if(!listPref.getEntry().equals("gg"))
+                String username = GGApp.GG_APP.provider.getUsername();
+                if(username == null)
                     findPreference("authentication_username").setSummary("Du bist nicht angemeldet");
                 else
-                    findPreference("authentication_username").setSummary(prefs.getString("username", null) + "(Zum Abmelden berühren)");
+                    findPreference("authentication_username").setSummary(username + " (Zum Abmelden berühren)");
             } else if(key.equals("klasse")) {
                 EditTextPreference editTextPref = (EditTextPreference) pref;
                 if(editTextPref.getText().equals("")){ //Klasse

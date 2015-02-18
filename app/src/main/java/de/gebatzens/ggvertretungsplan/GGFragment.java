@@ -145,6 +145,7 @@ public class GGFragment extends Fragment {
     }
 
     private CardView createCardItem() {
+
         return null;
     }
 

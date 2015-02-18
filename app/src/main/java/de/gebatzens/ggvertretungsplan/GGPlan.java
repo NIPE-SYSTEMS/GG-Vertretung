@@ -152,4 +152,13 @@ public class GGPlan {
         return list;
     }
 
+    public static class Entry {
+        String type;
+        String clazz;
+        String subst;
+        String subject;
+        String comment;
+        String hour;
+    }
+
 }

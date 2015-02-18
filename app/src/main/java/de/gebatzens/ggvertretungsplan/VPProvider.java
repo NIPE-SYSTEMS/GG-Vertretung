@@ -63,4 +63,10 @@ public abstract class VPProvider {
     public abstract int login(String u, String p);
     public abstract void logout();
 
+    /**
+     * Gibt den Benutzernamen oder null, wenn man nicht angemeldet ist, zurück
+     * @return
+     */
+    public abstract String getUsername();
+
 }

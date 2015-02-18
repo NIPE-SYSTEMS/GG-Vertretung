@@ -210,9 +210,13 @@ public class SWSProvider extends VPProvider {
         return 0;
     }
 
-
     @Override
     public String getFullName() {
         return "Sachsenwaldschule";
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
     }
 }
