@@ -23,6 +23,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -36,6 +37,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -43,9 +46,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,25 +134,43 @@ public class GGFragment extends Fragment {
         return t;
     }
 
-    public View createTable(List<String[]> list, boolean clas, LayoutInflater inflater, ViewGroup group, GGPlan plan) {
-        TableLayout table = (TableLayout) inflater.inflate(clas ? R.layout.all_table : R.layout.overview_table, group, true).findViewById(R.id.plan_table);
-
-        for(String[] s : list) {
-            TableRow row = new TableRow(getActivity());
-            if(clas)
-                createTextView(s[0], 10, inflater, row);
-            createTextView(s[1], 10, inflater, row);
-            createTextView(s[2], 10, inflater, row);
-            createTextView(s[3], 10, inflater, row);
-            createTextView(s[4], 10, inflater, row);
-            table.addView(row);
+    private void createCardItems(List<GGPlan.Entry> list, ViewGroup group, LayoutInflater inflater) {
+        if(list.size() == 0) {
+            FrameLayout f2 = new FrameLayout(getActivity());
+            f2.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
+            CardView cv = createCardView();
+            f2.addView(cv);
+            createTextView("Keine Einträge", 20, inflater, cv);
+            group.addView(f2);
         }
-        return table;
+
+        for(GGPlan.Entry e : list) {
+            FrameLayout f2 = new FrameLayout(getActivity());
+            f2.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
+            f2.addView(createCardItem(e, inflater));
+            group.addView(f2);
+        }
     }
 
-    private CardView createCardItem() {
+    int cardColorIndex = 0;
 
-        return null;
+    private CardView createCardItem(GGPlan.Entry entry, LayoutInflater i) {
+        CardView cv = createCardView();
+        String[] colors = getActivity().getResources().getStringArray(GGApp.GG_APP.provider.getColorArray());
+        cv.setCardBackgroundColor(Color.parseColor(colors[cardColorIndex]));
+        cardColorIndex++;
+        if(cardColorIndex == colors.length)
+            cardColorIndex = 0;
+        i.inflate(R.layout.cardview_entry, cv, true);
+        ((TextView) cv.findViewById(R.id.cv_hour)).setText(entry.hour);
+        ((TextView) cv.findViewById(R.id.cv_header)).setText(entry.type + (entry.subst.isEmpty() ? "" : " [" + entry.subst + "]"));
+        TextView tv = (TextView) cv.findViewById(R.id.cv_detail);
+        tv.setText(entry.comment + (entry.room.isEmpty() ? "" : (entry.comment.isEmpty() ? "" : "\n") + "Raum " + entry.room));
+        if(tv.getText().toString().trim().isEmpty())
+            ((ViewGroup) tv.getParent()).removeView(tv);
+        ((TextView) cv.findViewById(R.id.cv_subject)).setText(entry.subject);
+        ((CardView.LayoutParams) cv.getLayoutParams()).setMargins(0, 0, 0, toPixels(10));
+        return cv;
     }
 
     private CardView createCardView() {
@@ -161,17 +185,8 @@ public class GGFragment extends Fragment {
         return c2;
     }
 
-    private ArrayList<TextView> createSMViews(GGPlan plan, boolean margin) {
+    private ArrayList<TextView> createSMViews(GGPlan plan) {
         ArrayList<TextView> tvl = new ArrayList<TextView>();
-
-        TextView tv = new TextView(getActivity());
-        if(margin) {
-            LinearLayout.LayoutParams tv1p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tv1p.setMargins(0, toPixels(10), 0, 0);
-            tv.setLayoutParams(tv1p);
-        }
-        tv.setText(Html.fromHtml("<b>Besondere Mitteilungen</b>"));
-        tvl.add(tv);
 
         for(String special : plan.special) {
             TextView tv2 = new TextView(getActivity());
@@ -179,6 +194,8 @@ public class GGFragment extends Fragment {
             params.setMargins(0, toPixels(2), 0, 0);
             tv2.setLayoutParams(params);
             tv2.setText(Html.fromHtml(special));
+            tv2.setTextSize(toPixels(10));
+            tv2.setTextColor(Color.WHITE);
             tvl.add(tv2);
 
         }
@@ -218,6 +235,7 @@ public class GGFragment extends Fragment {
     }
 
     public void createView(final LayoutInflater inflater, ViewGroup group) {
+        cardColorIndex = 0;
         ScrollView sv = new ScrollView(getActivity());
         sv.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
         sv.setFillViewport(true);
@@ -235,58 +253,57 @@ public class GGFragment extends Fragment {
             //normale Übersicht
             String clas = GGApp.GG_APP.getSelectedClass();
 
-            List<String[]> list = planh.getAllForClass(clas);
+            List<GGPlan.Entry> list = planh.getAllForClass(clas);
 
-
-            FrameLayout f2s = new FrameLayout(getActivity());
-            f2s.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
-            CardView c2s = createCardView();
-            createTextView(planh.loadDate, 15, inflater, c2s);
-            f2s.addView(c2s);
-            l.addView(f2s);
-
-            FrameLayout f2 = new FrameLayout(getActivity());
-            f2.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
-            CardView c2 = createCardView();
             LinearLayout l2 = new LinearLayout(getActivity());
-            l2.setOrientation(LinearLayout.VERTICAL);
-            c2.addView(l2);
-            f2.addView(c2);
-            l.addView(f2);
-            TextView tv2 = createTextView(planh.date + " ("+clas+")", 20, inflater, l2);
-            tv2.setPadding(0, 0, 0, toPixels(8));
-            tv2.setTextColor(getResources().getColor(android.R.color.primary_text_light));
-            if(list.size() == 0) {
-                createTextView("Es fällt nichts für "+clas+" aus!", 14, inflater, l2);
-            } else
-                createTable(list, false, inflater, l2, planh);
+            l.addView(l2);
+            createTextView(planh.loadDate, 15, inflater, l2);
 
+            TextView tv2 = createTextView("Klasse " + clas, 15, inflater, l2);
+            tv2.setGravity(Gravity.RIGHT);
+            tv2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+
+
+            createTextView(GGApp.GG_APP.provider.getDay(planh.date), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
             if(!planh.special.isEmpty()) {
-                for(TextView tv : createSMViews(planh, true))
-                    l2.addView(tv);
+                FrameLayout f2 = new FrameLayout(getActivity());
+                f2.setPadding(toPixels(1.3f), toPixels(0.3f), toPixels(1.3f), toPixels(0.3f));
+                CardView cv = createCardView();
+                cv.setCardBackgroundColor(GGApp.GG_APP.provider.getColor());
+                f2.addView(cv);
+                l.addView(f2);
+                LinearLayout ls = new LinearLayout(getActivity());
+                ls.setOrientation(LinearLayout.VERTICAL);
+                cv.addView(ls);
+
+                for(TextView tv : createSMViews(planh)) {
+                    ls.addView(tv);
+                }
             }
+            createCardItems(list, l, inflater);
+
 
             list = planm.getAllForClass(clas);
-            FrameLayout f4 = new FrameLayout(getActivity());
-            f4.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
-            CardView c4 = createCardView();
-            LinearLayout l4 = new LinearLayout(getActivity());
-            l4.setOrientation(LinearLayout.VERTICAL);
-            c4.addView(l4);
-            f4.addView(c4);
-            l.addView(f4);
-            TextView tv4 = createTextView(planm.date + " ("+clas+")", 20, inflater, l4);
-            tv4.setPadding(0, 0, 0, toPixels(8));
-            tv4.setTextColor(getResources().getColor(android.R.color.primary_text_light));
-            if(list.size() == 0) {
-                createTextView("Es fällt nichts für "+clas+" aus!", 14, inflater, l4);
-            } else
-                createTable(list, false, inflater, l4, planm);
+            createTextView(GGApp.GG_APP.provider.getDay(planm.date), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
 
             if(!planm.special.isEmpty()) {
-                for(TextView tv : createSMViews(planm, true))
-                    l4.addView(tv);
+                FrameLayout f2 = new FrameLayout(getActivity());
+                f2.setPadding(toPixels(1.3f), toPixels(0.3f), toPixels(1.3f), toPixels(0.3f));
+                CardView cv = createCardView();
+                cv.setCardBackgroundColor(GGApp.GG_APP.provider.getColor());
+                f2.addView(cv);
+                l.addView(f2);
+                LinearLayout ls = new LinearLayout(getActivity());
+                ls.setOrientation(LinearLayout.VERTICAL);
+                cv.addView(ls);
+
+                for(TextView tv : createSMViews(planm)) {
+                    ls.addView(tv);
+                }
             }
+
+            createCardItems(list, l, inflater);
 
         } else if(type == TYPE_OVERVIEW && planh.throwable == null && planm.throwable == null) {
             //Keine Klasse
@@ -371,40 +388,59 @@ public class GGFragment extends Fragment {
                     }
                 });
         } else {
+            LinearLayout l2 = new LinearLayout(getActivity());
+            LinearLayout.LayoutParams lps = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            lps.setMargins(0, 0, 0, toPixels(20));
+            l2.setLayoutParams(lps);
 
-            FrameLayout f6s = new FrameLayout(getActivity());
-            f6s.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
-            CardView c6s = createCardView();
-            createTextView(plan.loadDate, 15, inflater, c6s);
-            f6s.addView(c6s);
-            l.addView(f6s);
+            l.addView(l2);
+            createTextView(plan.loadDate, 15, inflater, l2);
+
+            Spinner spin = new Spinner(getActivity());
+            spin.setGravity(Gravity.RIGHT);
+            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, plan.getAllClasses());
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spin.setAdapter(adapter);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            spin.setLayoutParams(lp);
+            l2.addView(spin);
 
             if(!plan.special.isEmpty()) {
-                FrameLayout f6 = new FrameLayout(getActivity());
-                f6.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
-                CardView c6 = createCardView();
-                LinearLayout l6 = new LinearLayout(getActivity());
-                l6.setOrientation(LinearLayout.VERTICAL);
-                c6.addView(l6);
-                f6.addView(c6);
-                l.addView(f6);
-                for(TextView tv : createSMViews(plan, false))
-                    l6.addView(tv);
+                FrameLayout f2 = new FrameLayout(getActivity());
+                f2.setPadding(toPixels(1.3f), toPixels(0.3f), toPixels(1.3f), toPixels(0.3f));
+                CardView cv = createCardView();
+                cv.setCardBackgroundColor(GGApp.GG_APP.provider.getColor());
+                f2.addView(cv);
+                l.addView(f2);
+                LinearLayout ls = new LinearLayout(getActivity());
+                ls.setOrientation(LinearLayout.VERTICAL);
+                cv.addView(ls);
+
+                for(TextView tv : createSMViews(plan)) {
+                    ls.addView(tv);
+                }
             }
 
-            FrameLayout f7 = new FrameLayout(getActivity());
-            f7.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
-            CardView c7 = createCardView();
-            LinearLayout l7 = new LinearLayout(getActivity());
-            l7.setOrientation(LinearLayout.VERTICAL);
-            c7.addView(l7);
-            f7.addView(c7);
-            l.addView(f7);
+            final LinearLayout l3 = new LinearLayout(getActivity());
+            l3.setOrientation(LinearLayout.VERTICAL);
+            l.addView(l3);
 
-            if(plan.entries.size() == 0)
-                createTextView("Keine Einträge!", 15, inflater, l7);
-            else
-                createTable(plan.entries, true, inflater, l7, plan);
+            spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    String item = adapter.getItem(position);
+
+                    l3.removeAllViews();
+                    cardColorIndex = 0;
+                    createCardItems(plan.getAllForClass(item), l3, inflater);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    l3.removeAllViews();
+                }
+            });
+
         }
         sv.addView(l);
     }

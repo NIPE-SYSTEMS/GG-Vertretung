@@ -81,8 +81,8 @@ public class GGBroadcast extends BroadcastReceiver {
         String[] td = p.getProperty("todayles").split(";");
         String[] tdn = new String[today.getAllForClass(gg.getSelectedClass()).size()];
         int i = 0;
-        for(String[] ss : today.getAllForClass(gg.getSelectedClass())) {
-            tdn[i] = ss[1];
+        for(GGPlan.Entry e : today.getAllForClass(gg.getSelectedClass())) {
+            tdn[i] = e.hour;
             i++;
         }
         if(td[0].isEmpty())
@@ -96,8 +96,8 @@ public class GGBroadcast extends BroadcastReceiver {
         String[] tm = p.getProperty("tomoles").split(";");
         String[] tmn = new String[tomo.getAllForClass(gg.getSelectedClass()).size()];
         i = 0;
-        for(String[] ss : tomo.getAllForClass(gg.getSelectedClass())) {
-            tmn[i] = ss[1];
+        for(GGPlan.Entry e : tomo.getAllForClass(gg.getSelectedClass())) {
+            tmn[i] = e.hour;
             i++;
         }
         if(tm[0].isEmpty())

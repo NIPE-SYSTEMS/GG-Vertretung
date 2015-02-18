@@ -18,6 +18,9 @@
  */
 package de.gebatzens.ggvertretungsplan;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public abstract class VPProvider {
 
     GGApp gg;
@@ -62,6 +65,7 @@ public abstract class VPProvider {
     public abstract boolean loginNeeded();
     public abstract int login(String u, String p);
     public abstract void logout();
+    public abstract int getColorArray();
 
     /**
      * Gibt den Benutzernamen oder null, wenn man nicht angemeldet ist, zurück
