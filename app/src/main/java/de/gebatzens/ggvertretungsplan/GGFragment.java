@@ -194,7 +194,7 @@ public class GGFragment extends Fragment {
             params.setMargins(0, toPixels(2), 0, 0);
             tv2.setLayoutParams(params);
             tv2.setText(Html.fromHtml(special));
-            tv2.setTextSize(toPixels(10));
+            tv2.setTextSize(15);
             tv2.setTextColor(Color.WHITE);
             tvl.add(tv2);
 
@@ -262,8 +262,6 @@ public class GGFragment extends Fragment {
             TextView tv2 = createTextView("Klasse " + clas, 15, inflater, l2);
             tv2.setGravity(Gravity.RIGHT);
             tv2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-
 
             createTextView(GGApp.GG_APP.provider.getDay(planh.date), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
             if(!planh.special.isEmpty()) {
