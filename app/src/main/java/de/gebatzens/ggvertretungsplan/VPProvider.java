@@ -18,6 +18,8 @@
  */
 package de.gebatzens.ggvertretungsplan;
 
+import java.util.ArrayList;
+
 public abstract class VPProvider {
 
     GGApp gg;
@@ -62,5 +64,6 @@ public abstract class VPProvider {
     public abstract boolean loginNeeded();
     public abstract int login(String u, String p);
     public abstract void logout();
+    public abstract ArrayList getNews();
 
 }

@@ -39,6 +39,7 @@ import java.net.URLEncoder;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -282,6 +283,71 @@ public class GGProvider extends VPProvider {
             return "date";
         }
         return c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.GERMAN);
+    }
+
+    public ArrayList getNews() {
+        try {
+            HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/infoapp_provider_new.php?site=news&sessid="+sessId).openConnection();
+            con.setRequestMethod("GET");
+            con.setSSLSocketFactory(GGProvider.sslSocketFactory);
+
+            ArrayList<ArrayList<String>> news_list = new ArrayList<ArrayList<String>>();
+            /*
+             * 0 - ID
+             * 1 - Date
+             * 2 - Topic
+             * 3 - Source
+             * 4 - Title
+             * 5 - Text
+             */
+
+            if (con.getResponseCode() == 200) {
+                XmlPullParser parser = Xml.newPullParser();
+                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                parser.setInput(new BufferedReader(new InputStreamReader(con.getInputStream())));
+                parser.nextTag();
+                parser.require(XmlPullParser.START_TAG, null, "news");
+
+                while (parser.next() != XmlPullParser.END_TAG) {
+                    if (parser.getEventType() != XmlPullParser.START_TAG)
+                        continue;
+
+                    String name = parser.getName();
+                    if (name.equals("item")) {
+
+                        news_list.add(new ArrayList<String>());
+
+                        while (parser.next() != XmlPullParser.END_TAG) {
+                            if (parser.getEventType() != XmlPullParser.START_TAG)
+                                continue;
+
+                            if (parser.getName().equals("id"))
+                                news_list.get(news_list.size() - 1).add(0, parser.nextText());
+
+                            if (parser.getName().equals("date"))
+                                news_list.get(news_list.size() - 1).add(1, parser.nextText());
+
+                            if (parser.getName().equals("topic"))
+                                news_list.get(news_list.size() - 1).add(2, parser.nextText());
+
+                            if (parser.getName().equals("source"))
+                                news_list.get(news_list.size() - 1).add(3, parser.nextText());
+
+                            if (parser.getName().equals("title"))
+                                news_list.get(news_list.size() - 1).add(4, parser.nextText());
+
+                            if (parser.getName().equals("text"))
+                                news_list.get(news_list.size() - 1).add(5, parser.nextText());
+                        }
+                    }
+                }
+            }
+
+            return news_list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList();
+        }
     }
 
     @Override

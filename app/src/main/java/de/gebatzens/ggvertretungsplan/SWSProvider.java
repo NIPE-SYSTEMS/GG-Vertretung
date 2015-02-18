@@ -27,6 +27,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -168,6 +169,10 @@ public class SWSProvider extends VPProvider {
         if(strs.length < 2)
             return "";
         return strs[1];
+    }
+
+    public ArrayList getNews() {
+        return new ArrayList();
     }
 
     @Override
