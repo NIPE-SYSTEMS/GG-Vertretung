@@ -112,6 +112,11 @@ public class GGBroadcast extends BroadcastReceiver {
             Log.d("ggvp", "Datum anders: " + today.date + " " + p.getProperty("todaydate"));
         }
 
+        //Nichts neues, morgen fällt nichts aus
+        if(today.date.equals(p.getProperty("tomdate")) && tmn.length == 0 && tdn.length == tm.length) {
+            b = false;
+        }
+
         p.setProperty("todaydate", today.date);
         p.setProperty("tomdate", tomo.date);
         String tdnstr = "";

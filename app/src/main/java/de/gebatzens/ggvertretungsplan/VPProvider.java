@@ -49,7 +49,7 @@ public abstract class VPProvider {
     /**
      *
      * @param toast
-     * @return GGPlan[2], Elemente können null sein
+     * @return GGPlan[2], Elemente können nicht null sein
      */
     public abstract GGPlan[] getPlans(boolean toast);
     public abstract String getFullName();

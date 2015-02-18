@@ -91,7 +91,7 @@ public class SettingsActivity extends Activity {
 
             Preference pref_klasse = findPreference("klasse");
             pref_klasse.setSummary(pref_klasse_content);
-            
+
             Preference update = findPreference("appupdates");
             update.setSummary(gg.translateUpdateType(gg.getUpdateType()));
 
