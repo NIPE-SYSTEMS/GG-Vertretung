@@ -230,6 +230,8 @@ public class GGPlan {
             } else if(commentl.contains("klausur")) {
                 type = "Klausur";
                 comment = "";
+            } else if(commentl.contains("unterricht findet statt")) {
+                type = "Unterricht";
             } else if(commentl.contains("statt")) {
                 type = "Vertretung / Verlegung";
 
@@ -241,8 +243,6 @@ public class GGPlan {
 
                 if(m2.find())
                     subject = m2.group(1);
-            } else if(commentl.contains("unterricht findet statt")) {
-                type = "Unterricht";
             } else {
                 type = "Vertretung";
 
