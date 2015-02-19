@@ -101,6 +101,10 @@ public class SettingsActivity extends Activity {
             pref_buildversion.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
+                    if(BuildConfig.DEBUG) {
+                        Toast.makeText(GGApp.GG_APP, "Im Debugmodus nicht verfügbar", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }
                     new AsyncTask<Object, Void, Void>() {
 
                         @Override
