@@ -23,6 +23,7 @@ import android.content.Context;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,11 +31,13 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GGPlan {
 
     //TODO java.util.Date benutzen
-    public ArrayList<String[]> entries = new ArrayList<String[]>();
+    public ArrayList<Entry> entries = new ArrayList<Entry>();
     public String date = "";
     public List<String> special = new ArrayList<String>();
     public Throwable throwable = null;
@@ -71,24 +74,32 @@ public class GGPlan {
                     reader.beginArray();
                     while(reader.hasNext()) {
                         reader.beginObject();
-                        String[] d = new String[5];
+                        Entry e = new Entry();
                         while(reader.hasNext()) {
                             String name2 = reader.nextName();
-                            if(name2.equals("klasse"))
-                                d[0] = reader.nextString();
-                            else if(name2.equals("stunde"))
-                                d[1] = reader.nextString();
-                            else if(name2.equals("vertr"))
-                                d[2] = reader.nextString();
-                            else if(name2.equals("fach"))
-                                d[3] = reader.nextString();
-                            else if(name2.equals("bemerk"))
-                                d[4] = reader.nextString();
+                            if(name2.equals("class"))
+                                e.clazz = reader.nextString();
+                            else if(name2.equals("hour"))
+                                e.hour = reader.nextString();
+                            else if(name2.equals("subst"))
+                                e.subst = reader.nextString();
+                            else if(name2.equals("subject"))
+                                e.subject = reader.nextString();
+                            else if(name2.equals("comment"))
+                                e.comment = reader.nextString();
+                            else if(name2.equals("type"))
+                                e.type = reader.nextString();
+                            else if(name2.equals("room"))
+                                e.type = reader.nextString();
                             else
                                 reader.skipValue();
 
                         }
-                        entries.add(d);
+                        if(!e.isValid()) {
+                            reader.close();
+                            return false;
+                        }
+                        entries.add(e);
                         reader.endObject();
                     }
                     reader.endArray();
@@ -96,6 +107,7 @@ public class GGPlan {
                     reader.skipValue();
             }
             reader.endObject();
+            reader.close();
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -122,13 +134,15 @@ public class GGPlan {
 
             writer.name("entries");
             writer.beginArray();
-            for(String[] ss : entries){
+            for(Entry e : entries) {
                 writer.beginObject();
-                writer.name("klasse").value(ss[0]);
-                writer.name("stunde").value(ss[1]);
-                writer.name("vertr").value(ss[2]);
-                writer.name("fach").value(ss[3]);
-                writer.name("bemerk").value(ss[4]);
+                writer.name("class").value(e.clazz);
+                writer.name("hour").value(e.hour);
+                writer.name("subst").value(e.subst);
+                writer.name("subject").value(e.subject);
+                writer.name("comment").value(e.comment);
+                writer.name("type").value(e.type);
+                writer.name("room").value(e.room);
                 writer.endObject();
             }
             writer.endArray();
@@ -140,16 +154,108 @@ public class GGPlan {
         }
     }
 
-    public List<String[]> getAllForClass(String c) {
-        c = c.toLowerCase();
-        c = c.replaceAll(" ", "");
-        ArrayList<String[]> list = new ArrayList<String[]>();
-        for(String[] ss : entries) {
-            String sc = ss[0].toLowerCase().replaceAll(" ", "");
-            if (sc.equals(c))
-                list.add(ss);
+    public List<String> getAllClasses() {
+        ArrayList<String> list = new ArrayList<String>();
+
+        String last = "";
+        for(Entry e : entries) {
+            if(!last.equals(e.clazz)) {
+                list.add(e.clazz);
+                last = e.clazz;
+            }
         }
         return list;
+    }
+
+    public List<Entry> getAllForClass(String c) {
+        c = c.toLowerCase();
+        c = c.replaceAll(" ", "");
+        ArrayList<Entry> list = new ArrayList<Entry>();
+        for(Entry e : entries) {
+            String sc = e.clazz.toLowerCase().replaceAll(" ", "");
+            if (sc.equals(c))
+                list.add(e);
+        }
+        return list;
+    }
+
+    public static class Entry {
+        String type;
+        String clazz;
+        //String missing;
+        String subst;
+        String subject;
+        String comment;
+        String hour;
+        String room;
+
+        public boolean isValid() {
+            return type != null && clazz != null && subject != null
+                    && subst != null && comment != null && room != null;
+        }
+
+        /**
+         * Comment hat Inhalt, type noch nicht
+         *
+         */
+        public void unify() {
+            Pattern aufg = Pattern.compile("Aufg. durch (\\w+)");
+            String commentl = comment.toLowerCase();
+
+            Matcher aufgm = aufg.matcher(comment);
+
+            if(commentl.contains("eigenverantwortlich") || commentl.contains("eva")) {
+                type = "EVA";
+
+                if(aufgm.find()) {
+                    comment = "Aufgabe durch " + aufgm.group(1);
+                } else
+                    comment = "";
+
+            } else if(commentl.contains("siehe")) {
+                type = "Entfall / Verlegung";
+
+                Matcher m = Pattern.compile("[Ss]iehe (.*)").matcher(comment);
+                if (m.find())
+                    if (m.group(1).contains("heute")) {
+                        comment = "Verlegt in " + m.group(1).replace("heute, ", "");
+                    } else {
+                        comment = "Verlegt nach " + m.group(1);
+                    }
+            } else if(commentl.contains("f.a.") || commentl.contains("fällt aus") || commentl.contains("entfall")) {
+                type = "Entfall";
+
+                if(aufgm.find())
+                    comment = "Aufgabe durch " + aufgm.group(1);
+            } else if(commentl.contains("klausur")) {
+                type = "Klausur";
+                comment = "";
+            } else if(commentl.contains("unterricht findet statt")) {
+                type = "Unterricht";
+            } else if(commentl.contains("statt")) {
+                type = "Vertretung / Verlegung";
+
+                Matcher m1 = Pattern.compile("[Ss]tatt (.*?)Std.").matcher(comment);
+                Matcher m2 = Pattern.compile(":(.*)").matcher(comment);
+
+                if(m1.find())
+                    comment = "Statt " + m1.group(1).replaceAll("\\w+ \\(heute\\)", "") + " Stunde";
+
+                if(m2.find())
+                    subject = m2.group(1);
+            } else {
+                type = "Vertretung";
+
+                if(aufgm.find())
+                    comment = "Aufgabe durch " + aufgm.group(1);
+
+                if(commentl.contains("mittag"))
+                    comment = "Mittagspause";
+            }
+
+            //TODO SWS fehlt hier noch
+
+        }
     }
 
 }

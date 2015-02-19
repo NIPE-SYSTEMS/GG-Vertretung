@@ -231,6 +231,10 @@ public class GGProvider extends VPProvider {
         return plans;
     }
 
+    public int getColorArray() {
+        return R.array.orangeColors;
+    }
+
     private void getPlan(XmlPullParser parser, GGPlan p) throws Exception {
 
         while(parser.next() != XmlPullParser.END_TAG) {
@@ -238,31 +242,31 @@ public class GGProvider extends VPProvider {
                 continue;
 
             if(parser.getName().equals("item"))  {
-                String[] s = new String[5];
-                p.entries.add(s);
+                GGPlan.Entry e = new GGPlan.Entry();
+                p.entries.add(e);
                 while(parser.next() != XmlPullParser.END_TAG) {
                     if(parser.getEventType() != XmlPullParser.START_TAG)
                         continue;
 
                     String name = parser.getName();
                     if(name.equals("class")) {
-                        s[0] = parser.nextText();
+                        e.clazz = parser.nextText().trim();
                     } else if(name.equals("hour")) {
-                        s[1] = parser.nextText();
+                        e.hour = parser.nextText().trim();
                     } else if(name.equals("substitutor")) {
-                        s[2] = parser.nextText();
+                        e.subst = parser.nextText().trim();
                     } else if(name.equals("subject")) {
-                        s[3] = parser.nextText();
+                        e.subject = parser.nextText().trim();
                     } else if(name.equals("comment")) {
-                        s[4] = parser.nextText();
+                        e.comment = parser.nextText().trim();
                     } else if(name.equals("date")) {
                         parser.nextText();
                     } else if(name.equals("room")) {
-                        String text = parser.nextText().trim();
-                        if(!text.isEmpty())
-                            s[4] += " (Raum " + text + ")";
+                        e.room = parser.nextText().trim();
                     }
                 }
+                e.unify();
+
             }
         }
 
@@ -462,8 +466,10 @@ public class GGProvider extends VPProvider {
         return "Gymnasium Glinde";
     }
 
-
-
+    @Override
+    public String getUsername() {
+        return prefs.getString("username", null);
+    }
 
     private static TrustManager[] ggTrustMgr = new TrustManager[]{ new X509TrustManager() {
 

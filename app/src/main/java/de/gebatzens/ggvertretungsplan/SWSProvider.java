@@ -113,18 +113,16 @@ public class SWSProvider extends VPProvider {
                                 if(i != 6)
                                     throw new GGInvalidSourceException("Not enough data in line " + ln + ": " + tline);
 
-                                String[] rdata = new String[5];
-                                rdata[0] = current;
-                                rdata[1] = data[0]; //Stunde
-                                rdata[2] = data[2]; //Vertr.
-                                rdata[3] = data[1]; //Fach
-                                rdata[4] = data[5];
-                                if(!data[3].equals(""))
-                                    rdata[4] += "; Raum " + data[3];
-                                if(!data[4].equals(""))
-                                    rdata[4] += "; " + data[4];
+                                GGPlan.Entry e = new GGPlan.Entry();
+                                e.clazz = current;
+                                e.hour = data[0]; //Stunde
+                                e.subst = data[2]; //Vertr.
+                                e.subject = data[1]; //Fach
+                                e.comment = data[5];
+                                e.room = data[3];
+                                e.comment += " " + data[4];
 
-                                plan.entries.add(rdata);
+                                plan.entries.add(e);
                             }
                         }
                     }
@@ -159,6 +157,11 @@ public class SWSProvider extends VPProvider {
         }
 
         return plan;
+    }
+
+    @Override
+    public int getColorArray() {
+        return R.array.blueColors;
     }
 
     @Override
@@ -215,9 +218,13 @@ public class SWSProvider extends VPProvider {
         return 0;
     }
 
-
     @Override
     public String getFullName() {
         return "Sachsenwaldschule";
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
     }
 }

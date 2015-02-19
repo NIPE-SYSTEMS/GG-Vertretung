@@ -18,8 +18,6 @@
  */
 package de.gebatzens.ggvertretungsplan;
 
-import java.util.ArrayList;
-
 public abstract class VPProvider {
 
     GGApp gg;
@@ -51,7 +49,7 @@ public abstract class VPProvider {
     /**
      *
      * @param toast
-     * @return GGPlan[2], Elemente können null sein
+     * @return GGPlan[2], Elemente können nicht null sein
      */
     public abstract GGPlan[] getPlans(boolean toast);
     public abstract String getFullName();
@@ -65,5 +63,12 @@ public abstract class VPProvider {
     public abstract int login(String u, String p);
     public abstract void logout();
     public abstract NewsFragment.News getNews();
+    public abstract int getColorArray();
+
+    /**
+     * Gibt den Benutzernamen oder null, wenn man nicht angemeldet ist, zurück
+     * @return
+     */
+    public abstract String getUsername();
 
 }
