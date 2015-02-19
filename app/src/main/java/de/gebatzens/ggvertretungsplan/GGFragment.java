@@ -134,7 +134,7 @@ public class GGFragment extends Fragment {
             f2.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
             CardView cv = createCardView();
             f2.addView(cv);
-            createTextView("Keine Einträge", 20, inflater, cv);
+            createTextView("Keine Vertretungsplan Einträge", 20, inflater, cv);
             group.addView(f2);
         }
 
@@ -163,7 +163,6 @@ public class GGFragment extends Fragment {
         if(tv.getText().toString().trim().isEmpty())
             ((ViewGroup) tv.getParent()).removeView(tv);
         ((TextView) cv.findViewById(R.id.cv_subject)).setText(Html.fromHtml(entry.subject));
-        ((CardView.LayoutParams) cv.getLayoutParams()).setMargins(0, 0, 0, toPixels(10));
         return cv;
     }
 
@@ -234,6 +233,8 @@ public class GGFragment extends Fragment {
         sv.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
         sv.setFillViewport(true);
         sv.setTag("ggfrag_scrollview");
+        LinearLayout l0 = new LinearLayout(getActivity());
+        l0.setOrientation(LinearLayout.VERTICAL);
         LinearLayout l = new LinearLayout(getActivity());
         l.setOrientation(LinearLayout.VERTICAL);
         l.setPadding(toPixels(4),toPixels(4),toPixels(4),toPixels(4));
@@ -249,8 +250,15 @@ public class GGFragment extends Fragment {
 
             List<GGPlan.Entry> list = planh.getAllForClass(clas);
 
+            CardView cv2 = new CardView(getActivity());
+            cv2.setContentPadding(toPixels(16),toPixels(16),toPixels(16),toPixels(16));
+            cv2.setBackgroundColor(Color.WHITE);
+
             LinearLayout l2 = new LinearLayout(getActivity());
-            l.addView(l2);
+
+            cv2.addView(l2);
+            l0.addView(cv2);
+
             createTextView(planh.loadDate, 15, inflater, l2);
 
             TextView tv2 = createTextView("Klasse " + clas, 15, inflater, l2);
@@ -267,6 +275,9 @@ public class GGFragment extends Fragment {
                 l.addView(f2);
                 LinearLayout ls = new LinearLayout(getActivity());
                 ls.setOrientation(LinearLayout.VERTICAL);
+                TextView tv3 = createTextView("Besondere Mitteilungen", 19, inflater, ls);
+                tv3.setTextColor(Color.WHITE);
+                tv3.setPadding(0,0,0,toPixels(6));
                 cv.addView(ls);
 
                 for(TextView tv : createSMViews(planh)) {
@@ -288,6 +299,9 @@ public class GGFragment extends Fragment {
                 l.addView(f2);
                 LinearLayout ls = new LinearLayout(getActivity());
                 ls.setOrientation(LinearLayout.VERTICAL);
+                TextView tv3 = createTextView("Besondere Mitteilungen", 19, inflater, ls);
+                tv3.setTextColor(Color.WHITE);
+                tv3.setPadding(0,0,0,toPixels(6));
                 cv.addView(ls);
 
                 for(TextView tv : createSMViews(planm)) {
@@ -380,25 +394,32 @@ public class GGFragment extends Fragment {
                     }
                 });
         } else {
-            LinearLayout l2 = new LinearLayout(getActivity());
-            LinearLayout.LayoutParams lps = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            lps.setMargins(0, 0, 0, toPixels(20));
-            l2.setLayoutParams(lps);
+            CardView cv2 = new CardView(getActivity());
+            cv2.setContentPadding(toPixels(16),toPixels(16),toPixels(16),toPixels(16));
+            cv2.setBackgroundColor(Color.WHITE);
 
-            l.addView(l2);
+            LinearLayout l2 = new LinearLayout(getActivity());
+
+            cv2.addView(l2);
+            l0.addView(cv2);
+
             createTextView(plan.loadDate, 15, inflater, l2);
 
+            LinearLayout l4 = new LinearLayout(getActivity());
+            l4.setGravity(Gravity.RIGHT);
+            l4.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
             Spinner spin = new Spinner(getActivity());
-            spin.setGravity(Gravity.RIGHT);
             ArrayList<String> items = new ArrayList<String>();
             items.add("Alle");
             items.addAll(plan.getAllClasses());
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spin.setAdapter(adapter);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
             spin.setLayoutParams(lp);
-            l2.addView(spin);
+            l4.addView(spin);
+            l2.addView(l4);
 
             spin.setSelection(spinnerPos);
 
@@ -411,6 +432,9 @@ public class GGFragment extends Fragment {
                 l.addView(f2);
                 LinearLayout ls = new LinearLayout(getActivity());
                 ls.setOrientation(LinearLayout.VERTICAL);
+                TextView tv3 = createTextView("Besondere Mitteilungen", 19, inflater, ls);
+                tv3.setTextColor(Color.WHITE);
+                tv3.setPadding(0,0,0,toPixels(6));
                 cv.addView(ls);
 
                 for(TextView tv : createSMViews(plan)) {
@@ -452,7 +476,8 @@ public class GGFragment extends Fragment {
             });
 
         }
-        sv.addView(l);
+        l0.addView(l);
+        sv.addView(l0);
     }
 
     @Override
