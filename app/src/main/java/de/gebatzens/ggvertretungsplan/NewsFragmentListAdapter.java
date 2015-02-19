@@ -47,10 +47,12 @@ public class NewsFragmentListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = inflater.inflate(R.layout.news_fragment_list_item, parent, false);
+        TextView txtDate = (TextView) itemView.findViewById(R.id.newsDate);
         TextView txtTitle = (TextView) itemView.findViewById(R.id.newsTitle);
         TextView txtContent = (TextView) itemView.findViewById(R.id.newsContent);
         ArrayAdapter a;
         ImageView imgIcon = (ImageView) itemView.findViewById(R.id.newsIcon);
+        txtDate.setText(mArrayList.get(position)[1]);
         txtTitle.setText(mArrayList.get(position)[4]);
         txtContent.setText(Html.fromHtml(mArrayList.get(position)[5]));
         imgIcon.setImageResource(R.drawable.news_icon);
