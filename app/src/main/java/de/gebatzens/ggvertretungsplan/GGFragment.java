@@ -162,7 +162,7 @@ public class GGFragment extends Fragment {
         tv.setText(entry.comment + (entry.room.isEmpty() ? "" : (entry.comment.isEmpty() ? "" : "\n") + "Raum " + entry.room));
         if(tv.getText().toString().trim().isEmpty())
             ((ViewGroup) tv.getParent()).removeView(tv);
-        ((TextView) cv.findViewById(R.id.cv_subject)).setText(entry.subject);
+        ((TextView) cv.findViewById(R.id.cv_subject)).setText(Html.fromHtml(entry.subject));
         ((CardView.LayoutParams) cv.getLayoutParams()).setMargins(0, 0, 0, toPixels(10));
         return cv;
     }

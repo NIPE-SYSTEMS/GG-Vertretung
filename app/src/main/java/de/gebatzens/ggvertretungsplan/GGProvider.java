@@ -243,6 +243,7 @@ public class GGProvider extends VPProvider {
 
             if(parser.getName().equals("item"))  {
                 GGPlan.Entry e = new GGPlan.Entry();
+                e.repsub = "";
                 p.entries.add(e);
                 while(parser.next() != XmlPullParser.END_TAG) {
                     if(parser.getEventType() != XmlPullParser.START_TAG)

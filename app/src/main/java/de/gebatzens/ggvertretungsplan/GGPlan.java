@@ -194,13 +194,15 @@ public class GGPlan {
         //String missing;
         String subst;
         String subject;
+        //Neues Fach
+        String repsub;
         String comment;
         String hour;
         String room;
 
         public boolean isValid() {
             return type != null && clazz != null && subject != null
-                    && subst != null && comment != null && room != null;
+                    && subst != null && comment != null && room != null && repsub != null;
         }
 
         @Override
@@ -209,7 +211,7 @@ public class GGPlan {
                 Entry e = (Entry) o;
                 return e.type.equals(type) && e.clazz.equals(clazz) && e.subject.equals(subject)
                         && e.subst.equals(subst) && e.comment.equals(comment)
-                        && e.hour.equals(hour) && e.room.equals(room);
+                        && e.hour.equals(hour) && e.room.equals(room) && e.repsub.equals(repsub);
             } else
                 return false;
         }
@@ -238,7 +240,7 @@ public class GGPlan {
                 Matcher m = Pattern.compile("[Ss]iehe (.*)").matcher(comment);
                 if (m.find())
                     if (m.group(1).contains("heute")) {
-                        comment = "Verlegt in " + m.group(1).replace("heute, ", "");
+                        comment = "Verlegt in " + m.group(1).replaceAll("heute,? ", "");
                     } else {
                         comment = "Verlegt nach " + m.group(1);
                     }
@@ -247,10 +249,12 @@ public class GGPlan {
 
                 if(aufgm.find())
                     comment = "Aufgabe durch " + aufgm.group(1);
+                else
+                    comment = "";
             } else if(commentl.contains("klausur")) {
                 type = "Klausur";
                 comment = "";
-            } else if(commentl.contains("unterricht findet statt")) {
+            } else if(commentl.contains("unterricht findet statt") || commentl.contains("absenz")) {
                 type = "Unterricht";
             } else if(commentl.contains("statt")) {
                 type = "Vertretung / Verlegung";
@@ -259,10 +263,13 @@ public class GGPlan {
                 Matcher m2 = Pattern.compile(":(.*)").matcher(comment);
 
                 if(m1.find())
-                    comment = "Statt " + m1.group(1).replaceAll("\\w+ \\(heute\\)", "") + " Stunde";
+                    comment = "Statt " + m1.group(1).replaceAll("\\w+ \\(heute\\)", "").replaceAll("heute,? ", "") + " Stunde";
 
                 if(m2.find())
-                    subject = m2.group(1);
+                    repsub = m2.group(1).trim();
+            } else if(commentl.contains("betreuung")) {
+                type = "Betreuung";
+                comment = "";
             } else {
                 type = "Vertretung";
 
@@ -273,7 +280,12 @@ public class GGPlan {
                     comment = "Mittagspause";
             }
 
-            //TODO SWS fehlt hier noch
+            if(subject.isEmpty() && !repsub.isEmpty())
+                subject = "&#x2192; " + repsub;
+            else if(!subject.isEmpty() && !repsub.isEmpty() && !subject.equals(repsub))
+                subject += " &#x2192; " + repsub;
+
+
 
         }
     }

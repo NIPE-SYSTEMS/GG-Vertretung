@@ -95,6 +95,8 @@ public class SWSProvider extends VPProvider {
                                 Matcher m = tdata.matcher(tline);
                                 if(m.find()) {
                                     current = m.group(1).trim();
+                                    if(current.equals("--")) // decode löscht schon zwei
+                                        current = "Sonstiges";
                                 } else
                                     throw new GGInvalidSourceException("Malformed class row (" + ln + "): " + tline);
 
@@ -113,12 +115,14 @@ public class SWSProvider extends VPProvider {
                                 if(i != 6)
                                     throw new GGInvalidSourceException("Not enough data in line " + ln + ": " + tline);
 
+                                //Die SWS hat keine Lehrereinträge
                                 GGPlan.Entry e = new GGPlan.Entry();
+                                e.subst = "";
                                 e.clazz = current;
                                 e.hour = data[0]; //Stunde
-                                e.subst = data[2]; //Vertr.
+                                e.repsub = data[2]; //Vertr.
                                 e.subject = data[1]; //Fach
-                                e.comment = data[5];
+                                e.comment = data[5]; //Typ
                                 e.room = data[3];
                                 e.comment += " " + data[4];
 
