@@ -22,16 +22,21 @@ package de.gebatzens.ggvertretungsplan;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.InputStream;
@@ -42,17 +47,54 @@ import java.util.ArrayList;
 
 public class NewsFragment extends RemoteDataFragment {
 
-    private ListView lv;
+    ListView lv;
 
     @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_news, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
+        ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.fragment_news, group, false);
+        if(GGApp.GG_APP.news != null)
+            createView(inflater, vg);
+        return vg;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        lv = (ListView) view.findViewById(R.id.news_listview);
+    public void onViewCreated(View v, Bundle b) {
+        super.onViewCreated(v, b);
+
+        /*final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.news_refresh);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                GGApp.GG_APP.refreshAsync(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeContainer.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                swipeContainer.setRefreshing(false);
+                            }
+                        });
+
+                    }
+                }, true, GGApp.FragmentType.PLAN);
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(R.color.custom_material_green,
+                R.color.custom_material_red,
+                R.color.custom_material_blue,
+                R.color.custom_material_orange);
+        */
+
+        if(GGApp.GG_APP.plans == null) {
+            ((ViewGroup) getView().findViewById(R.id.news_content)).addView(createLoadingView());
+        }
+    }
+
+    private void createView(LayoutInflater inflater, ViewGroup view) {
+        lv = new ListView(getActivity());
+        ((LinearLayout) view.findViewById(R.id.news_content)).addView(lv);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -72,42 +114,48 @@ public class NewsFragment extends RemoteDataFragment {
                 ad.show();
             }
         });
-        updateNews();
+        NewsFragmentListAdapter nfla = new NewsFragmentListAdapter(getActivity(), GGApp.GG_APP.news);
+        lv.setAdapter(nfla);
     }
 
-    private void updateNews() {
+    private View createLoadingView() {
+        LinearLayout l = new LinearLayout(getActivity());
+        l.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        l.setGravity(Gravity.CENTER);
 
-        new AsyncTask<Object, Void, Void>() {
+        ProgressBar pb = new ProgressBar(getActivity());
+        pb.getIndeterminateDrawable().setColorFilter(GGApp.GG_APP.provider.getColor(), PorterDuff.Mode.SRC_IN);
+        pb.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        pb.setVisibility(ProgressBar.VISIBLE);
 
-            @Override
-            protected Void doInBackground(Object... params) {
-                News n = GGApp.GG_APP.provider.getNews();
-                updateUI(n);
-
-                return null;
-            }
-
-        }.execute();
-    }
-
-    private void updateUI(final News mNewsList) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                NewsFragmentListAdapter nfla = new NewsFragmentListAdapter(getActivity(),mNewsList);
-                lv.setAdapter(nfla);
-            }
-        });
+        l.addView(pb);
+        return l;
     }
 
     @Override
     public void setFragmentLoading() {
+        if(getView() == null)
+            return;
 
+        ViewGroup vg = (ViewGroup) getView().findViewById(R.id.news_content);
+        if(vg == null)
+            return;
+        vg.removeAllViews();
+
+        vg.addView(createLoadingView());
     }
 
     @Override
     public void updateFragment() {
+        if(getView() == null)
+            return;
 
+        ViewGroup vg = (ViewGroup) getView().findViewById(R.id.news_content);
+        if(vg == null)
+            return;
+        vg.removeAllViews();
+
+        createView(getActivity().getLayoutInflater(), vg);
     }
 
     public static class News extends ArrayList<String[]> {

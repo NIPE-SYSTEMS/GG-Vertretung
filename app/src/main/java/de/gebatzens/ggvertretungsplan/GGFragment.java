@@ -111,13 +111,6 @@ public class GGFragment extends Fragment {
         return (int) (dp * scale);
     }
 
-    private LinearLayout createLinearLayoutText(String text, int size, ViewGroup g) {
-        LinearLayout l = new LinearLayout(getActivity());
-        createTextView(text, size, null, l);
-        g.addView(l);
-        return l;
-    }
-
     private TextView createTextView(String text, int size, LayoutInflater inflater, ViewGroup group) {
         // TextView t = (TextView) inflater.inflate(R.layout.plan_text, group, true).findViewById(R.id.plan_entry);
         TextView t = new TextView(getActivity());
@@ -307,7 +300,7 @@ public class GGFragment extends Fragment {
                 createButtonWithText(l, "Verbindung überprüfen und wiederholen", "Nochmal", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        GGApp.GG_APP.refreshAsync(null, true);
+                        GGApp.GG_APP.refreshAsync(null, true, GGApp.FragmentType.PLAN);
                     }
                 });
             else

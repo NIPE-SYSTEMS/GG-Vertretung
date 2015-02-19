@@ -219,7 +219,7 @@ public class GGBroadcast extends BroadcastReceiver {
                                 }
                             });
 
-                            params[0].refreshAsync(null, true);
+                            params[0].refreshAsync(null, true, params[0].getFragmentType());
                         } else {
                             checkForUpdates(params[0], false);
                         }

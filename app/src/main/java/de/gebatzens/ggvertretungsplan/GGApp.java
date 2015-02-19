@@ -40,6 +40,7 @@ import java.util.HashMap;
 public class GGApp extends Application {
 
     public GGPlan[] plans = null;
+    public NewsFragment.News news;
     public MainActivity activity;
     public VPProvider provider;
     public static final int UPDATE_DISABLE = 0, UPDATE_WLAN = 1, UPDATE_ALL = 2;
@@ -55,8 +56,21 @@ public class GGApp extends Application {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         GGBroadcast.createAlarm(this);
         recreateProvider();
-        refreshAsync(null, false);
+        //refreshAsync(null, false, getFragmentType());
 
+    }
+
+    public Object getDataForFragment(FragmentType type) {
+        switch(type) {
+            case PLAN:
+                return plans;
+            case NEWS:
+                return news;
+            case MENSA:
+                return null;
+            default:
+                return null;
+        }
     }
 
     public void registerProviders() {
@@ -173,15 +187,23 @@ public class GGApp extends Application {
         preferences.edit().putString("fragtype", type.toString()).apply();
     }
 
-    public void refreshAsync(final Runnable finished, final boolean updateFragments) {
+    public void refreshAsync(final Runnable finished, final boolean updateFragments, final FragmentType type) {
         new AsyncTask<Object, Void, Void>() {
 
             @Override
             protected Void doInBackground(Object... params) {
 
-                plans = provider.getPlans(updateFragments);
-
-                //TODO news und mensa
+                switch(type) {
+                    case PLAN:
+                        plans = provider.getPlans(updateFragments);
+                        break;
+                    case NEWS:
+                        news = provider.getNews();
+                        break;
+                    case MENSA:
+                        //TODO
+                        break;
+                }
 
                 if(updateFragments)
                     activity.runOnUiThread(new Runnable() {

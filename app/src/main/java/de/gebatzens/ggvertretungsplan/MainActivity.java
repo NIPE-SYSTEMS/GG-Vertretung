@@ -85,6 +85,7 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GGApp.GG_APP.activity = this;
+
         NotificationManager nm =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         nm.cancel(123);
@@ -99,6 +100,11 @@ public class MainActivity extends FragmentActivity {
         transaction.replace(R.id.content_fragment, mContent, "gg_content_fragment");
         transaction.commit();
 
+        if(GGApp.GG_APP.getDataForFragment(GGApp.GG_APP.getFragmentType()) == null)
+            GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());
+        else
+            mContent.updateFragment();
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
         mToolbar.setBackgroundColor(GGApp.GG_APP.provider.getColor());
@@ -108,7 +114,7 @@ public class MainActivity extends FragmentActivity {
 
                 if(menuItem.getItemId() == R.id.action_refresh) {
                     mContent.setFragmentLoading();
-                    GGApp.GG_APP.refreshAsync(null, true);
+                    GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());
                 } else if(menuItem.getItemId() == R.id.action_settings) {
                     Intent i = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivityForResult(i, 1);
@@ -178,6 +184,9 @@ public class MainActivity extends FragmentActivity {
                 mDrawerLayout.closeDrawers();
                 mToolbar.setSubtitle(mStrings[position]);
 
+                if(GGApp.GG_APP.getDataForFragment(GGApp.GG_APP.getFragmentType()) == null)
+                    GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());
+
                 removeAllFragments();
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -212,8 +221,7 @@ public class MainActivity extends FragmentActivity {
                             b = GGApp.GG_APP.plans == null;
                             break;
                         case NEWS:
-                            //TODO
-                            b = false;
+                            b = GGApp.GG_APP.news == null;
                             break;
                         case MENSA:
                             //TODO
@@ -221,12 +229,7 @@ public class MainActivity extends FragmentActivity {
                             break;
                     }
                 }
-                MainActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mContent.updateFragment();
-                    }
-                });
+
                 return null;
             }
         }.execute();
@@ -286,7 +289,7 @@ public class MainActivity extends FragmentActivity {
                 ((GGContentFragment)mContent).mSlidingTabLayout.setBackgroundColor(GGApp.GG_APP.provider.getColor());
                 mContent.setFragmentLoading();
             }
-            GGApp.GG_APP.refreshAsync(null, true);
+            GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());
         }
 
     }

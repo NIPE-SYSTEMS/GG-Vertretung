@@ -439,7 +439,7 @@ public class GGProvider extends VPProvider {
                         gg.activity.mContent.setFragmentLoading();
                     }
                 });
-                GGApp.GG_APP.refreshAsync(null, true);
+                GGApp.GG_APP.refreshAsync(null, true, GGApp.FragmentType.PLAN);
 
             } else
                 return 3;

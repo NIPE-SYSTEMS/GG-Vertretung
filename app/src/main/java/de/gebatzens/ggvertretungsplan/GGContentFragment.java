@@ -88,7 +88,7 @@ public class GGContentFragment extends RemoteDataFragment {
                         });
 
                     }
-                }, true);
+                }, true, GGApp.FragmentType.PLAN);
             }
         });
         // Configure the refreshing colors
