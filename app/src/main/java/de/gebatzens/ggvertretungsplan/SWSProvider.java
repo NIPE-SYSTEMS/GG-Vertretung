@@ -122,6 +122,7 @@ public class SWSProvider extends VPProvider {
                                 e.room = data[3];
                                 e.comment += " " + data[4];
 
+                                e.unify();
                                 plan.entries.add(e);
                             }
                         }
