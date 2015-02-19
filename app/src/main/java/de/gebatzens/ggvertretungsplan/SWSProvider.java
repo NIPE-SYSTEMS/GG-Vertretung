@@ -171,8 +171,8 @@ public class SWSProvider extends VPProvider {
         return strs[1];
     }
 
-    public ArrayList getNews() {
-        return new ArrayList();
+    public NewsFragment.News getNews() {
+        return new NewsFragment.News();
     }
 
     @Override

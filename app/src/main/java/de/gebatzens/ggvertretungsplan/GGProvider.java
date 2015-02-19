@@ -285,13 +285,13 @@ public class GGProvider extends VPProvider {
         return c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.GERMAN);
     }
 
-    public ArrayList getNews() {
+    public NewsFragment.News getNews() {
+        NewsFragment.News n = new NewsFragment.News();
         try {
             HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/infoapp_provider_new.php?site=news&sessid="+sessId).openConnection();
             con.setRequestMethod("GET");
             con.setSSLSocketFactory(GGProvider.sslSocketFactory);
 
-            ArrayList<ArrayList<String>> news_list = new ArrayList<ArrayList<String>>();
             /*
              * 0 - ID
              * 1 - Date
@@ -315,38 +315,42 @@ public class GGProvider extends VPProvider {
                     String name = parser.getName();
                     if (name.equals("item")) {
 
-                        news_list.add(new ArrayList<String>());
+                        String[] s = new String[6];
+                        n.add(s);
 
                         while (parser.next() != XmlPullParser.END_TAG) {
                             if (parser.getEventType() != XmlPullParser.START_TAG)
                                 continue;
 
                             if (parser.getName().equals("id"))
-                                news_list.get(news_list.size() - 1).add(0, parser.nextText());
+                                s[0] = parser.nextText();
 
-                            if (parser.getName().equals("date"))
-                                news_list.get(news_list.size() - 1).add(1, parser.nextText());
+                            else if (parser.getName().equals("date"))
+                                s[1] = parser.nextText();
 
-                            if (parser.getName().equals("topic"))
-                                news_list.get(news_list.size() - 1).add(2, parser.nextText());
+                            else if (parser.getName().equals("topic"))
+                                s[2] = parser.nextText();
 
-                            if (parser.getName().equals("source"))
-                                news_list.get(news_list.size() - 1).add(3, parser.nextText());
+                            else if (parser.getName().equals("source"))
+                                s[3] = parser.nextText();
 
-                            if (parser.getName().equals("title"))
-                                news_list.get(news_list.size() - 1).add(4, parser.nextText());
+                            else if (parser.getName().equals("title"))
+                                s[4] = parser.nextText();
 
-                            if (parser.getName().equals("text"))
-                                news_list.get(news_list.size() - 1).add(5, parser.nextText());
+                            else if (parser.getName().equals("text"))
+                                s[5] = parser.nextText();
                         }
                     }
                 }
+                n.save("ggnews");
             }
-
-            return news_list;
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList();
+            if(!n.load("ggnews"))
+                return null;
+
+        } finally {
+            return n;
         }
     }
 

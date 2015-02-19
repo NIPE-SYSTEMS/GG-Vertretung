@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Hauke Oldsen
+ * Copyright (C) 2015 Fabian Schultis
  *
  * This file is part of GGVertretungsplan.
  *
@@ -21,6 +21,7 @@ package de.gebatzens.ggvertretungsplan;
  
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +34,11 @@ import java.util.ArrayList;
 
 public class NewsFragmentListAdapter extends BaseAdapter {
     private Context context;
-    private ArrayList<ArrayList<String>> mArrayList;
+    private NewsFragment.News mArrayList;
     private LayoutInflater inflater;
 
     /*public NewsFragmentListAdapter(Context pContext, String[] pTitle, String[] pContent, int[] pIcon) {*/
-    public NewsFragmentListAdapter(Context pContext, ArrayList pArrayList) {
+    public NewsFragmentListAdapter(Context pContext, NewsFragment.News pArrayList) {
         context = pContext;
         mArrayList = pArrayList;
     }
@@ -50,10 +51,10 @@ public class NewsFragmentListAdapter extends BaseAdapter {
         TextView txtContent = (TextView) itemView.findViewById(R.id.newsContent);
         ArrayAdapter a;
         ImageView imgIcon = (ImageView) itemView.findViewById(R.id.newsIcon);
-        txtTitle.setText(mArrayList.get(position).get(4));
-        txtContent.setText(mArrayList.get(position).get(5));
+        txtTitle.setText(mArrayList.get(position)[4]);
+        txtContent.setText(Html.fromHtml(mArrayList.get(position)[5]));
         imgIcon.setImageResource(R.drawable.news_icon);
-        //imgIcon.setImageResource(mIcon[position]);
+        //imgIcon.setImageResource(mIcnewson[position]);
         return itemView;
     }
 
@@ -64,7 +65,7 @@ public class NewsFragmentListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return mArrayList.get(position).get(4);
+        return mArrayList.get(position)[4];
     }
 
     @Override

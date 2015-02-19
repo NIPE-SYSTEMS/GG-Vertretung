@@ -64,6 +64,6 @@ public abstract class VPProvider {
     public abstract boolean loginNeeded();
     public abstract int login(String u, String p);
     public abstract void logout();
-    public abstract ArrayList getNews();
+    public abstract NewsFragment.News getNews();
 
 }
