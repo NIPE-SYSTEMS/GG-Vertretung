@@ -102,8 +102,7 @@ public class MainActivity extends FragmentActivity {
 
         if(GGApp.GG_APP.getDataForFragment(GGApp.GG_APP.getFragmentType()) == null)
             GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());
-        else
-            mContent.updateFragment();
+        
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
