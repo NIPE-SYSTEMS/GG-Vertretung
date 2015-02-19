@@ -167,6 +167,15 @@ public class GGPlan {
         return list;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if(o instanceof GGPlan) {
+            GGPlan plan = (GGPlan) o;
+            return plan.entries.equals(entries) && plan.date.equals(date) && plan.special.equals(special);
+        } else
+            return false;
+    }
+
     public List<Entry> getAllForClass(String c) {
         c = c.toLowerCase();
         c = c.replaceAll(" ", "");
@@ -192,6 +201,17 @@ public class GGPlan {
         public boolean isValid() {
             return type != null && clazz != null && subject != null
                     && subst != null && comment != null && room != null;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if(o instanceof Entry) {
+                Entry e = (Entry) o;
+                return e.type.equals(type) && e.clazz.equals(clazz) && e.subject.equals(subject)
+                        && e.subst.equals(subst) && e.comment.equals(comment)
+                        && e.hour.equals(hour) && e.room.equals(room);
+            } else
+                return false;
         }
 
         /**

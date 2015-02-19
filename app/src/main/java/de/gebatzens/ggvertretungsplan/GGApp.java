@@ -192,10 +192,13 @@ public class GGApp extends Application {
 
             @Override
             protected Void doInBackground(Object... params) {
-
+                boolean update = updateFragments;
                 switch(type) {
                     case PLAN:
-                        plans = provider.getPlans(updateFragments);
+                        GGPlan[] nplans = provider.getPlans(updateFragments);
+                        if(plans != null)
+                            update = update && !(nplans[0].equals(plans[0]) && nplans[1].equals(plans[1]));
+                        plans = nplans;
                         break;
                     case NEWS:
                         news = provider.getNews();
@@ -205,7 +208,7 @@ public class GGApp extends Application {
                         break;
                 }
 
-                if(updateFragments)
+                if(update)
                     activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

@@ -63,6 +63,7 @@ public class GGFragment extends Fragment {
     String url;
     GGPlan plan, planh, planm;
     int type = -1;
+    int spinnerPos = 0;
 
     public void setParams(int type) {
         this.type = type;
@@ -389,12 +390,17 @@ public class GGFragment extends Fragment {
 
             Spinner spin = new Spinner(getActivity());
             spin.setGravity(Gravity.RIGHT);
-            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, plan.getAllClasses());
+            ArrayList<String> items = new ArrayList<String>();
+            items.add("Alle");
+            items.addAll(plan.getAllClasses());
+            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spin.setAdapter(adapter);
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             spin.setLayoutParams(lp);
             l2.addView(spin);
+
+            spin.setSelection(spinnerPos);
 
             if(!plan.special.isEmpty()) {
                 FrameLayout f2 = new FrameLayout(getActivity());
@@ -421,11 +427,24 @@ public class GGFragment extends Fragment {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     String item = adapter.getItem(position);
 
-                    l3.removeAllViews();
-                    cardColorIndex = 0;
-                    createCardItems(plan.getAllForClass(item), l3, inflater);
-                }
+                    spinnerPos = position;
 
+                    if (!item.equals("Alle")) {
+                        l3.removeAllViews();
+                        cardColorIndex = 0;
+                        createCardItems(plan.getAllForClass(item), l3, inflater);
+
+                    } else {
+                        l3.removeAllViews();
+                        cardColorIndex = 0;
+
+                        List<String> classes = plan.getAllClasses();
+                        for(String s : classes) {
+                            createTextView(s, 30, inflater, l3).setPadding(0, toPixels(20), 0, 0);
+                            createCardItems(plan.getAllForClass(s), l3, inflater);
+                        }
+                    }
+                }
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
                     l3.removeAllViews();
@@ -452,6 +471,7 @@ public class GGFragment extends Fragment {
         if(GGApp.GG_APP.plans == null) {
             ((ViewGroup) getView()).addView(createLoadingView());
         }
+
     }
 
 }

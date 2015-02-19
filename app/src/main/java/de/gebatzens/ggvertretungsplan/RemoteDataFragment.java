@@ -19,11 +19,16 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 public abstract class RemoteDataFragment extends Fragment{
 
     public abstract void setFragmentLoading();
     public abstract void updateFragment();
+
+    public void saveInstanceState(Bundle bundle) {
+
+    }
 
 }

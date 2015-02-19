@@ -36,6 +36,7 @@ public class GGContentFragment extends RemoteDataFragment {
     SlidingTabLayout mSlidingTabLayout;
     GGFragmentAdapter mGGFrag;
     SwipeRefreshLayout swipeContainer;
+    Bundle bundle;
 
     public GGContentFragment() {
 
@@ -54,9 +55,16 @@ public class GGContentFragment extends RemoteDataFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        bundle = ((MainActivity) getActivity()).savedState;
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
         mGGFrag = new GGFragmentAdapter(getActivity().getSupportFragmentManager(), savedInstanceState, (MainActivity) getActivity());
+        if(bundle != null) {
+            mGGFrag.heute.spinnerPos = bundle.getInt("ggvp_frag_today_spinner");
+            mGGFrag.morgen.spinnerPos = bundle.getInt("ggvp_frag_tomorrow_spinner");
+        }
         mViewPager.setAdapter(mGGFrag);
+        if(bundle != null)
+            mViewPager.setCurrentItem(bundle.getInt("ggvp_tab"));
 
         mToolbar = (Toolbar) ((MainActivity) this.getActivity()).mToolbar;
         ColorDrawable mToolbarColor = (ColorDrawable) mToolbar.getBackground();
@@ -100,12 +108,22 @@ public class GGContentFragment extends RemoteDataFragment {
     }
 
     @Override
+    public void saveInstanceState(Bundle b) {
+
+        b.putInt("ggvp_frag_today_spinner", mGGFrag.heute.spinnerPos);
+        b.putInt("ggvp_frag_tomorrow_spinner", mGGFrag.morgen.spinnerPos);
+        b.putInt("ggvp_tab", mViewPager.getCurrentItem());
+    }
+
+    @Override
     public void setFragmentLoading() {
         mGGFrag.setFragmentsLoading();
     }
 
     @Override
     public void updateFragment() {
+        mGGFrag.morgen.spinnerPos = 0;
+        mGGFrag.heute.spinnerPos = 0;
         mGGFrag.updateFragments();
     }
 }

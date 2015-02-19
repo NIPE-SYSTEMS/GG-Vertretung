@@ -57,6 +57,7 @@ public class MainActivity extends FragmentActivity {
     int[] mIcons = new int[] {R.drawable.drawer_list_button_image_vertretungsplan, R.drawable.drawer_list_button_image_news, R.drawable.drawer_list_button_image_mensa};
     ImageView mNacvigationImage;
     View mNavigationSchoolpictureLink;
+    Bundle savedState;
 
     public RemoteDataFragment createFragment() {
         switch(GGApp.GG_APP.getFragmentType()) {
@@ -85,6 +86,7 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         GGApp.GG_APP.activity = this;
+        savedState = savedInstanceState;
 
         NotificationManager nm =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -261,6 +263,12 @@ public class MainActivity extends FragmentActivity {
         mToggle.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle b) {
+        super.onSaveInstanceState(b);
+
+        mContent.saveInstanceState(b);
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
