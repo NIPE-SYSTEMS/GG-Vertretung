@@ -103,7 +103,7 @@ public class NewsFragment extends RemoteDataFragment {
                 AlertDialog.Builder ad = new AlertDialog.Builder(view.getContext());
                 ad.setTitle(mTitle);
                 ad.setMessage(mContent);
-                ad.setNeutralButton("Schließen", new DialogInterface.OnClickListener() {
+                ad.setNegativeButton("Schließen", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
