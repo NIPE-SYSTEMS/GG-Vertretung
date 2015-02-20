@@ -136,7 +136,7 @@ public class GGFragment extends Fragment {
             f2.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
             CardView cv = createCardView();
             f2.addView(cv);
-            createTextView("Keine Vertretungsplan Einträge", 20, inflater, cv);
+            createTextView("Keine Einträge im Vertretungsplan", 20, inflater, cv);
             group.addView(f2);
         }
 
@@ -264,8 +264,8 @@ public class GGFragment extends Fragment {
             createTextView(planh.loadDate, 15, inflater, l2);
 
             TextView tv2 = createTextView("Klasse " + clas, 15, inflater, l2);
-            tv2.setGravity(Gravity.RIGHT);
-            tv2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            tv2.setGravity(Gravity.RIGHT | Gravity.CENTER);
+            tv2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
             createTextView(GGApp.GG_APP.provider.getDay(planh.date), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
             if(!planh.special.isEmpty()) {
