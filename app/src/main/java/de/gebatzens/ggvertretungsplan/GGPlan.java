@@ -90,15 +90,18 @@ public class GGPlan {
                             else if(name2.equals("type"))
                                 e.type = reader.nextString();
                             else if(name2.equals("room"))
-                                e.type = reader.nextString();
+                                e.room = reader.nextString();
+                            else if(name2.equals("repsub"))
+                                e.repsub = reader.nextString();
                             else
                                 reader.skipValue();
 
                         }
-                        if(!e.isValid()) {
-                            reader.close();
-                            return false;
-                        }
+                        //if(!e.isValid()) {
+                        //    reader.close();
+                        //    return false;
+                        //}
+                        //Log.w("ggvp", "Loaded " + e);
                         entries.add(e);
                         reader.endObject();
                     }
@@ -143,6 +146,7 @@ public class GGPlan {
                 writer.name("comment").value(e.comment);
                 writer.name("type").value(e.type);
                 writer.name("room").value(e.room);
+                writer.name("repsub").value(e.repsub);
                 writer.endObject();
             }
             writer.endArray();
@@ -192,18 +196,13 @@ public class GGPlan {
         String type;
         String clazz;
         //String missing;
-        String subst;
-        String subject;
+        String subst = "";
+        String subject = "";
         //Neues Fach
-        String repsub;
-        String comment;
-        String hour;
-        String room;
-
-        public boolean isValid() {
-            return type != null && clazz != null && subject != null
-                    && subst != null && comment != null && room != null && repsub != null;
-        }
+        String repsub = "";
+        String comment = "";
+        String hour = "";
+        String room = "";
 
         @Override
         public boolean equals(Object o) {
@@ -214,6 +213,11 @@ public class GGPlan {
                         && e.hour.equals(hour) && e.room.equals(room) && e.repsub.equals(repsub);
             } else
                 return false;
+        }
+
+        @Override
+        public String toString() {
+            return "Entry[" + type + " " + clazz + " " + subject + " " + subst + " " + comment + " " + hour + " " + room + " " + repsub;
         }
 
         /**

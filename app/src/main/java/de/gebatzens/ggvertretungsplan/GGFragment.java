@@ -19,10 +19,12 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -113,8 +115,8 @@ public class GGFragment extends Fragment {
         vg.addView(createLoadingView());
     }
 
-    private int toPixels(float dp) {
-        float scale = getResources().getDisplayMetrics().density;
+    private static int toPixels(float dp) {
+        float scale = GGApp.GG_APP.getResources().getDisplayMetrics().density;
         return (int) (dp * scale);
     }
 
@@ -196,11 +198,11 @@ public class GGFragment extends Fragment {
         return tvl;
     }
 
-    private void createButtonWithText(LinearLayout l, String text, String button, View.OnClickListener onclick) {
-        RelativeLayout r = new RelativeLayout(getActivity());
+    private static void createButtonWithText(Activity activity, LinearLayout l, String text, String button, View.OnClickListener onclick) {
+        RelativeLayout r = new RelativeLayout(activity);
         r.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        TextView tv = new TextView(getActivity());
+        TextView tv = new TextView(activity);
         RelativeLayout.LayoutParams tvparams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         tvparams.addRule(RelativeLayout.ABOVE, R.id.reload_button);
         tvparams.addRule(RelativeLayout.CENTER_HORIZONTAL);
@@ -211,7 +213,7 @@ public class GGFragment extends Fragment {
         tv.setGravity(Gravity.CENTER_HORIZONTAL);
         r.addView(tv);
 
-        Button b = new Button(getActivity());
+        Button b = new Button(activity);
         RelativeLayout.LayoutParams bparams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
         bparams.addRule(RelativeLayout.CENTER_VERTICAL);
         bparams.addRule(RelativeLayout.CENTER_HORIZONTAL);
@@ -313,7 +315,7 @@ public class GGFragment extends Fragment {
 
         } else if(type == TYPE_OVERVIEW && planh.throwable == null && planm.throwable == null) {
             //Keine Klasse
-            createButtonWithText(l, "Du musst eine Klasse wählen!", "Einstellungen", new View.OnClickListener() {
+            createButtonWithText(getActivity(), l, "Kein Filter ausgewählt", "Einstellungen", new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -328,14 +330,14 @@ public class GGFragment extends Fragment {
             LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             boolean b = planm.throwable != null && planm.throwable instanceof VPLoginException;
             if(!b)
-                createButtonWithText(l, "Verbindung überprüfen und wiederholen", "Nochmal", new View.OnClickListener() {
+                createButtonWithText(getActivity(), l, "Verbindung überprüfen und wiederholen", "Nochmal", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         GGApp.GG_APP.refreshAsync(null, true, GGApp.FragmentType.PLAN);
                     }
                 });
             else
-                createButtonWithText(l, "Du musst dich anmelden!", "Anmelden", new View.OnClickListener() {
+                createButtonWithText(getActivity(), l, "Anmeldung benötigt!", "Anmelden", new View.OnClickListener() {
                     @Override
                     public void onClick(View c) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

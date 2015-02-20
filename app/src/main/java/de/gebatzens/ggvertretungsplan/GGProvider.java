@@ -206,15 +206,20 @@ public class GGProvider extends VPProvider {
             if(session && (e instanceof XmlPullParserException || e instanceof VPLoginException)) {
                 startNewSession(prefs.getString("token", null));
                 return getPlans(toast, false);
-            } else
-                plans[0].throwable = plans[1].throwable = e;
+            } else {
+                plans[0].throwable = e;
+                plans[1].throwable = e;
+            }
         }
 
         if(plans[0].throwable != null) {
             if (plans[0].load(GGApp.GG_APP, "ggvptoday") && plans[1].load(GGApp.GG_APP, "ggvptomorrow")) {
                 final Throwable t = plans[0].throwable;
-                plans[0].loadDate = plans[1].loadDate = "Keine Internetverbindung\n" + plans[0].loadDate;
-                plans[0].throwable = plans[1].throwable = null;
+                String s = "Keine Internetverbindung\n" + plans[0].loadDate;
+                plans[0].loadDate = s;
+                plans[1].loadDate = s;
+                plans[0].throwable = null;
+                plans[1].throwable = null;
                 if(toast)
                     GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
                         @Override
@@ -243,7 +248,6 @@ public class GGProvider extends VPProvider {
 
             if(parser.getName().equals("item"))  {
                 GGPlan.Entry e = new GGPlan.Entry();
-                e.repsub = "";
                 p.entries.add(e);
                 while(parser.next() != XmlPullParser.END_TAG) {
                     if(parser.getEventType() != XmlPullParser.START_TAG)
@@ -351,8 +355,10 @@ public class GGProvider extends VPProvider {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            if(!n.load("ggnews"))
-                return null;
+            if(!n.load("ggnews")) {
+                n.throwable = e;
+                return n;
+            }
 
         } finally {
             return n;
