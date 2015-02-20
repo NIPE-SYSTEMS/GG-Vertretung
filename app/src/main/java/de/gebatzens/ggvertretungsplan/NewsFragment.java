@@ -22,6 +22,7 @@ package de.gebatzens.ggvertretungsplan;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.JsonReader;
@@ -92,6 +93,7 @@ public class NewsFragment extends RemoteDataFragment {
 
     private void createView(LayoutInflater inflater, ViewGroup view) {
         lv = new ListView(getActivity());
+        lv.setDrawSelectorOnTop(true);
         ((LinearLayout) view.findViewById(R.id.news_content)).addView(lv);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
