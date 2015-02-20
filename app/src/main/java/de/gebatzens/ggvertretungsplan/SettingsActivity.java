@@ -97,7 +97,7 @@ public class SettingsActivity extends Activity {
 
             Preference pref_buildversion = findPreference("buildversion");
             String versionName = BuildConfig.VERSION_NAME;
-            pref_buildversion.setSummary("Version: " + versionName + " (" + BuildConfig.BUILD_TYPE + ") (Zum aktualisieren berühren)");
+            pref_buildversion.setSummary("Version: " + versionName + " (" + BuildConfig.BUILD_TYPE + ") (Zum\u00A0Aktualisieren\u00A0berühren)");
             pref_buildversion.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
@@ -230,7 +230,7 @@ public class SettingsActivity extends Activity {
 
             String username = gg.provider.getUsername();
             if(username != null) {
-                    pref_username.setSummary(username + " (Zum Abmelden berühren)");
+                    pref_username.setSummary(username + " (Zum\u00A0Abmelden\u00A0berühren)");
             }
 
         }
@@ -249,7 +249,7 @@ public class SettingsActivity extends Activity {
                 if(username == null)
                     findPreference("authentication_username").setSummary("Du bist nicht angemeldet");
                 else
-                    findPreference("authentication_username").setSummary(username + " (Zum Abmelden berühren)");
+                    findPreference("authentication_username").setSummary(username + " (Zum\u00A0Abmelden\u00A0berühren)");
             } else if(key.equals("klasse")) {
                 EditTextPreference editTextPref = (EditTextPreference) pref;
                 if(editTextPref.getText().equals("")){ //Klasse
