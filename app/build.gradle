@@ -8,7 +8,7 @@ android {
         applicationId "de.gebatzens.ggvertretungsplan"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 17
+        versionCode 18
         versionName "0.8.5"
     }
     buildTypes {
