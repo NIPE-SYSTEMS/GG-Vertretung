@@ -44,7 +44,9 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
@@ -203,11 +205,23 @@ public class SettingsActivity extends Activity {
                     if(gg.provider.getUsername() != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setTitle("Abmelden");
-                        builder.setMessage("Wirklich abmelden?");
+                        LinearLayout ll = new LinearLayout(getActivity());
+                        ll.setOrientation(LinearLayout.VERTICAL);
+                        int p = 25;
+                        float d = getActivity().getResources().getDisplayMetrics().density;
+                        int padding_left = (int)(p * d);
+                        ll.setPadding(padding_left,0,0,0);
+                        TextView tv = new TextView(getActivity());
+                        tv.setText("Wirklich abmelden?");
+                        ll.addView(tv);
+                        final CheckBox cb = new CheckBox(getActivity());
+                        cb.setText("Auf allen Geräten abmelden");
+                        ll.addView(cb);
+                        builder.setView(ll);
                         builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                GGApp.GG_APP.provider.logout();
+                                GGApp.GG_APP.provider.logout((Boolean) cb.isChecked());
                                 changed = true;
                                 pref_username.setSummary("Du bist nicht angemeldet");
                                 dialog.dismiss();
