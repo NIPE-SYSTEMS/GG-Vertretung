@@ -40,6 +40,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -98,6 +99,7 @@ public class FilterActivity extends Activity {
                             Toast.makeText(((Dialog) dialog).getContext(), "Ungültige Eingabe", Toast.LENGTH_SHORT).show();
                         else {
                             GGApp.GG_APP.filters.add(f);
+                            saveFilter(GGApp.GG_APP.filters);
                             adapter.notifyDataSetChanged();
                         }
                         dialog.dismiss();

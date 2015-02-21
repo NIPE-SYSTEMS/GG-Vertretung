@@ -58,6 +58,7 @@ public class GGApp extends Application {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         GGBroadcast.createAlarm(this);
         recreateProvider();
+        filters = FilterActivity.loadFilter();
         //refreshAsync(null, false, getFragmentType());
 
     }
