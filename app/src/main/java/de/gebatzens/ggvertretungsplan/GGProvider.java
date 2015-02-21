@@ -102,18 +102,30 @@ public class GGProvider extends VPProvider {
     }
 
     @Override
-    public void logout() {
+    public void logout(Boolean delete_token) {
         GGApp.GG_APP.deleteFile("gguserinfo");
         GGApp.GG_APP.deleteFile("ggvptoday");
         GGApp.GG_APP.deleteFile("ggvptomorrow");
         prefs.edit().clear().apply();
+        String delete_token_string;
+        if(delete_token) {
+            delete_token_string = "true";
+        } else {
+            delete_token_string = "false";
+        }
         new AsyncTask<String, String, String>() {
             @Override
             public String doInBackground(String... s) {
 
                 if((s[0] != null) && !s[0].isEmpty()) {
                     try {
-                        HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/logout.php?deltoken=true&sessid=" + s[0]).openConnection();
+                        String connect_string;
+                        if((s[1]!=null) && s[1].equals("true")) {
+                            connect_string = BASE_URL + "infoapp/logout.php?deltoken=true&sessid=" + s[0];
+                        } else {
+                            connect_string = BASE_URL + "infoapp/logout.php?sessid=" + s[0];
+                        }
+                        HttpsURLConnection con = (HttpsURLConnection) new URL(connect_string).openConnection();
                         con.setRequestMethod("GET");
                         con.setSSLSocketFactory(sslSocketFactory);
                         BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -151,7 +163,7 @@ public class GGProvider extends VPProvider {
                 }
                 return null;
             }
-        }.execute(sessId);
+        }.execute(sessId, delete_token_string);
         sessId = null;
     }
 
