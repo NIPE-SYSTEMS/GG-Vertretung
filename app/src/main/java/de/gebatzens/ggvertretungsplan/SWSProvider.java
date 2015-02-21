@@ -194,7 +194,7 @@ public class SWSProvider extends VPProvider {
     }
 
     @Override
-    public void logout() {
+    public void logout(Boolean delete_token) {
 
     }
 
