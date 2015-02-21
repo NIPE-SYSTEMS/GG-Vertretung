@@ -1,7 +1,7 @@
-- strings.xml benutzen
+##To-Do-Liste
 
-- gelesene News Artikel als gelesen markieren
-
-- Mensaplan für GG und SWS
-
-- News für SWS
+* strings.xml benutzen
+* gelesene News Artikel als gelesen markieren
+* Mensaplan fÃ¼r GG und SWS
+  * Hier fehlt noch UnterstÃ¼tzung der Schulen
+* News fÃ¼r SWS
