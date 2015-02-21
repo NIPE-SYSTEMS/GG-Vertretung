@@ -21,6 +21,9 @@ package de.gebatzens.ggvertretungsplan;
  
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.media.Image;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,7 +62,7 @@ public class NewsFragmentListAdapter extends BaseAdapter {
         ImageView imgIcon = (ImageView) itemView.findViewById(R.id.newsIcon);
 
         DateFormat parser = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        DateFormat dateFormatter = new SimpleDateFormat("d. MMM");
+        DateFormat dateFormatter = new SimpleDateFormat("d. MMM yy");
         try
         {
             String startDate = mArrayList.get(position)[1];
@@ -72,9 +75,13 @@ public class NewsFragmentListAdapter extends BaseAdapter {
         }
 
         txtDate.setText(formattedDate);
+        txtDate.setTextColor(GGApp.GG_APP.provider.getColor());
         txtTitle.setText(mArrayList.get(position)[4]);
         txtContent.setText(Html.fromHtml(mArrayList.get(position)[5]));
-        imgIcon.setImageResource(R.drawable.news_icon);
+        imgIcon.setImageResource(R.drawable.news_icon_white);
+        imgIcon.setBackgroundResource(R.drawable.news_img_background);
+        GradientDrawable drawable = (GradientDrawable) imgIcon.getBackground();
+        drawable.setColor(GGApp.GG_APP.provider.getColor());
         //imgIcon.setImageResource(mIcnewson[position]);
         return itemView;
     }

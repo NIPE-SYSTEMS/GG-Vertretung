@@ -12,23 +12,24 @@
         <ImageView
             android:id="@+id/newsIcon"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:contentDescription="@string/app_name" />
     </FrameLayout>
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingRight="16dp">
+        android:paddingRight="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="16dp"
-            android:paddingBottom="16dp">
+            android:orientation="horizontal"
+            android:weightSum="1">
             <TextView
                 android:id="@+id/newsTitle"
                 android:layout_width="match_parent"
@@ -36,25 +37,29 @@
                 android:textSize="16sp"
                 android:fontFamily="sans-serif-medium"
                 android:singleLine="true"
-                android:text="@string/app_name"/>
-            <TextView
-                android:id="@+id/newsContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:fontFamily="sans-serif-medium"
-                android:singleLine="true"
-                android:textColor="#727272"
-                android:text="@string/app_name"/>
+                android:text="dsafdsafsd fsdfsdfsd sdfsdfsdfsf sdfsdffsfsdf"
+                android:layout_weight="1"/>
             <TextView
                 android:id="@+id/newsDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="10sp"
+                android:layout_marginLeft="3dp"
+                android:textSize="14sp"
                 android:fontFamily="sans-serif-medium"
-                android:singleLine="true"
                 android:textColor="#727272"
-                android:text="@string/app_name"/>
+                android:text="14. Jan."
+                android:layout_weight="0"/>
         </LinearLayout>
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/newsContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:fontFamily="sans-serif-medium"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:lines="2"
+            android:textColor="#727272"
+            android:text="@string/app_name"/>
+    </LinearLayout>
 </LinearLayout>
