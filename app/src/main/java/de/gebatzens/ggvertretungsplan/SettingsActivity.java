@@ -208,6 +208,7 @@ public class SettingsActivity extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 GGApp.GG_APP.provider.logout();
+                                changed = true;
                                 pref_username.setSummary("Du bist nicht angemeldet");
                                 dialog.dismiss();
                             }
