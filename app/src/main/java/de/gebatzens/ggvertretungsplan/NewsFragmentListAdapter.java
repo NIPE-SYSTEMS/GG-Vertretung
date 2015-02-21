@@ -30,12 +30,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class NewsFragmentListAdapter extends BaseAdapter {
     private Context context;
     private NewsFragment.News mArrayList;
     private LayoutInflater inflater;
+    private String formattedDate;
 
     /*public NewsFragmentListAdapter(Context pContext, String[] pTitle, String[] pContent, int[] pIcon) {*/
     public NewsFragmentListAdapter(Context pContext, NewsFragment.News pArrayList) {
@@ -52,7 +57,21 @@ public class NewsFragmentListAdapter extends BaseAdapter {
         TextView txtContent = (TextView) itemView.findViewById(R.id.newsContent);
         ArrayAdapter a;
         ImageView imgIcon = (ImageView) itemView.findViewById(R.id.newsIcon);
-        txtDate.setText(mArrayList.get(position)[1]);
+
+        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        DateFormat dateFormatter = new SimpleDateFormat("d. MMM");
+        try
+        {
+            String startDate = mArrayList.get(position)[1];
+            Date parsedDate = parser.parse(startDate);
+            formattedDate = dateFormatter.format(parsedDate);
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+
+        txtDate.setText(formattedDate);
         txtTitle.setText(mArrayList.get(position)[4]);
         txtContent.setText(Html.fromHtml(mArrayList.get(position)[5]));
         imgIcon.setImageResource(R.drawable.news_icon);
