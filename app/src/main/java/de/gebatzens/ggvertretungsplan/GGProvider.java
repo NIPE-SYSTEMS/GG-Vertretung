@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Xml;
+import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -110,15 +111,35 @@ public class GGProvider extends VPProvider {
             @Override
             public String doInBackground(String... s) {
 
-                if(s[0] != null && !s[0].isEmpty()) {
+                if((s[0] != null) && !s[0].isEmpty()) {
                     try {
-                        HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/logout.php?sessid=" + s[0]).openConnection();
+                        HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/logout.php?deltoken=true&sessid=" + s[0]).openConnection();
                         con.setRequestMethod("GET");
                         con.setSSLSocketFactory(sslSocketFactory);
-                        con.connect();
+                        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                        StringBuilder sb = new StringBuilder();
+                        String line;
+                        while((line = br.readLine()) != null) {
+                            sb.append(line);
+                        }
+                        Log.e("Response",sb.toString());
+                        if(sb.toString().contains("<state>true</state>")) {
+                            GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(GGApp.GG_APP.activity.getApplicationContext(),"Abmeldung erfolgreich",Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        } else {
+                            GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(GGApp.GG_APP.activity.getApplicationContext(),"Abmeldefehler",Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
-
                     }
                     GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
                         @Override
