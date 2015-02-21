@@ -108,7 +108,7 @@ public class FilterActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                });
+                });//
                 AlertDialog d = builder.create();
                 d.show();
                 Spinner s = (Spinner) d.findViewById(R.id.filter_spinner);
