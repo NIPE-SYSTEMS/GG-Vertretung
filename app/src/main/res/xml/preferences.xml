@@ -7,9 +7,9 @@
             android:entries="@array/schuleArray"
             android:entryValues="@array/schuleValues"
             android:defaultValue="gg" />
-        <EditTextPreference android:title="Klasse"
-            android:key="klasse"
-            android:summary="Keine ausgewählt" />
+        <Preference android:title="Filter"
+            android:key="filter"
+            android:summary="Kein Filter aktiv" />
         <Preference android:title="Benutzername"
             android:key="authentication_username"
             android:summary="Sie sind nicht angemeldet">

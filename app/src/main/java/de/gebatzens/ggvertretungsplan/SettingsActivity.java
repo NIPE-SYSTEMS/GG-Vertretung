@@ -82,15 +82,11 @@ public class SettingsActivity extends Activity {
             SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
             sp.registerOnSharedPreferenceChangeListener(this);
             String pref_schule_content = gg.provider.getFullName();
-            String pref_klasse_content = gg.getSelectedClass();
-            if(pref_klasse_content.equals(""))
-                pref_klasse_content = "Keine ausgewählt";
 
             Preference pref_schule = findPreference("schule");
             pref_schule.setSummary(pref_schule_content);
 
             Preference pref_klasse = findPreference("klasse");
-            pref_klasse.setSummary(pref_klasse_content);
 
             Preference update = findPreference("appupdates");
             update.setSummary(gg.translateUpdateType(gg.getUpdateType()));
@@ -233,6 +229,17 @@ public class SettingsActivity extends Activity {
                     pref_username.setSummary(username + " (Zum Abmelden berühren)");
             }
 
+            Preference filter = findPreference("filter");
+            filter.setSummary(GGApp.GG_APP.filters.size() == 0 ? "Kein Filter aktiv" : GGApp.GG_APP.filters.size() + " Filter aktiv");
+            filter.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent i = new Intent(getActivity(), FilterActivity.class);
+                    startActivityForResult(i, 1);
+                    return false;
+                }
+            });
+
         }
 
         @Override
@@ -251,12 +258,7 @@ public class SettingsActivity extends Activity {
                 else
                     findPreference("authentication_username").setSummary(username + " (Zum Abmelden berühren)");
             } else if(key.equals("klasse")) {
-                EditTextPreference editTextPref = (EditTextPreference) pref;
-                if(editTextPref.getText().equals("")){ //Klasse
-                    pref.setSummary("Keine ausgewählt");
-                } else{
-                    pref.setSummary(editTextPref.getText());
-                }
+
             } else if(key.equals("appupdates")) {
                 ListPreference listPreference = (ListPreference) pref;
                 listPreference.setSummary(listPreference.getEntry());
@@ -319,6 +321,15 @@ public class SettingsActivity extends Activity {
     public void onSaveInstanceState(Bundle b) {
         super.onSaveInstanceState(b);
         b.putBoolean("ggs_changed", changed);
+    }
+
+    @Override
+    public void onActivityResult(int req, int resp, Intent intent) {
+        super.onActivityResult(req, resp, intent);
+
+        if(req == 0 && resp == RESULT_OK) {
+            changed = true;
+        }
     }
 
     @Override

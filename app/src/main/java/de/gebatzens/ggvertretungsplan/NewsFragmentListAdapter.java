@@ -50,7 +50,6 @@ public class NewsFragmentListAdapter extends BaseAdapter {
         TextView txtDate = (TextView) itemView.findViewById(R.id.newsDate);
         TextView txtTitle = (TextView) itemView.findViewById(R.id.newsTitle);
         TextView txtContent = (TextView) itemView.findViewById(R.id.newsContent);
-        ArrayAdapter a;
         ImageView imgIcon = (ImageView) itemView.findViewById(R.id.newsIcon);
         txtDate.setText(mArrayList.get(position)[1]);
         txtTitle.setText(mArrayList.get(position)[4]);

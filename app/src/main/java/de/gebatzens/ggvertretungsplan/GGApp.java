@@ -35,6 +35,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GGApp extends Application {
@@ -47,6 +48,7 @@ public class GGApp extends Application {
     private SharedPreferences preferences;
     public static GGApp GG_APP;
     private HashMap<String, Class<? extends VPProvider>> mProviderList = new HashMap<String, Class<? extends VPProvider>>();
+    public ArrayList<FilterActivity.Filter> filters = new ArrayList<FilterActivity.Filter>();
 
     @Override
     public void onCreate() {
@@ -82,7 +84,7 @@ public class GGApp extends Application {
     public void createNotification(String title, String message, int id, String... strings) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.stern)
+                        .setSmallIcon(R.drawable.ic_gg_star)
                         .setContentTitle(title)
                         .setContentText(message);
         if(strings.length > 1) {
