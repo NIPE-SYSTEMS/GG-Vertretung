@@ -38,9 +38,9 @@ import android.widget.Toast;
 public class FilterListAdapter extends BaseAdapter {
 
     FilterActivity.FilterList list;
-    Activity c;
+    FilterActivity c;
 
-    public FilterListAdapter(Activity c, FilterActivity.FilterList filters) {
+    public FilterListAdapter(FilterActivity c, FilterActivity.FilterList filters) {
         this.c = c;
         list = filters;
     }
@@ -56,9 +56,9 @@ public class FilterListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(c);
-                builder.setTitle("Filter bearbeiten");
+                builder.setTitle(c.getString(R.string.edit_filter));
                 builder.setView(c.getLayoutInflater().inflate(R.layout.filter_dialog, null));
-                builder.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(c.getString(R.string.add), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Spinner spinner = (Spinner) ((Dialog) dialog).findViewById(R.id.filter_spinner);
@@ -67,7 +67,7 @@ public class FilterListAdapter extends BaseAdapter {
                         f.type = FilterActivity.Filter.getTypeFromString((String) spinner.getSelectedItem());
                         f.filter = text.getText().toString().trim();
                         if (f.filter.isEmpty())
-                            Toast.makeText(((Dialog) dialog).getContext(), "Ungültige Eingabe", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(((Dialog) dialog).getContext(), c.getString(R.string.invalid_filter), Toast.LENGTH_SHORT).show();
                         else {
                             GGApp.GG_APP.filters.add(f);
                             notifyDataSetChanged();
@@ -75,7 +75,7 @@ public class FilterListAdapter extends BaseAdapter {
                         dialog.dismiss();
                     }
                 });
-                builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(c.getString(R.string.abort), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -85,7 +85,7 @@ public class FilterListAdapter extends BaseAdapter {
                 d.show();
                 Spinner s = (Spinner) d.findViewById(R.id.filter_spinner);
                 ArrayAdapter<String> a = new ArrayAdapter<String>(c,
-                        android.R.layout.simple_spinner_item, new String[]{"Klasse", "Lehrer", "Fach/Kurs"});
+                        android.R.layout.simple_spinner_item, c.filterStrings);
                 a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 s.setAdapter(a);
                 FilterActivity.FilterType type = list.get((int) v.getTag()).type;

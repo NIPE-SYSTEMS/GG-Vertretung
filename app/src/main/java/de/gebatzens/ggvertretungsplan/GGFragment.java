@@ -262,8 +262,9 @@ public class GGFragment extends Fragment {
 
             createTextView(planh.loadDate, 15, inflater, l2);
 
-            TextView tv2 = createTextView(filters.mainFilter.type == FilterActivity.FilterType.CLASS ? "Klasse " + filters.mainFilter.filter :
-                    "Lehrer " + filters.mainFilter.filter, 15, inflater, l2);
+            TextView tv2 = createTextView(
+                    filters.mainFilter.type == FilterActivity.FilterType.CLASS ? getActivity().getString(R.string.schoolclass) + " " + filters.mainFilter.filter :
+                    getActivity().getString(R.string.teacher) + " " + filters.mainFilter.filter, 15, inflater, l2);
             tv2.setGravity(Gravity.RIGHT | Gravity.CENTER);
             tv2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -412,7 +413,7 @@ public class GGFragment extends Fragment {
 
             Spinner spin = new Spinner(getActivity());
             ArrayList<String> items = new ArrayList<String>();
-            items.add("Alle");
+            items.add(getActivity().getString(R.string.all));
             items.addAll(plan.getAllClasses());
             final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, items);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -454,7 +455,7 @@ public class GGFragment extends Fragment {
 
                     spinnerPos = position;
 
-                    if (!item.equals("Alle")) {
+                    if (!item.equals(getActivity().getString(R.string.all))) {
                         l3.removeAllViews();
                         cardColorIndex = 0;
                         FilterActivity.FilterList fl = new FilterActivity.FilterList();

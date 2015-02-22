@@ -8,7 +8,7 @@
         android:id="@+id/toolbar"
         android:layout_height="?attr/actionBarSize"
         android:layout_width="match_parent"
-        android:title="Filter"
+        android:title="@string/filter"
         app:theme="@style/ToolBarStyle"/>
 
     <RelativeLayout
@@ -44,7 +44,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
                 android:id="@+id/filter_sep"
-                android:text="Filterregeln"/>
+                android:text="@string/filters"/>
 
             <ListView
                 android:layout_width="wrap_content"

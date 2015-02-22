@@ -45,8 +45,7 @@
     <string name="news">News</string>
     <string name="cafeteria">Mensa</string>
     <string name="close">Schließen</string>
-    <string name="non_choosen">Keine ausgewählt</string>
-    <string name="touch_to_update">Zum Aktualisieren brühren</string>
+    <string name="touch_to_update">Zum Aktualisieren berühren</string>
     <string name="not_available_in_debug_mode">Im Debugmodus nicht verfügbar</string>
     <string name="update_available">Aktualisierung verfügbar</string>
     <string name="should_the_app_be_updated">Soll die SchulinfoAPP aktualisiert werden?</string>
@@ -71,11 +70,23 @@
     <string name="developer">Entwickler</string>
     <string name="information_about_the_developers_of_this_app">Informationen über die Entwickler der App</string>
     <string name="github">GitHub</string>
-    <string name="license">Lizens</string>
+    <string name="license">Lizenz</string>
     <string name="build_version">Build-Version</string>
     <string name="deny_substitutionplan_updates">Keine automatischen Aktualisierungen des Vertretungsplans zulassen</string>
     <string name="update_everytime">Jederzeit automatisch aktualisieren</string>
     <string name="as_of">Stand</string>
     <string name="refresh">Aktualisieren</string>
+    <string name="add">Hinzufügen</string>
+    <string name="add_filter">Filter hinzufügen</string>
+    <string name="filter">Filter</string>
+    <string name="filters">Filter</string>
+    <string name="invalid_filter">Ungültiger Filter</string>
+    <string name="subject_course">Fach/Kurs</string>
+    <string name="teacher">Lehrer</string>
+    <string name="edit_filter">Filter bearbeiten</string>
+    <string name="all">Alle</string>
+    <string name="no_filter_active">Kein Filter aktiv</string>
+    <string name="filter_active">1 Filter aktiv</string>
+    <string name="filters_active">%d Filter aktiv</string>
 
 </resources>

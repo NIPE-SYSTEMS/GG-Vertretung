@@ -51,10 +51,15 @@ public class FilterActivity extends Activity {
     FilterListAdapter adapter;
     ListView listView;
 
+    public String[] filterStrings;
+
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(R.layout.activity_filter);
+
+        filterStrings = new String[] { getApplication().getString(R.string.schoolclass), getApplication().getString(R.string.teacher),
+                                        getApplication().getString(R.string.subject_course)};
 
         listView = (ListView) findViewById(R.id.filter_list);
         adapter = new FilterListAdapter(this, GGApp.GG_APP.filters);
@@ -69,7 +74,8 @@ public class FilterActivity extends Activity {
         tv.setTextColor(GGApp.GG_APP.provider.getColor());
 
         Spinner spin = (Spinner) findViewById(R.id.filter_main_spinner);
-        ArrayAdapter<String> a2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, new String[] {"Klasse", "Lehrer"});
+        ArrayAdapter<String> a2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
+                new String[] {getApplication().getString(R.string.schoolclass), getApplication().getString(R.string.teacher)});
         a2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(a2);
 
@@ -96,9 +102,9 @@ public class FilterActivity extends Activity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(FilterActivity.this);
-                builder.setTitle("Filter Hinzufügen");
+                builder.setTitle(getApplication().getString(R.string.add_filter));
                 builder.setView(getLayoutInflater().inflate(R.layout.filter_dialog, null));
-                builder.setPositiveButton("Hinzufügen", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getApplication().getString(R.string.add), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Spinner spinner = (Spinner) ((Dialog) dialog).findViewById(R.id.filter_spinner);
@@ -107,7 +113,7 @@ public class FilterActivity extends Activity {
                         f.type = Filter.getTypeFromString((String) spinner.getSelectedItem());
                         f.filter = text.getText().toString().trim();
                         if(f.filter.isEmpty())
-                            Toast.makeText(((Dialog) dialog).getContext(), "Ungültige Eingabe", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(((Dialog) dialog).getContext(), getApplication().getString(R.string.invalid_filter), Toast.LENGTH_SHORT).show();
                         else {
                             GGApp.GG_APP.filters.add(f);
                             adapter.notifyDataSetChanged();
@@ -115,7 +121,7 @@ public class FilterActivity extends Activity {
                         dialog.dismiss();
                     }
                 });
-                builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(getApplication().getString(R.string.abort), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -125,7 +131,7 @@ public class FilterActivity extends Activity {
                 d.show();
                 Spinner s = (Spinner) d.findViewById(R.id.filter_spinner);
                 ArrayAdapter<String> a = new ArrayAdapter<String>(FilterActivity.this,
-                        android.R.layout.simple_spinner_item, new String[] { "Klasse", "Lehrer", "Fach/Kurs" });
+                        android.R.layout.simple_spinner_item, filterStrings);
                 a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 s.setAdapter(a);
                 s.setSelection(0);
@@ -166,13 +172,13 @@ public class FilterActivity extends Activity {
             String s;
             switch(type) {
                 case CLASS:
-                    s = "Klasse";
+                    s = GGApp.GG_APP.getString(R.string.schoolclass);
                     break;
                 case TEACHER:
-                    s = "Lehrer";
+                    s = GGApp.GG_APP.getString(R.string.teacher);
                     break;
                 case SUBJECT:
-                    s = "Fach/Kurs";
+                    s = GGApp.GG_APP.getString(R.string.subject_course);
                     break;
                 default:
                     s = "";
@@ -181,11 +187,11 @@ public class FilterActivity extends Activity {
         }
 
         public static FilterType getTypeFromString(String s) {
-            if(s.equals("Lehrer"))
+            if(s.equals(GGApp.GG_APP.getString(R.string.teacher)))
                 return FilterType.TEACHER;
-            else if(s.equals("Klasse"))
+            else if(s.equals(GGApp.GG_APP.getString(R.string.schoolclass)))
                 return FilterType.CLASS;
-            else if(s.equals("Fach/Kurs"))
+            else if(s.equals(GGApp.GG_APP.getString(R.string.subject_course)))
                 return FilterType.SUBJECT;
             else
                 return null;
