@@ -24,7 +24,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
@@ -49,13 +48,12 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -268,7 +266,7 @@ public class GGFragment extends Fragment {
             tv2.setGravity(Gravity.RIGHT | Gravity.CENTER);
             tv2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-            createTextView(translateDay(GGApp.GG_APP.provider.getDay(planh.date)), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
+            createTextView(translateDay(planh.date), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
             if(!planh.special.isEmpty()) {
                 FrameLayout f2 = new FrameLayout(getActivity());
                 f2.setPadding(toPixels(1.3f), toPixels(0.3f), toPixels(1.3f), toPixels(0.3f));
@@ -291,7 +289,7 @@ public class GGFragment extends Fragment {
 
 
             list = planm.getAllForClass(clas);
-            createTextView(translateDay(GGApp.GG_APP.provider.getDay(planm.date)), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
+            createTextView(translateDay(planm.date), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
 
             if(!planm.special.isEmpty()) {
                 FrameLayout f2 = new FrameLayout(getActivity());
@@ -502,26 +500,21 @@ public class GGFragment extends Fragment {
 
     }
 
-    private String translateDay(String day_german) {
+    private String translateDay(String date_string) {
         StringBuilder sb = new StringBuilder();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat convertedDateFormat;
         if(Locale.getDefault().getLanguage().equals("en")) {
-            if(day_german.equals("Montag")) {
-                sb.append("Monday");
-            } else if(day_german.equals("Dienstag")) {
-                sb.append("Tuesday");
-            } else if(day_german.equals("Mittwoch")) {
-                sb.append("Wednesday");
-            } else if(day_german.equals("Donnerstag")) {
-                sb.append("Thursday");
-            } else if(day_german.equals("Freitag")) {
-                sb.append("Friday");
-            } else if(day_german.equals("Samstag")) {
-                sb.append("Saturday");
-            } else if(day_german.equals("Sonntag")) {
-                sb.append("Sunday");
-            }
+            convertedDateFormat = new SimpleDateFormat("EEEE, MM/dd/yyyy");
         } else {
-            sb.append(day_german);
+            convertedDateFormat = new SimpleDateFormat("EEEE, dd.MM.yyyy");
+        }
+        Date date = new Date();
+        try {
+            date = dateFormat.parse(date_string);
+            sb.append(convertedDateFormat.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         return sb.toString();
     }
