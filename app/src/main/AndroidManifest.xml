@@ -32,6 +32,10 @@
             android:label="@string/settings">
         </activity>
 
+        <activity android:name=".FilterActivity"
+            android:label="Filter">
+        </activity>
+
         <receiver android:enabled="true" android:name="de.gebatzens.ggvertretungsplan.GGBroadcast"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
         <intent-filter>

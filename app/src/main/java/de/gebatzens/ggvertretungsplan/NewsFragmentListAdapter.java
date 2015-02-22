@@ -18,7 +18,7 @@
  */
 
 package de.gebatzens.ggvertretungsplan;
- 
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -28,7 +28,6 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,7 +57,6 @@ public class NewsFragmentListAdapter extends BaseAdapter {
         TextView txtDate = (TextView) itemView.findViewById(R.id.newsDate);
         TextView txtTitle = (TextView) itemView.findViewById(R.id.newsTitle);
         TextView txtContent = (TextView) itemView.findViewById(R.id.newsContent);
-        ArrayAdapter a;
         ImageView imgIcon = (ImageView) itemView.findViewById(R.id.newsIcon);
 
         DateFormat parser = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");

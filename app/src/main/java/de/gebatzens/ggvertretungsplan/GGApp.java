@@ -47,6 +47,7 @@ public class GGApp extends Application {
     private SharedPreferences preferences;
     public static GGApp GG_APP;
     private HashMap<String, Class<? extends VPProvider>> mProviderList = new HashMap<String, Class<? extends VPProvider>>();
+    public FilterActivity.FilterList filters = new FilterActivity.FilterList();
 
     @Override
     public void onCreate() {
@@ -56,6 +57,7 @@ public class GGApp extends Application {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         GGBroadcast.createAlarm(this);
         recreateProvider();
+        filters = FilterActivity.loadFilter();
         //refreshAsync(null, false, getFragmentType());
 
     }
@@ -82,7 +84,7 @@ public class GGApp extends Application {
     public void createNotification(String title, String message, int id, String... strings) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.stern)
+                        .setSmallIcon(R.drawable.ic_gg_star)
                         .setContentTitle(title)
                         .setContentText(message);
         if(strings.length > 1) {
@@ -122,14 +124,6 @@ public class GGApp extends Application {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         // mId allows you to update the notification later on.
         mNotificationManager.notify(id, mBuilder.build());
-    }
-
-    public String getSelectedClass() {
-        return preferences.getString("klasse", "");
-    }
-
-    public void setSelectedClass(String c) {
-        preferences.edit().putString("klasse", c).apply();
     }
 
     public String getSelectedProvider() {
@@ -196,8 +190,8 @@ public class GGApp extends Application {
                 switch(type) {
                     case PLAN:
                         GGPlan[] nplans = provider.getPlans(updateFragments);
-                        if(plans != null)
-                            update = update && !(nplans[0].equals(plans[0]) && nplans[1].equals(plans[1]));
+                        //if(plans != null)
+                        //    update = update && !(nplans[0].equals(plans[0]) && nplans[1].equals(plans[1]));
                         plans = nplans;
                         break;
                     case NEWS:

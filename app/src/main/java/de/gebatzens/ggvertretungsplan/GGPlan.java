@@ -23,7 +23,6 @@ import android.content.Context;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -180,16 +179,23 @@ public class GGPlan {
             return false;
     }
 
-    public List<Entry> getAllForClass(String c) {
-        c = c.toLowerCase();
-        c = c.replaceAll(" ", "");
+    public List<Entry> filter(FilterActivity.FilterList filters) {
         ArrayList<Entry> list = new ArrayList<Entry>();
         for(Entry e : entries) {
-            String sc = e.clazz.toLowerCase().replaceAll(" ", "");
-            if (sc.equals(c))
+            if(filters.mainFilter.matches(e))
                 list.add(e);
         }
+
+        for(FilterActivity.Filter f : filters) {
+            ArrayList<Entry> rlist = new ArrayList<Entry>();
+            for(Entry e : list)
+                if(f.matches(e))
+                    rlist.add(e);
+            for(Entry e : rlist)
+                list.remove(e);
+        }
         return list;
+
     }
 
     public static class Entry {

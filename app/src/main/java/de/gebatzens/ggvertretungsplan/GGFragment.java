@@ -245,11 +245,11 @@ public class GGFragment extends Fragment {
             tv.setText("Error: " + type);
             l.addView(tv);
             Log.w("ggvp", "setParams not called " + type + " " + this + " " + getParentFragment());
-        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.getSelectedClass().equals("") && planh.throwable == null && planm.throwable == null) {
+        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.filters.mainFilter.filter.equals("") && planh.throwable == null && planm.throwable == null) {
             //normale Übersicht
-            String clas = GGApp.GG_APP.getSelectedClass();
+            FilterActivity.FilterList filters = GGApp.GG_APP.filters;
 
-            List<GGPlan.Entry> list = planh.getAllForClass(clas);
+            List<GGPlan.Entry> list = planh.filter(filters);
 
             CardView cv2 = new CardView(getActivity());
             cv2.setContentPadding(toPixels(16),toPixels(16),toPixels(16),toPixels(16));
@@ -262,9 +262,10 @@ public class GGFragment extends Fragment {
 
             createTextView(planh.loadDate, 15, inflater, l2);
 
-            TextView tv2 = createTextView(getResources().getString(R.string.schoolclass) + " " + clas, 15, inflater, l2);
+            TextView tv2 = createTextView(filters.mainFilter.type == FilterActivity.FilterType.CLASS ? "Klasse " + filters.mainFilter.filter :
+                    "Lehrer " + filters.mainFilter.filter, 15, inflater, l2);
             tv2.setGravity(Gravity.RIGHT | Gravity.CENTER);
-            tv2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            tv2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
             createTextView(translateDay(planh.date), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
             if(!planh.special.isEmpty()) {
@@ -287,8 +288,7 @@ public class GGFragment extends Fragment {
             }
             createCardItems(list, l, inflater);
 
-
-            list = planm.getAllForClass(clas);
+            list = planm.filter(filters);
             createTextView(translateDay(planm.date), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
 
             if(!planm.special.isEmpty()) {
@@ -457,7 +457,12 @@ public class GGFragment extends Fragment {
                     if (!item.equals("Alle")) {
                         l3.removeAllViews();
                         cardColorIndex = 0;
-                        createCardItems(plan.getAllForClass(item), l3, inflater);
+                        FilterActivity.FilterList fl = new FilterActivity.FilterList();
+                        FilterActivity.Filter main = new FilterActivity.Filter();
+                        fl.mainFilter = main;
+                        main.type = FilterActivity.FilterType.CLASS;
+                        main.filter = item;
+                        createCardItems(plan.filter(fl), l3, inflater);
 
                     } else {
                         l3.removeAllViews();
@@ -466,7 +471,12 @@ public class GGFragment extends Fragment {
                         List<String> classes = plan.getAllClasses();
                         for(String s : classes) {
                             createTextView(s, 30, inflater, l3).setPadding(0, toPixels(20), 0, 0);
-                            createCardItems(plan.getAllForClass(s), l3, inflater);
+                            FilterActivity.FilterList fl = new FilterActivity.FilterList();
+                            FilterActivity.Filter main = new FilterActivity.Filter();
+                            fl.mainFilter = main;
+                            main.filter = s;
+                            main.type = FilterActivity.FilterType.CLASS;
+                            createCardItems(plan.filter(fl), l3, inflater);
                         }
                     }
                 }
