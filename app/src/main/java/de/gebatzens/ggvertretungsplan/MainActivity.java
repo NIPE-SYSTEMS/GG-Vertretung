@@ -278,6 +278,13 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        GGApp.GG_APP.activity = this;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
