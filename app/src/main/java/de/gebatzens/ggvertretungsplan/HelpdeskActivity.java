@@ -141,12 +141,12 @@ public class HelpdeskActivity extends Activity {
                     @Override
                     protected void onPostExecute(Integer result) {
                         if(result==0) {
-                            Toast.makeText(getApplicationContext(),"Message sent successfully",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),getResources().getString(R.string.message_sent_successfully),Toast.LENGTH_LONG).show();
                             finish();
                         } else if(result==1) {
-                            Toast.makeText(getApplicationContext(),"Please fill out all inputs",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),getResources().getString(R.string.please_fill_out_all_inputs),Toast.LENGTH_LONG).show();
                         } else if(result==2) {
-                            Toast.makeText(getApplicationContext(),"Error while sending message",Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),getResources().getString(R.string.error_while_sending_message),Toast.LENGTH_LONG).show();
                         }
                     }
                 }.execute(name,email,subject,message);
