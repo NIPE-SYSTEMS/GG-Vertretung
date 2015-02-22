@@ -71,8 +71,8 @@ public class GGBroadcast extends BroadcastReceiver {
             p.load(in = gg.openFileInput("ggsavedstate"));
             in.close();
         } catch(Exception e) {
-            p.setProperty("todaydate", today.date);
-            p.setProperty("tomdate", tomo.date);
+            p.setProperty("todaydate", ""+today.date.getTime());
+            p.setProperty("tomdate", ""+tomo.date.getTime());
             p.setProperty("todayles", "");
             p.setProperty("tomoles", "");
         }
@@ -120,8 +120,8 @@ public class GGBroadcast extends BroadcastReceiver {
             b = false;
         }
 
-        p.setProperty("todaydate", today.date);
-        p.setProperty("tomdate", tomo.date);
+        p.setProperty("todaydate", ""+today.date.getTime());
+        p.setProperty("tomdate", ""+tomo.date.getTime());
         String tdnstr = "";
         for(String s : tdn)
             tdnstr += s + ";";
@@ -151,7 +151,7 @@ public class GGBroadcast extends BroadcastReceiver {
             else
                 stdtm = "Nichts";
             gg.createNotification(gg.getString(R.string.substitutionplan_change), gg.getString(R.string.the_sp_has_changed), 123,
-                    gg.getString(R.string.affected_lessons) ,gg.provider.getDay(today.date) + ": " + stdt, gg.provider.getDay(tomo.date) + ": " + stdtm);
+                    gg.getString(R.string.affected_lessons) , VPProvider.getWeekday(today.date) + ": " + stdt, VPProvider.getWeekday(tomo.date) + ": " + stdtm);
         } else
             Log.d("ggvp", "Up to date!");
 

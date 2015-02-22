@@ -18,6 +18,10 @@
  */
 package de.gebatzens.ggvertretungsplan;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.SimpleTimeZone;
+
 public abstract class VPProvider {
 
     GGApp gg;
@@ -53,7 +57,6 @@ public abstract class VPProvider {
      */
     public abstract GGPlan[] getPlans(boolean toast);
     public abstract String getFullName();
-    public abstract String getDay(String date);
     public abstract int getColor();
     public abstract int getDarkColor();
     public abstract int getTheme();
@@ -70,5 +73,9 @@ public abstract class VPProvider {
      * @return
      */
     public abstract String getUsername();
+
+    public static String getWeekday(Date date) {
+        return new SimpleDateFormat("EEEE").format(date);
+    }
 
 }

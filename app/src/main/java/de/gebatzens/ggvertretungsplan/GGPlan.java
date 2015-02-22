@@ -28,16 +28,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GGPlan {
 
-    //TODO java.util.Date benutzen
     public ArrayList<Entry> entries = new ArrayList<Entry>();
-    public String date = "";
+    public Date date;
     public List<String> special = new ArrayList<String>();
     public Throwable throwable = null;
     public String loadDate = "";
@@ -50,7 +52,6 @@ public class GGPlan {
         Log.w("ggvp", "Lade " + file);
         entries.clear();
         special.clear();
-        date = "";
         loadDate = "";
 
         try {
@@ -61,9 +62,9 @@ public class GGPlan {
                 String name = reader.nextName();
                 if(name.equals("loadDate"))
                     loadDate = reader.nextString();
-                else if(name.equals("date"))
-                    date = reader.nextString();
-                else if(name.equals("messages")) {
+                else if(name.equals("date")) {
+                    date = new Date(reader.nextLong());
+                } else if(name.equals("messages")) {
                     reader.beginArray();
                     while(reader.hasNext()) {
                         special.add(reader.nextString());
@@ -127,7 +128,7 @@ public class GGPlan {
             writer.setIndent("  ");
             writer.beginObject();
             writer.name("loadDate").value(loadDate);
-            writer.name("date").value(date);
+            writer.name("date").value(date.getTime());
             writer.name("messages");
             writer.beginArray();
             for(String s : special)

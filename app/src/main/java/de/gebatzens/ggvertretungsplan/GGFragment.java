@@ -511,22 +511,16 @@ public class GGFragment extends Fragment {
 
     }
 
-    private String translateDay(String date_string) {
+    private String translateDay(Date date) {
         StringBuilder sb = new StringBuilder();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat convertedDateFormat;
         if(Locale.getDefault().getLanguage().equals("en")) {
-            convertedDateFormat = new SimpleDateFormat("EEEE, MM/dd/yyyy");
+            convertedDateFormat = new SimpleDateFormat("EEEE, MM/dd");
         } else {
-            convertedDateFormat = new SimpleDateFormat("EEEE, dd.MM.yyyy");
+            convertedDateFormat = new SimpleDateFormat("EEEE, dd.MM.");
         }
-        Date date = new Date();
-        try {
-            date = dateFormat.parse(date_string);
-            sb.append(convertedDateFormat.format(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
+        sb.append(convertedDateFormat.format(date));
         return sb.toString();
     }
 }

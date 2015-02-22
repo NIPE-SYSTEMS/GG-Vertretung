@@ -69,10 +69,10 @@ public class SWSProvider extends VPProvider {
             while ((line = decode(reader.readLine())) != null) {
                 ln++;
 
-                if(plan.date.isEmpty()) {
+                if(plan.date == null) {
                     Matcher md = date.matcher(line);
                     if (md.find())
-                        plan.date = md.group(1).trim();
+                        plan.date = new SimpleDateFormat("dd.M.yyyy").parse(md.group(1).trim().split(" ")[0]);
                 } else if(line.equals(specialBegin)) { //Nachrichten
                     String line2 = "";
                     while(!(line = decode(reader.readLine())).equals("</table>")) {
@@ -166,16 +166,6 @@ public class SWSProvider extends VPProvider {
     @Override
     public int getColorArray() {
         return R.array.blueColors;
-    }
-
-    @Override
-    public String getDay(String s) {
-        if(s.isEmpty())
-            return "";
-        String[] strs = s.split(" ");
-        if(strs.length < 2)
-            return "";
-        return strs[1];
     }
 
     public NewsFragment.News getNews() {

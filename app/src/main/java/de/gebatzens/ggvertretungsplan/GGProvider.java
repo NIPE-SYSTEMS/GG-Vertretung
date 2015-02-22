@@ -201,11 +201,12 @@ public class GGProvider extends VPProvider {
                         if(parser.getEventType() != XmlPullParser.START_TAG)
                             continue;
 
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                         String name2 = parser.getName();
                         if(name2.equals("date-today"))
-                            plans[0].date = parser.nextText();
+                            plans[0].date = format.parse(parser.nextText());
                         else if(name2.equals("date-tomorrow"))
-                            plans[1].date = parser.nextText();
+                            plans[1].date = format.parse(parser.nextText());
 
                     }
                 } else if(name.equals("list-today")) {
@@ -308,21 +309,6 @@ public class GGProvider extends VPProvider {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         p.loadDate = GGApp.GG_APP.getResources().getString(R.string.as_of) + ": " + sdf.format(new Date());
-    }
-
-    @Override
-    public String getDay(String date) {
-        if (date.isEmpty())
-            return date;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Calendar c = Calendar.getInstance();
-        try {
-            c.setTime(format.parse(date));
-
-        } catch (Exception e) {
-            return "date";
-        }
-        return c.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.GERMAN);
     }
 
     public NewsFragment.News getNews() {
