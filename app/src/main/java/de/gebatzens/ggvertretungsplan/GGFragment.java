@@ -57,6 +57,7 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class GGFragment extends Fragment {
 
@@ -136,7 +137,7 @@ public class GGFragment extends Fragment {
             f2.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
             CardView cv = createCardView();
             f2.addView(cv);
-            createTextView("Keine Einträge im Vertretungsplan", 20, inflater, cv);
+            createTextView(getResources().getString(R.string.no_entries_in_substitutionplan), 20, inflater, cv);
             group.addView(f2);
         }
 
@@ -263,11 +264,11 @@ public class GGFragment extends Fragment {
 
             createTextView(planh.loadDate, 15, inflater, l2);
 
-            TextView tv2 = createTextView("Klasse " + clas, 15, inflater, l2);
+            TextView tv2 = createTextView(getResources().getString(R.string.schoolclass) + " " + clas, 15, inflater, l2);
             tv2.setGravity(Gravity.RIGHT | Gravity.CENTER);
             tv2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-            createTextView(GGApp.GG_APP.provider.getDay(planh.date), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
+            createTextView(translateDay(GGApp.GG_APP.provider.getDay(planh.date)), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
             if(!planh.special.isEmpty()) {
                 FrameLayout f2 = new FrameLayout(getActivity());
                 f2.setPadding(toPixels(1.3f), toPixels(0.3f), toPixels(1.3f), toPixels(0.3f));
@@ -277,7 +278,7 @@ public class GGFragment extends Fragment {
                 l.addView(f2);
                 LinearLayout ls = new LinearLayout(getActivity());
                 ls.setOrientation(LinearLayout.VERTICAL);
-                TextView tv3 = createTextView("Besondere Mitteilungen", 19, inflater, ls);
+                TextView tv3 = createTextView(getResources().getString(R.string.special_messages), 19, inflater, ls);
                 tv3.setTextColor(Color.WHITE);
                 tv3.setPadding(0,0,0,toPixels(6));
                 cv.addView(ls);
@@ -290,7 +291,7 @@ public class GGFragment extends Fragment {
 
 
             list = planm.getAllForClass(clas);
-            createTextView(GGApp.GG_APP.provider.getDay(planm.date), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
+            createTextView(translateDay(GGApp.GG_APP.provider.getDay(planm.date)), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
 
             if(!planm.special.isEmpty()) {
                 FrameLayout f2 = new FrameLayout(getActivity());
@@ -301,7 +302,7 @@ public class GGFragment extends Fragment {
                 l.addView(f2);
                 LinearLayout ls = new LinearLayout(getActivity());
                 ls.setOrientation(LinearLayout.VERTICAL);
-                TextView tv3 = createTextView("Besondere Mitteilungen", 19, inflater, ls);
+                TextView tv3 = createTextView(getResources().getString(R.string.special_messages), 19, inflater, ls);
                 tv3.setTextColor(Color.WHITE);
                 tv3.setPadding(0,0,0,toPixels(6));
                 cv.addView(ls);
@@ -315,7 +316,7 @@ public class GGFragment extends Fragment {
 
         } else if(type == TYPE_OVERVIEW && planh.throwable == null && planm.throwable == null) {
             //Keine Klasse
-            createButtonWithText(getActivity(), l, "Kein Filter ausgewählt", "Einstellungen", new View.OnClickListener() {
+            createButtonWithText(getActivity(), l, getResources().getString(R.string.no_filter_applied), getResources().getString(R.string.settings), new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -330,22 +331,22 @@ public class GGFragment extends Fragment {
             LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             boolean b = planm.throwable != null && planm.throwable instanceof VPLoginException;
             if(!b)
-                createButtonWithText(getActivity(), l, "Verbindung überprüfen und wiederholen", "Nochmal", new View.OnClickListener() {
+                createButtonWithText(getActivity(), l, getResources().getString(R.string.check_connection_and_repeat), getResources().getString(R.string.again), new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         GGApp.GG_APP.refreshAsync(null, true, GGApp.FragmentType.PLAN);
                     }
                 });
             else
-                createButtonWithText(getActivity(), l, "Anmeldung benötigt!", "Anmelden", new View.OnClickListener() {
+                createButtonWithText(getActivity(), l, getResources().getString(R.string.login_required), getResources().getString(R.string.do_login), new View.OnClickListener() {
                     @Override
                     public void onClick(View c) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         AlertDialog dialog;
-                        builder.setTitle("Login");
+                        builder.setTitle(getResources().getString(R.string.login));
                         builder.setView(inflater.inflate(R.layout.login_dialog, null));
 
-                        builder.setPositiveButton("Einloggen", new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton(getResources().getString(R.string.do_login_submit), new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(final DialogInterface dialog, int which) {
@@ -356,13 +357,13 @@ public class GGFragment extends Fragment {
                                     public void onPostExecute(Integer v) {
                                         switch(v) {
                                             case 1:
-                                                GGApp.GG_APP.showToast("Benutzername oder Passwort falsch");
+                                                GGApp.GG_APP.showToast(getResources().getString(R.string.username_or_password_wrong));
                                                 break;
                                             case 2:
-                                                GGApp.GG_APP.showToast("Konnte keine Verbindung zum Anmeldeserver herstellen");
+                                                GGApp.GG_APP.showToast(getResources().getString(R.string.could_not_contact_logon_server));
                                                 break;
                                             case 3:
-                                                GGApp.GG_APP.showToast("Unbekannter Fehler bei der Anmeldung");
+                                                GGApp.GG_APP.showToast(getResources().getString(R.string.unknown_error_at_logon));
                                                 break;
                                         }
 
@@ -382,7 +383,7 @@ public class GGFragment extends Fragment {
                         });
 
 
-                        builder.setNegativeButton("Abbrechen", new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton(getResources().getString(R.string.abort), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -434,7 +435,7 @@ public class GGFragment extends Fragment {
                 l.addView(f2);
                 LinearLayout ls = new LinearLayout(getActivity());
                 ls.setOrientation(LinearLayout.VERTICAL);
-                TextView tv3 = createTextView("Besondere Mitteilungen", 19, inflater, ls);
+                TextView tv3 = createTextView(getResources().getString(R.string.special_messages), 19, inflater, ls);
                 tv3.setTextColor(Color.WHITE);
                 tv3.setPadding(0,0,0,toPixels(6));
                 cv.addView(ls);
@@ -501,4 +502,27 @@ public class GGFragment extends Fragment {
 
     }
 
+    private String translateDay(String day_german) {
+        StringBuilder sb = new StringBuilder();
+        if(Locale.getDefault().getLanguage().equals("en")) {
+            if(day_german.equals("Montag")) {
+                sb.append("Monday");
+            } else if(day_german.equals("Dienstag")) {
+                sb.append("Tuesday");
+            } else if(day_german.equals("Mittwoch")) {
+                sb.append("Wednesday");
+            } else if(day_german.equals("Donnerstag")) {
+                sb.append("Thursday");
+            } else if(day_german.equals("Freitag")) {
+                sb.append("Friday");
+            } else if(day_german.equals("Samstag")) {
+                sb.append("Saturday");
+            } else if(day_german.equals("Sonntag")) {
+                sb.append("Sunday");
+            }
+        } else {
+            sb.append(day_german);
+        }
+        return sb.toString();
+    }
 }

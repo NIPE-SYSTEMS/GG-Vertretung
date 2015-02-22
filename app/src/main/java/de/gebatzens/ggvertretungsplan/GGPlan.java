@@ -234,54 +234,54 @@ public class GGPlan {
                 type = "EVA";
 
                 if(aufgm.find()) {
-                    comment = "Aufgabe durch " + aufgm.group(1);
+                    comment = GGApp.GG_APP.getResources().getString(R.string.task_through) + " " + aufgm.group(1);
                 } else
                     comment = "";
 
             } else if(commentl.contains("siehe")) {
-                type = "Entfall / Verlegung";
+                type =  GGApp.GG_APP.getResources().getString(R.string.elemination) + " / " +  GGApp.GG_APP.getResources().getString(R.string.shift);
 
                 Matcher m = Pattern.compile("[Ss]iehe (.*)").matcher(comment);
                 if (m.find())
                     if (m.group(1).contains("heute")) {
-                        comment = "Verlegt in " + m.group(1).replaceAll("heute,? ", "");
+                        comment =  GGApp.GG_APP.getResources().getString(R.string.shifted_to_today) + " " + m.group(1).replaceAll("heute,? ", "");
                     } else {
-                        comment = "Verlegt nach " + m.group(1);
+                        comment =  GGApp.GG_APP.getResources().getString(R.string.shifted_to) + " " + m.group(1);
                     }
             } else if(commentl.contains("f.a.") || commentl.contains("fällt aus") || commentl.contains("entfall")) {
-                type = "Entfall";
+                type =  GGApp.GG_APP.getResources().getString(R.string.elemination);
 
                 if(aufgm.find())
-                    comment = "Aufgabe durch " + aufgm.group(1);
+                    comment =  GGApp.GG_APP.getResources().getString(R.string.task_through) + aufgm.group(1);
                 else
                     comment = "";
             } else if(commentl.contains("klausur")) {
-                type = "Klausur";
+                type =  GGApp.GG_APP.getResources().getString(R.string.exam);
                 comment = "";
             } else if(commentl.contains("unterricht findet statt") || commentl.contains("absenz")) {
-                type = "Unterricht";
+                type =  GGApp.GG_APP.getResources().getString(R.string.lesson);
             } else if(commentl.contains("statt")) {
-                type = "Vertretung / Verlegung";
+                type =  GGApp.GG_APP.getResources().getString(R.string.substitute) + " / " +  GGApp.GG_APP.getResources().getString(R.string.shift);
 
                 Matcher m1 = Pattern.compile("[Ss]tatt (.*?)Std.").matcher(comment);
                 Matcher m2 = Pattern.compile(":(.*)").matcher(comment);
 
                 if(m1.find())
-                    comment = "Statt " + m1.group(1).replaceAll("\\w+ \\(heute\\)", "").replaceAll("heute,? ", "") + " Stunde";
+                    comment =  GGApp.GG_APP.getResources().getString(R.string.instead_of) + " " + m1.group(1).replaceAll("\\w+ \\(heute\\)", "").replaceAll("heute,? ", "") + " " +  GGApp.GG_APP.getResources().getString(R.string.lesson);
 
                 if(m2.find())
                     repsub = m2.group(1).trim();
             } else if(commentl.contains("betreuung")) {
-                type = "Betreuung";
+                type =  GGApp.GG_APP.getResources().getString(R.string.supervision);
                 comment = "";
             } else {
-                type = "Vertretung";
+                type =  GGApp.GG_APP.getResources().getString(R.string.substitute);
 
                 if(aufgm.find())
-                    comment = "Aufgabe durch " + aufgm.group(1);
+                    comment =  GGApp.GG_APP.getResources().getString(R.string.task_through) + " " + aufgm.group(1);
 
                 if(commentl.contains("mittag"))
-                    comment = "Mittagspause";
+                    comment =  GGApp.GG_APP.getResources().getString(R.string.lunch);
             }
 
             if(subject.isEmpty() && !repsub.isEmpty())

@@ -139,14 +139,14 @@ public class GGProvider extends VPProvider {
                             GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(GGApp.GG_APP.activity.getApplicationContext(),"Abmeldung erfolgreich",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(GGApp.GG_APP.activity.getApplicationContext(),GGApp.GG_APP.getResources().getString(R.string.logout_successfull),Toast.LENGTH_LONG).show();
                                 }
                             });
                         } else {
                             GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(GGApp.GG_APP.activity.getApplicationContext(),"Abmeldefehler",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(GGApp.GG_APP.activity.getApplicationContext(),GGApp.GG_APP.getResources().getString(R.string.logout_error),Toast.LENGTH_LONG).show();
                                 }
                             });
                         }
@@ -248,7 +248,7 @@ public class GGProvider extends VPProvider {
         if(plans[0].throwable != null) {
             if (plans[0].load(GGApp.GG_APP, "ggvptoday") && plans[1].load(GGApp.GG_APP, "ggvptomorrow")) {
                 final Throwable t = plans[0].throwable;
-                String s = "Keine Internetverbindung\n" + plans[0].loadDate;
+                String s = GGApp.GG_APP.getResources().getString(R.string.no_internet_connection)+"\n" + plans[0].loadDate;
                 plans[0].loadDate = s;
                 plans[1].loadDate = s;
                 plans[0].throwable = null;
@@ -257,7 +257,7 @@ public class GGProvider extends VPProvider {
                     GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            GGApp.GG_APP.showToast(t instanceof IOException ? "Keine Internetverbindung" : "Unbekannter Fehler");
+                            GGApp.GG_APP.showToast(t instanceof IOException ? GGApp.GG_APP.getResources().getString(R.string.no_entries_in_substitutionplan) : GGApp.GG_APP.getResources().getString(R.string.unknown_error));
                         }
                     });
             }
@@ -309,7 +309,7 @@ public class GGProvider extends VPProvider {
         }
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        p.loadDate = "Stand: " + sdf.format(new Date());
+        p.loadDate = GGApp.GG_APP.getResources().getString(R.string.as_of) + ": " + sdf.format(new Date());
     }
 
     @Override

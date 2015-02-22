@@ -7,13 +7,13 @@
 
     <item android:id="@+id/action_refresh"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:title="Aktualisieren"
+        android:title="@string/refresh"
         android:orderInCategory="100"
         app:showAsAction="never" />
 
     <item android:id="@+id/action_settings"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:title="Einstellungen"
+        android:title="@string/settings"
         android:orderInCategory="100"
         app:showAsAction="never"/>
 

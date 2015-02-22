@@ -86,7 +86,7 @@ public class SettingsActivity extends Activity {
             String pref_schule_content = gg.provider.getFullName();
             String pref_klasse_content = gg.getSelectedClass();
             if(pref_klasse_content.equals(""))
-                pref_klasse_content = "Keine ausgewählt";
+                pref_klasse_content = getResources().getString(R.string.non_choosen);
 
             Preference pref_schule = findPreference("schule");
             pref_schule.setSummary(pref_schule_content);
@@ -99,12 +99,12 @@ public class SettingsActivity extends Activity {
 
             Preference pref_buildversion = findPreference("buildversion");
             String versionName = BuildConfig.VERSION_NAME;
-            pref_buildversion.setSummary("Version: " + versionName + " (" + BuildConfig.BUILD_TYPE + ") (Zum\u00A0Aktualisieren\u00A0berühren)");
+            pref_buildversion.setSummary("Version: " + versionName + " (" + BuildConfig.BUILD_TYPE + ") (" + getResources().getString(R.string.touch_to_update) + ")");
             pref_buildversion.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     if(BuildConfig.DEBUG) {
-                        Toast.makeText(GGApp.GG_APP, "Im Debugmodus nicht verfügbar", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GGApp.GG_APP, getResources().getString(R.string.not_available_in_debug_mode), Toast.LENGTH_SHORT).show();
                         return false;
                     }
                     new AsyncTask<Object, Void, Void>() {
@@ -141,10 +141,10 @@ public class SettingsActivity extends Activity {
                                                 @Override
                                                 public void run() {
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                                    builder.setTitle("Aktualisierung verfügbar");
-                                                    builder.setMessage(Html.fromHtml("Soll die SchulinfoAPP aktualisiert werden?<br><br>Changelog:<br>" +
+                                                    builder.setTitle(getResources().getString(R.string.update_available));
+                                                    builder.setMessage(Html.fromHtml(getResources().getString(R.string.should_the_app_be_updated) + "<br><br>Changelog:<br>" +
                                                             final_resp_changelog.replace("|","<br>").replace("*", "&#8226;")));
-                                                    builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                                                    builder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             UpdateActivity ua = new UpdateActivity(getActivity(), getActivity());
@@ -152,7 +152,7 @@ public class SettingsActivity extends Activity {
                                                             dialog.dismiss();
                                                         }
                                                     });
-                                                    builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                                                    builder.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             dialog.dismiss();
@@ -166,7 +166,7 @@ public class SettingsActivity extends Activity {
                                         getActivity().runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                Toast.makeText(getActivity().getApplication(), "Keine neue Version verfügbar.", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getActivity().getApplication(), getResources().getString(R.string.no_new_version_available), Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     }
@@ -176,7 +176,7 @@ public class SettingsActivity extends Activity {
                                 getActivity().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(getActivity().getApplication(), "Keine Internetverindung", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getActivity().getApplication(), getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
@@ -204,7 +204,7 @@ public class SettingsActivity extends Activity {
                 public boolean onPreferenceClick(Preference preference) {
                     if(gg.provider.getUsername() != null) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle("Abmelden");
+                        builder.setTitle(getResources().getString(R.string.logout));
                         LinearLayout ll = new LinearLayout(getActivity());
                         ll.setOrientation(LinearLayout.VERTICAL);
                         int p = 25;
@@ -212,22 +212,22 @@ public class SettingsActivity extends Activity {
                         int padding_left = (int)(p * d);
                         ll.setPadding(padding_left,0,0,0);
                         TextView tv = new TextView(getActivity());
-                        tv.setText("Wirklich abmelden?");
+                        tv.setText(getResources().getString(R.string.logout_realy));
                         ll.addView(tv);
                         final CheckBox cb = new CheckBox(getActivity());
-                        cb.setText("Auf allen Geräten abmelden");
+                        cb.setText(getResources().getString(R.string.logout_on_all_devices));
                         ll.addView(cb);
                         builder.setView(ll);
-                        builder.setPositiveButton("Ja", new DialogInterface.OnClickListener() {
+                        builder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 GGApp.GG_APP.provider.logout((Boolean) cb.isChecked());
                                 changed = true;
-                                pref_username.setSummary("Du bist nicht angemeldet");
+                                pref_username.setSummary(getResources().getString(R.string.youre_not_logged_in));
                                 dialog.dismiss();
                             }
                         });
-                        builder.setNegativeButton("Nein", new DialogInterface.OnClickListener() {
+                        builder.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -236,7 +236,7 @@ public class SettingsActivity extends Activity {
                         builder.create().show();
                     } else {
                         //Überall in der App steht "Du", also sollte das mal einheitlich werden
-                        Toast.makeText(getActivity(),"Du bist nicht angemeldet", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(),getResources().getString(R.string.youre_not_logged_in), Toast.LENGTH_SHORT).show();
                     }
 
                     return false;
@@ -245,7 +245,7 @@ public class SettingsActivity extends Activity {
 
             String username = gg.provider.getUsername();
             if(username != null) {
-                    pref_username.setSummary(username + " (Zum\u00A0Abmelden\u00A0berühren)");
+                    pref_username.setSummary(username + " (" + getResources().getString(R.string.touch_to_logout) + ")");
             }
 
         }
@@ -262,13 +262,13 @@ public class SettingsActivity extends Activity {
                 pref.setSummary(listPref.getEntry());
                 String username = GGApp.GG_APP.provider.getUsername();
                 if(username == null)
-                    findPreference("authentication_username").setSummary("Du bist nicht angemeldet");
+                    findPreference("authentication_username").setSummary(getResources().getString(R.string.youre_not_logged_in));
                 else
-                    findPreference("authentication_username").setSummary(username + " (Zum\u00A0Abmelden\u00A0berühren)");
+                    findPreference("authentication_username").setSummary(username + " (" + getResources().getString(R.string.touch_to_logout) + ")");
             } else if(key.equals("klasse")) {
                 EditTextPreference editTextPref = (EditTextPreference) pref;
                 if(editTextPref.getText().equals("")){ //Klasse
-                    pref.setSummary("Keine ausgewählt");
+                    pref.setSummary(getResources().getString(R.string.non_choosen));
                 } else{
                     pref.setSummary(editTextPref.getText());
                 }

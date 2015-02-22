@@ -53,7 +53,7 @@ public class MainActivity extends FragmentActivity {
     TextView mDrawerSettings;
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mToggle;
-    String[] mStrings = new String[] {"Vertretungsplan", "News", "Mensa"};
+    String[] mStrings;
     int[] mIcons = new int[] {R.drawable.drawer_list_button_image_vertretungsplan, R.drawable.drawer_list_button_image_news, R.drawable.drawer_list_button_image_mensa};
     ImageView mNacvigationImage;
     View mNavigationSchoolpictureLink;
@@ -94,6 +94,8 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
         setTheme(GGApp.GG_APP.provider.getTheme());
+
+        mStrings = new String[] {getResources().getString(R.string.substitutionplan), getResources().getString(R.string.news), getResources().getString(R.string.cafeteria)};
 
         removeAllFragments();
 

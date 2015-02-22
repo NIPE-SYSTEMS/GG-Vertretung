@@ -1,46 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Schuleinstellungen">
-        <ListPreference android:title="Schule"
+    <PreferenceCategory android:title="@string/school_settings">
+        <ListPreference android:title="@string/school"
             android:summary="Gymnasium Glinde"
             android:key="schule"
             android:entries="@array/schuleArray"
             android:entryValues="@array/schuleValues"
             android:defaultValue="gg" />
-        <EditTextPreference android:title="Klasse"
+        <EditTextPreference android:title="@string/schoolclass"
             android:key="klasse"
-            android:summary="Keine ausgewählt" />
-        <Preference android:title="Benutzername"
+            android:summary="@string/non_choosen" />
+        <Preference android:title="@string/username"
             android:key="authentication_username"
-            android:summary="Sie sind nicht angemeldet">
+            android:summary="@string/youre_not_logged_in">
         </Preference>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Allgemein">
-        <CheckBoxPreference android:title="Benachrichtigungen anzeigen"
-            android:summary="Benachrichtigen, wenn für deine Klasse etwas auf dem Vertretungsplan steht"
+    <PreferenceCategory android:title="@string/general">
+        <CheckBoxPreference android:title="@string/show_notifications"
+            android:summary="@string/notify_if_youre_class_is_affected"
             android:key="benachrichtigungen"
             android:defaultValue="true" />
-        <ListPreference android:title="Automatische Updates"
-            android:summary="Nur über WLAN automatisch aktualisieren"
+        <ListPreference android:title="@string/automatic_updates"
+            android:summary="@string/only_update_over_wireless_lan"
             android:key="appupdates"
             android:entries="@array/appupdatesArray"
             android:entryValues="@array/appupdatesValues"
             android:defaultValue="wifi" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="Info">
+    <PreferenceCategory android:title="@string/information">
         <de.gebatzens.ggvertretungsplan.GGDialogPreference
-            android:title="Entwickler"
-            android:summary="Informationen über die Entwickler der App"
+            android:title="@string/developer"
+            android:summary="@string/information_about_the_developers_of_this_app"
             android:key="entwickler"
             android:dialogMessage="Hauke Oldsen\nLasse Rosenow\nLennart Schmidt\nFabian Schultis"
             android:negativeButtonText=""/>
-        <Preference android:title="Github"
+        <Preference android:title="@string/github"
             android:summary="https://github.com/Gebatzens/GG-Vertretung"
             android:key="githublink"/>
-        <Preference android:title="Lizenz"
+        <Preference android:title="@string/license"
             android:summary="GNU GPL"
             android:key="license"/>
-        <Preference android:title="Build-Version"
+        <Preference android:title="@string/build_version"
             android:summary="Version: x.x.x"
             android:key="buildversion"/>
     </PreferenceCategory>

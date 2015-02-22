@@ -105,7 +105,7 @@ public class NewsFragment extends RemoteDataFragment {
                 AlertDialog.Builder ad = new AlertDialog.Builder(view.getContext());
                 ad.setTitle(mTitle);
                 ad.setMessage(mContent);
-                ad.setNegativeButton("Schließen", new DialogInterface.OnClickListener() {
+                ad.setNegativeButton(GGApp.GG_APP.getResources().getString(R.string.close), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

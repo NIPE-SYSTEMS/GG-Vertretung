@@ -25,6 +25,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
+import java.util.Locale;
+
 public class GGFragmentAdapter extends FragmentPagerAdapter {
 
     GGFragment heute, morgen, overview;
@@ -89,11 +91,11 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int p) {
         switch(p) {
             case 0:
-                return "Übersicht";
+                return GGApp.GG_APP.getResources().getString(R.string.overview);
             case 1:
-                return GGApp.GG_APP.plans == null ? "Heute"  : GGApp.GG_APP.provider.getDay(GGApp.GG_APP.plans[0].date);
+                return GGApp.GG_APP.plans == null ? GGApp.GG_APP.getResources().getString(R.string.today)  : translateDay(GGApp.GG_APP.provider.getDay(GGApp.GG_APP.plans[0].date));
             case 2:
-                return GGApp.GG_APP.plans == null ? "Morgen" : GGApp.GG_APP.provider.getDay(GGApp.GG_APP.plans[1].date);
+                return GGApp.GG_APP.plans == null ? GGApp.GG_APP.getResources().getString(R.string.tomorrow) : translateDay(GGApp.GG_APP.provider.getDay(GGApp.GG_APP.plans[1].date));
             default:
                 return null;
         }
@@ -102,5 +104,29 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return 3;
+    }
+
+    private String translateDay(String day_german) {
+        StringBuilder sb = new StringBuilder();
+        if(Locale.getDefault().getLanguage().equals("en")) {
+            if(day_german.equals("Montag")) {
+                sb.append("Monday");
+            } else if(day_german.equals("Dienstag")) {
+                sb.append("Tuesday");
+            } else if(day_german.equals("Mittwoch")) {
+                sb.append("Wednesday");
+            } else if(day_german.equals("Donnerstag")) {
+                sb.append("Thursday");
+            } else if(day_german.equals("Freitag")) {
+                sb.append("Friday");
+            } else if(day_german.equals("Samstag")) {
+                sb.append("Saturday");
+            } else if(day_german.equals("Sonntag")) {
+                sb.append("Sunday");
+            }
+        } else {
+            sb.append(day_german);
+        }
+        return sb.toString();
     }
 }

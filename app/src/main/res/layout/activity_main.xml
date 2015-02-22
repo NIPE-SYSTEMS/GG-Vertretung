@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textSize="14sp"
-                    android:text="Einstellungen"
+                    android:text="@string/settings"
                     android:gravity="center_vertical"
                     android:fontFamily="sans-serif-medium"
                     android:drawSelectorOnTop="true"

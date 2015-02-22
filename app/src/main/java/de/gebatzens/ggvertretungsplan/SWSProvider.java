@@ -148,7 +148,7 @@ public class SWSProvider extends VPProvider {
         else {
             if(plan.load(GGApp.GG_APP, b ? "swstd" : "swstm")) {
                 final String message = plan.throwable.getMessage();
-                plan.loadDate = "Keine Internetverbindung\n" + plan.loadDate;
+                plan.loadDate = GGApp.GG_APP.getResources().getString(R.string.no_internet_connection) + "\n" + plan.loadDate;
                 plan.throwable = null;
                 if(toast)
                     GGApp.GG_APP.activity.runOnUiThread(new Runnable() {

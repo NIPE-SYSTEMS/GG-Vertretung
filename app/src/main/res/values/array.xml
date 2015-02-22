@@ -10,9 +10,9 @@
         <item>sws</item>
     </string-array>
     <string-array name="appupdatesArray">
-        <item>Keine automatischen Aktualisierungen des Vertretungsplans zulassen</item>
-        <item>Nur über WLAN automatisch aktualisieren</item>
-        <item>Jederzeit automatisch aktualisieren</item>
+        <item>@string/deny_substitutionplan_updates</item>
+        <item>@string/only_update_over_wireless_lan</item>
+        <item>@string/update_everytime</item>
     </string-array>
     <string-array name="appupdatesValues">
         <item>disable</item>
