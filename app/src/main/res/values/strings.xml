@@ -95,5 +95,8 @@
     <string name="email_address">Email address</string>
     <string name="email_subject">Subject</string>
     <string name="message">Message</string>
+    <string name="message_sent_successfully">Message sent successfully</string>
+    <string name="please_fill_out_all_inputs">Please fill out all inputs</string>
+    <string name="error_while_sending_message">Error while sending message</string>
 
 </resources>
