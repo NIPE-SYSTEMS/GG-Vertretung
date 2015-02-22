@@ -50,7 +50,7 @@
                 android:id="@+id/filter_sep"
                 android:text="@string/filters"/>
 
-            <ListView
+            <de.gebatzens.ggvertretungsplan.ScrollDisabledListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/filter_list"

@@ -135,6 +135,7 @@ public class FilterActivity extends Activity {
                         else {
                             GGApp.GG_APP.filters.add(f);
                             adapter.notifyDataSetChanged();
+                            setListViewHeightBasedOnChildren(listView);
                         }
                         dialog.dismiss();
                     }
