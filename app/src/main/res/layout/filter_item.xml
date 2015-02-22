@@ -3,9 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingLeft="20dp"
-    android:paddingTop="20dp"
-    android:paddingBottom="20dp"
+    android:padding="20dp"
     android:weightSum="1">
 
     <TextView
@@ -13,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:id="@+id/filter_main_text"
-        android:text="sldfjsldfjsldfjlsf"
+        android:text=""
         android:layout_weight="1"/>
 
 

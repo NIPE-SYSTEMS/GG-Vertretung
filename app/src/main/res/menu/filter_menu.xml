@@ -8,7 +8,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:title="Hinzufügen"
         android:orderInCategory="100"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/ic_action_add"
         app:showAsAction="ifRoom" />
 
 </menu>

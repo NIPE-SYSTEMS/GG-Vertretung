@@ -31,6 +31,7 @@ import android.util.Log;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Properties;
 
 public class GGBroadcast extends BroadcastReceiver {
@@ -79,9 +80,10 @@ public class GGBroadcast extends BroadcastReceiver {
         boolean b = false;
 
         String[] td = p.getProperty("todayles").split(";");
-        String[] tdn = new String[today.getAllForClass(gg.getSelectedClass()).size()];
+        List<GGPlan.Entry> listtd = today.filter(GGApp.GG_APP.filters);
+        String[] tdn = new String[listtd.size()];
         int i = 0;
-        for(GGPlan.Entry e : today.getAllForClass(gg.getSelectedClass())) {
+        for(GGPlan.Entry e : listtd) {
             tdn[i] = e.hour;
             i++;
         }
@@ -94,9 +96,10 @@ public class GGBroadcast extends BroadcastReceiver {
         }
 
         String[] tm = p.getProperty("tomoles").split(";");
-        String[] tmn = new String[tomo.getAllForClass(gg.getSelectedClass()).size()];
+        List<GGPlan.Entry> listtm = tomo.filter(GGApp.GG_APP.filters);
+        String[] tmn = new String[listtm.size()];
         i = 0;
-        for(GGPlan.Entry e : tomo.getAllForClass(gg.getSelectedClass())) {
+        for(GGPlan.Entry e : listtm) {
             tmn[i] = e.hour;
             i++;
         }

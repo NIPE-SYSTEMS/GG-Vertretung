@@ -22,8 +22,6 @@ package de.gebatzens.ggvertretungsplan;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,9 +30,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.PowerManager;
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -48,28 +43,17 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Scanner;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 
 public class SettingsActivity extends Activity {
 
     Toolbar mToolBar;
     private static boolean changed;
     static String version;
-
+    GGPFragment frag;
 
     public static class GGPFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -85,8 +69,6 @@ public class SettingsActivity extends Activity {
 
             Preference pref_schule = findPreference("schule");
             pref_schule.setSummary(pref_schule_content);
-
-            Preference pref_klasse = findPreference("klasse");
 
             Preference update = findPreference("appupdates");
             update.setSummary(gg.translateUpdateType(gg.getUpdateType()));
@@ -230,12 +212,12 @@ public class SettingsActivity extends Activity {
             }
 
             Preference filter = findPreference("filter");
-            filter.setSummary(GGApp.GG_APP.filters.size() == 0 ? "Kein Filter aktiv" : GGApp.GG_APP.filters.size() + " Filter aktiv");
+            filter.setSummary(GGApp.GG_APP.filters.mainFilter.filter.isEmpty() ? "Kein Filter aktiv" : (GGApp.GG_APP.filters.size() + 1) + " Filter aktiv");
             filter.setOnPreferenceClickListener(new OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Intent i = new Intent(getActivity(), FilterActivity.class);
-                    startActivityForResult(i, 1);
+                    getActivity().startActivityForResult(i, 1);
                     return false;
                 }
             });
@@ -311,7 +293,8 @@ public class SettingsActivity extends Activity {
 
         mToolBar.setTitle(getTitle());
 
-        getFragmentManager().beginTransaction().replace(R.id.content_wrapper, new GGPFragment(), "gg_settings_frag").commit();
+        frag = new GGPFragment();
+        getFragmentManager().beginTransaction().replace(R.id.content_wrapper, frag, "gg_settings_frag").commit();
 
         setContentView(contentView);
     }
@@ -325,10 +308,10 @@ public class SettingsActivity extends Activity {
 
     @Override
     public void onActivityResult(int req, int resp, Intent intent) {
-        super.onActivityResult(req, resp, intent);
-
-        if(req == 0 && resp == RESULT_OK) {
+        if(req == 1 && resp == RESULT_OK) {
             changed = true;
+            Preference filter = frag.findPreference("filter");
+            filter.setSummary(GGApp.GG_APP.filters.mainFilter.filter.isEmpty() ? "Kein Filter aktiv" : (GGApp.GG_APP.filters.size() + 1) + " Filter aktiv");
         }
     }
 

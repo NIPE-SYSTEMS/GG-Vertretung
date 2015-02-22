@@ -35,7 +35,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GGApp extends Application {
@@ -48,7 +47,7 @@ public class GGApp extends Application {
     private SharedPreferences preferences;
     public static GGApp GG_APP;
     private HashMap<String, Class<? extends VPProvider>> mProviderList = new HashMap<String, Class<? extends VPProvider>>();
-    public ArrayList<FilterActivity.Filter> filters = new ArrayList<FilterActivity.Filter>();
+    public FilterActivity.FilterList filters = new FilterActivity.FilterList();
 
     @Override
     public void onCreate() {
@@ -127,14 +126,6 @@ public class GGApp extends Application {
         mNotificationManager.notify(id, mBuilder.build());
     }
 
-    public String getSelectedClass() {
-        return preferences.getString("klasse", "");
-    }
-
-    public void setSelectedClass(String c) {
-        preferences.edit().putString("klasse", c).apply();
-    }
-
     public String getSelectedProvider() {
         return preferences.getString("schule", "gg");
     }
@@ -199,8 +190,8 @@ public class GGApp extends Application {
                 switch(type) {
                     case PLAN:
                         GGPlan[] nplans = provider.getPlans(updateFragments);
-                        if(plans != null)
-                            update = update && !(nplans[0].equals(plans[0]) && nplans[1].equals(plans[1]));
+                        //if(plans != null)
+                        //    update = update && !(nplans[0].equals(plans[0]) && nplans[1].equals(plans[1]));
                         plans = nplans;
                         break;
                     case NEWS:

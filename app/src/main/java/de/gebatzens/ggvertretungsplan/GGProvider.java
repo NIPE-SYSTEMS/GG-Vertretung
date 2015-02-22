@@ -39,11 +39,9 @@ import java.net.URLEncoder;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -440,8 +438,14 @@ public class GGProvider extends VPProvider {
                     }
 
                     String group = prefs.getString("group", null);
-                    if(group != null && !group.equals("lehrer"))
-                        gg.setSelectedClass(group);
+                    if(group != null && !group.equals("lehrer")) {
+                        gg.filters.mainFilter.type = FilterActivity.FilterType.CLASS;
+                        gg.filters.mainFilter.filter = group;
+                    } else {
+                        gg.filters.mainFilter.type = FilterActivity.FilterType.TEACHER;
+                        gg.filters.mainFilter.filter = user;
+                    }
+                    FilterActivity.saveFilter(GGApp.GG_APP.filters);
                 }
 
                 gg.activity.runOnUiThread(new Runnable() {
