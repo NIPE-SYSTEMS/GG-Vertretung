@@ -36,6 +36,10 @@
             android:label="Filter">
         </activity>
 
+        <activity android:name=".HelpdeskActivity"
+            android:label="@string/helpdesk">
+        </activity>
+
         <receiver android:enabled="true" android:name="de.gebatzens.ggvertretungsplan.GGBroadcast"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
         <intent-filter>
