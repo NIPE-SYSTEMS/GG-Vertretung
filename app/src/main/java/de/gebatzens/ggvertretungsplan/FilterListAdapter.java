@@ -47,11 +47,10 @@ public class FilterListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        FilterActivity.Filter filter = list.get(position);
-        ViewGroup vg = (ViewGroup) ((LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.filter_item, parent, false);
+        final FilterActivity.Filter filter = list.get(position);
+        final ViewGroup vg = (ViewGroup) ((LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.filter_item, parent, false);
         ((TextView) vg.findViewById(R.id.filter_main_text)).setText(filter.toString());
         ImageButton edit = (ImageButton) vg.findViewById(R.id.filter_edit);
-        edit.setTag(position);
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,14 +62,15 @@ public class FilterListAdapter extends BaseAdapter {
                     public void onClick(DialogInterface dialog, int which) {
                         Spinner spinner = (Spinner) ((Dialog) dialog).findViewById(R.id.filter_spinner);
                         EditText text = (EditText) ((Dialog) dialog).findViewById(R.id.filter_text);
-                        FilterActivity.Filter f = new FilterActivity.Filter();
+                        FilterActivity.Filter f = list.get(position);
                         f.type = FilterActivity.Filter.getTypeFromString((String) spinner.getSelectedItem());
                         f.filter = text.getText().toString().trim();
                         if (f.filter.isEmpty())
                             Toast.makeText(((Dialog) dialog).getContext(), c.getString(R.string.invalid_filter), Toast.LENGTH_SHORT).show();
                         else {
-                            GGApp.GG_APP.filters.add(f);
-                            notifyDataSetChanged();
+                            TextView tv = (TextView) vg.findViewById(R.id.filter_main_text);
+                            tv.setText(f.toString());
+
                         }
                         dialog.dismiss();
                     }
@@ -88,10 +88,10 @@ public class FilterListAdapter extends BaseAdapter {
                         android.R.layout.simple_spinner_item, c.filterStrings);
                 a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 s.setAdapter(a);
-                FilterActivity.FilterType type = list.get((int) v.getTag()).type;
+                FilterActivity.FilterType type = list.get(position).type;
                 s.setSelection(type == FilterActivity.FilterType.CLASS ? 0 : type == FilterActivity.FilterType.TEACHER ? 1 : 2);
                 EditText ed = (EditText) d.findViewById(R.id.filter_text);
-                ed.setText(list.get((int) v.getTag()).filter);
+                ed.setText(list.get(position).filter);
             }
         });
         ((ImageButton)vg.findViewById(R.id.filter_delete)).setOnClickListener(new View.OnClickListener() {
