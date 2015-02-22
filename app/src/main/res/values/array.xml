@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string-array name="schuleArray">
+    <string-array name="schuleArray" translatable="false">
         <item>Gymnasium Glinde</item>
         <item>Sachsenwaldschule</item>
     </string-array>
-    <string-array name="schuleValues">
+    <string-array name="schuleValues" translatable="false">
         <item>gg</item>
         <item>sws</item>
     </string-array>
-    <string-array name="appupdatesArray">
+    <string-array name="appupdatesArray" translatable="false">
         <item>@string/deny_substitutionplan_updates</item>
         <item>@string/only_update_over_wireless_lan</item>
         <item>@string/update_everytime</item>
     </string-array>
-    <string-array name="appupdatesValues">
+    <string-array name="appupdatesValues" translatable="false">
         <item>disable</item>
         <item>wifi</item>
         <item>all</item>
     </string-array>
-    <string-array name="blueColors">
+    <string-array name="blueColors" translatable="false">
         <item>#039BE5</item>
         <item>#01579B</item>
         <item>#0091EA</item>
@@ -34,7 +34,7 @@
         <item>#2979FF</item>
         <item>#2962FF</item>
     </string-array>
-    <string-array name="orangeColors">
+    <string-array name="orangeColors" translatable="false">
         <item>#FFC107</item>
         <item>#FFB300</item>
         <item>#FF6F00</item>
