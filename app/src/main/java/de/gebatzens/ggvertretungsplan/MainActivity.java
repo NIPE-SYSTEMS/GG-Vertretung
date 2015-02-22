@@ -84,6 +84,7 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(GGApp.GG_APP.provider.getTheme());
         super.onCreate(savedInstanceState);
         GGApp.GG_APP.activity = this;
         savedState = savedInstanceState;
@@ -93,7 +94,6 @@ public class MainActivity extends FragmentActivity {
         nm.cancel(123);
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
-        setTheme(GGApp.GG_APP.provider.getTheme());
 
         mStrings = new String[] {getResources().getString(R.string.substitutionplan), getResources().getString(R.string.news), getResources().getString(R.string.cafeteria)};
 

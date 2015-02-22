@@ -11,7 +11,7 @@
         <Preference android:title="Filter"
             android:key="filter"
             android:summary="Kein Filter aktiv" />
-        <Preference android:title="Username"
+        <Preference android:title="@string/username"
             android:key="authentication_username"
             android:summary="@string/youre_not_logged_in">
         </Preference>

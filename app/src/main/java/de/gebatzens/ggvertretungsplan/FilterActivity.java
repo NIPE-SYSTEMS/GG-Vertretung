@@ -32,8 +32,11 @@ import android.util.JsonReader;
 import android.util.JsonWriter;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -55,6 +58,10 @@ public class FilterActivity extends Activity {
 
     @Override
     public void onCreate(Bundle bundle) {
+        setTheme(GGApp.GG_APP.provider.getTheme());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            GGApp.GG_APP.setStatusBarColor(getWindow());
+        }
         super.onCreate(bundle);
         setContentView(R.layout.activity_filter);
 
@@ -64,11 +71,22 @@ public class FilterActivity extends Activity {
         listView = (ListView) findViewById(R.id.filter_list);
         adapter = new FilterListAdapter(this, GGApp.GG_APP.filters);
         listView.setAdapter(adapter);
-
-        setTheme(GGApp.GG_APP.provider.getTheme());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            GGApp.GG_APP.setStatusBarColor(getWindow());
-        }
+        setListViewHeightBasedOnChildren(listView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AlertDialog.Builder ad = new AlertDialog.Builder(view.getContext());
+                ad.setTitle("test");
+                ad.setMessage("testss");
+                ad.setNegativeButton(GGApp.GG_APP.getResources().getString(R.string.close), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                ad.show();
+            }
+        });
 
         TextView tv = (TextView) findViewById(R.id.filter_sep);
         tv.setTextColor(GGApp.GG_APP.provider.getColor());
@@ -283,5 +301,27 @@ public class FilterActivity extends Activity {
         } catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
+
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 }
