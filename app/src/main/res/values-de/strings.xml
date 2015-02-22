@@ -95,5 +95,8 @@
     <string name="email_subject">Betreff</string>
     <string name="message">Nachricht</string>
     <string name="name">Name</string>
+    <string name="message_sent_successfully">Nachricht erfolgreich gesendet</string>
+    <string name="please_fill_out_all_inputs">Bitte alle Eingabefelder ausfüllen</string>
+    <string name="error_while_sending_message">Fehler beim Senden der Nachricht</string>
 
 </resources>
