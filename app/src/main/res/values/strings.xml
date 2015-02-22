@@ -88,5 +88,12 @@
     <string name="filters_active">%d filters active</string>
     <string name="filter_active">1 filter active</string>
     <string name="no_filter_active">No filter active</string>
+    <string name="helpdesk">Helpdesk</string>
+    <string name="contact_us_if_you_have_a_problem_with_this_app">Contact us, if you have problem with this app</string>
+    <string name="submit">Submit</string>
+    <string name="name">Name</string>
+    <string name="email_address">Email address</string>
+    <string name="email_subject">Subject</string>
+    <string name="message">Message</string>
 
 </resources>
