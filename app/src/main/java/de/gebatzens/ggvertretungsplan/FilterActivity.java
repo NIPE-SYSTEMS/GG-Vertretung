@@ -33,6 +33,7 @@ import android.util.JsonWriter;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -135,6 +136,7 @@ public class FilterActivity extends Activity {
                         else {
                             GGApp.GG_APP.filters.add(f);
                             adapter.notifyDataSetChanged();
+                            FilterActivity.saveFilter(GGApp.GG_APP.filters);
                             setListViewHeightBasedOnChildren(listView);
                         }
                         dialog.dismiss();
@@ -147,6 +149,7 @@ public class FilterActivity extends Activity {
                     }
                 });//
                 AlertDialog d = builder.create();
+                d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 d.show();
                 Spinner s = (Spinner) d.findViewById(R.id.filter_spinner);
                 ArrayAdapter<String> a = new ArrayAdapter<String>(FilterActivity.this,

@@ -100,6 +100,7 @@ public class FilterListAdapter extends BaseAdapter {
             public void onClick(View v) {
                 list.remove(getItem(position));
                 notifyDataSetChanged();
+                FilterActivity.saveFilter(GGApp.GG_APP.filters);
                 setListViewHeightBasedOnChildren(c.listView);
             }
         });
