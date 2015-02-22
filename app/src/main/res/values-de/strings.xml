@@ -79,7 +79,7 @@
     <string name="add">Hinzufügen</string>
     <string name="add_filter">Filter hinzufügen</string>
     <string name="filter">Filter</string>
-    <string name="filters">Filter</string>
+    <string name="filters">Fach/Kurs Filter</string>
     <string name="invalid_filter">Ungültiger Filter</string>
     <string name="subject_course">Fach/Kurs</string>
     <string name="teacher">Lehrer</string>

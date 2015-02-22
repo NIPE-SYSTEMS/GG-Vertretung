@@ -274,6 +274,11 @@ public class SettingsActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(GGApp.GG_APP.provider.getTheme());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            GGApp.GG_APP.setStatusBarColor(getWindow());
+        }
+
         changed = false;
         Fragment f = getFragmentManager().findFragmentByTag("gg_settings_frag");
         if(f != null) {
@@ -288,11 +293,6 @@ public class SettingsActivity extends Activity {
         if(savedInstanceState != null) {
             changed = savedInstanceState.getBoolean("ggs_changed");
 
-        }
-
-        setTheme(GGApp.GG_APP.provider.getTheme());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            GGApp.GG_APP.setStatusBarColor(getWindow());
         }
 
         mToolBar = (Toolbar) contentView.findViewById(R.id.toolbar);
