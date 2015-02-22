@@ -239,6 +239,17 @@ public class SettingsActivity extends Activity {
                 }
             });
 
+            Preference helpdesk = findPreference("helpdesk");
+            helpdesk.setSummary(getResources().getString(R.string.contact_us_if_you_have_a_problem_with_this_app));
+            helpdesk.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Intent i = new Intent(getActivity(), HelpdeskActivity.class);
+                    getActivity().startActivityForResult(i, 1);
+                    return false;
+                }
+            });
+
         }
 
         @Override
