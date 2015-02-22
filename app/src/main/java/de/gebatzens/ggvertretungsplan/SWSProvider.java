@@ -157,6 +157,8 @@ public class SWSProvider extends VPProvider {
                                     plan.throwable instanceof GGInvalidSourceException ? "Ungültige Antwort vom Server" : "Konnte keine Verbindung zu http://contao.sachsenwaldschule.org aufbauen");
                         }
                     });
+            } else {
+                plan.date = new Date();
             }
         }
 

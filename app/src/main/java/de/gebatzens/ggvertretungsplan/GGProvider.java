@@ -175,6 +175,8 @@ public class GGProvider extends VPProvider {
         GGPlan[] plans = new GGPlan[2];
         plans[0] = new GGPlan();
         plans[1] = new GGPlan();
+        plans[0].date = new Date();
+        plans[1].date = new Date();
 
         try {
             if (sessId == null || sessId.isEmpty())
