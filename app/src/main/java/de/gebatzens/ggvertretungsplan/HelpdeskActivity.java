@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Hauke Oldsen
+ * Copyright (C) 2015 Fabian Schultis
  *
  * This file is part of GGVertretungsplan.
  *
