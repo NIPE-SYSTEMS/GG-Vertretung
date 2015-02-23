@@ -61,8 +61,6 @@ public class FilterActivity extends Activity {
     FilterListAdapter adapter;
     ListView listView;
 
-    public String[] main_filterStrings;
-    public String[] filterStrings;
     TextView mainFilterCategory;
     TextView mainFilterContent;
     ImageButton mAddFilterButton;
@@ -76,7 +74,7 @@ public class FilterActivity extends Activity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_filter);
 
-        main_filterStrings = new String[] { getApplication().getString(R.string.schoolclass), getApplication().getString(R.string.teacher)};
+        final String[] main_filterStrings = new String[] { getApplication().getString(R.string.schoolclass), getApplication().getString(R.string.teacher)};
 
         listView = (ListView) findViewById(R.id.filter_list);
         adapter = new FilterListAdapter(this, GGApp.GG_APP.filters);
@@ -91,7 +89,7 @@ public class FilterActivity extends Activity {
 
         FilterList list = GGApp.GG_APP.filters;
         mainFilterCategory = (TextView) findViewById(R.id.filter_main_category);
-        mainFilterCategory.setText(list.mainFilter.type == FilterActivity.FilterType.CLASS ? getApplication().getString(R.string.schoolclass) : getApplication().getString(R.string.teacher));
+        mainFilterCategory.setText(list.mainFilter.filter.isEmpty() ? getString(R.string.not_selected) : list.mainFilter.type == FilterActivity.FilterType.CLASS ? getApplication().getString(R.string.schoolclass) : getApplication().getString(R.string.teacher));
         mainFilterContent = (TextView) findViewById(R.id.filter_main_content);
         mainFilterContent.setText(list.mainFilter.filter);
 
@@ -257,7 +255,11 @@ public class FilterActivity extends Activity {
 
         @Override
         public String toString() {
-            return getTypeString(type) + " " + filter;
+            return toString(true);
+        }
+
+        public String toString(boolean st) {
+            return (st ? (getTypeString(type) + " ") : "") + filter;
         }
     }
 

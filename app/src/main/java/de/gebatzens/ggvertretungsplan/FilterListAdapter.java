@@ -52,7 +52,7 @@ public class FilterListAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final FilterActivity.Filter filter = list.get(position);
         final ViewGroup vg = (ViewGroup) ((LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.filter_item, parent, false);
-        ((TextView) vg.findViewById(R.id.filter_main_text)).setText(filter.toString());
+        ((TextView) vg.findViewById(R.id.filter_main_text)).setText(filter.toString(false));
         FrameLayout edit = (FrameLayout) vg.findViewById(R.id.filter_edit);
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +71,7 @@ public class FilterListAdapter extends BaseAdapter {
                             Toast.makeText(((Dialog) dialog).getContext(), c.getString(R.string.invalid_filter), Toast.LENGTH_SHORT).show();
                         else {
                             TextView tv = (TextView) vg.findViewById(R.id.filter_main_text);
-                            tv.setText(f.toString());
+                            tv.setText(f.toString(false));
 
                         }
                         dialog.dismiss();

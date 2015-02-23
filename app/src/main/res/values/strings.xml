@@ -101,5 +101,6 @@
     <string name="ok">OK</string>
     <string name="mainfilter">Main filter</string>
     <string name="set_main_filter">Set Main filter</string>
+    <string name="not_selected">Not selected</string>
 
 </resources>
