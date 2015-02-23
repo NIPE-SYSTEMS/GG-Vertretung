@@ -49,8 +49,6 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,7 +59,6 @@ public class GGFragment extends Fragment {
 
     public static final int TYPE_OVERVIEW = 0, TYPE_TODAY = 1, TYPE_TOMORROW = 2;
 
-    String url;
     GGPlan plan, planh, planm;
     int type = -1;
     int spinnerPos = 0;
@@ -265,8 +262,8 @@ public class GGFragment extends Fragment {
             TextView tv2 = createTextView(
                     filters.mainFilter.type == FilterActivity.FilterType.CLASS ? getActivity().getString(R.string.schoolclass) + " " + filters.mainFilter.filter :
                     getActivity().getString(R.string.teacher) + " " + filters.mainFilter.filter, 15, inflater, l2);
+            tv2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             tv2.setGravity(Gravity.RIGHT | Gravity.CENTER);
-            tv2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
             createTextView(translateDay(planh.date), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
             if(!planh.special.isEmpty()) {
