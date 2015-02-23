@@ -3,4 +3,5 @@
     <declare-styleable name="ScrimInsetsView">
         <attr name="insetForeground" format="reference|color" />
     </declare-styleable>
+    <attr name="floating_action_circle" format="reference"/>
 </resources>
