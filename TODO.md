@@ -2,7 +2,7 @@
 
 * strings.xml benutzen (->Fast fertig)
 * java.util.Date im beim VP nutzen (->Erledigt)
-* gelesene News Artikel als gelesen markieren
+* gelesene News Artikel als gelesen markieren (->Erledigt)
 * Mensaplan für GG und SWS
   * Hier fehlt noch Unterstützung der Schulen
 * News für SWS
