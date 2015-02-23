@@ -21,9 +21,7 @@ package de.gebatzens.ggvertretungsplan;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.media.Image;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +33,6 @@ import android.widget.TextView;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class NewsFragmentListAdapter extends BaseAdapter {
