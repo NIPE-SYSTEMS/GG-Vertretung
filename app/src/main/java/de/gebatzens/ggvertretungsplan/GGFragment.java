@@ -234,6 +234,7 @@ public class GGFragment extends Fragment {
         LinearLayout l0 = new LinearLayout(getActivity());
         l0.setOrientation(LinearLayout.VERTICAL);
         LinearLayout l = new LinearLayout(getActivity());
+        l.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
         l.setOrientation(LinearLayout.VERTICAL);
         l.setPadding(toPixels(4),toPixels(4),toPixels(4),toPixels(4));
         group.addView(sv);
