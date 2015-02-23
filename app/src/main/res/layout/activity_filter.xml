@@ -21,50 +21,73 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="20dp">
-
-                <Spinner
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/filter_main_spinner"/>
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:id="@+id/filter_main_edit"/>
-
-            </LinearLayout>
+            android:orientation="vertical"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="10dp"
-                android:id="@+id/filter_sep"
-                android:text="@string/filters"/>
+                android:textSize="14sp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="16dp"
+                android:fontFamily="sans-serif-medium"
+                android:id="@+id/filter_sep_1"
+                android:text="@string/mainfilter"/>
 
-            <ListView
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="?android:selectableItemBackground"
+            android:id="@+id/mainfilter_layout">
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/filter_list"
-                android:drawSelectorOnTop="true"/>
+                android:textSize="16sp"
+                android:fontFamily="sans-serif"
+                android:id="@+id/filter_main_category"
+                android:text="@string/filters"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textColor="#727272"
+                android:id="@+id/filter_main_content"
+                android:text="@string/filters"/>
+
         </LinearLayout>
-        </ScrollView>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="10dp"
-            android:id="@+id/ShaderTabLayout"
-            android:background="@drawable/tablayoutbackground"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="16dp"
+            android:fontFamily="sans-serif-medium"
+            android:id="@+id/filter_sep_2"
+            android:text="@string/filters"/>
 
-    </RelativeLayout>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/filter_list"
+            android:drawSelectorOnTop="true"/>
+    </LinearLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="10dp"
+        android:id="@+id/ShaderTabLayout"
+        android:background="@drawable/tablayoutbackground"/>
+
+</RelativeLayout>
 
 
 </LinearLayout>

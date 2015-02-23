@@ -37,6 +37,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -55,7 +56,10 @@ public class FilterActivity extends Activity {
     FilterListAdapter adapter;
     ListView listView;
 
+    public String[] main_filterStrings;
     public String[] filterStrings;
+    TextView mainFilterCategory;
+    TextView mainFilterContent;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -66,42 +70,74 @@ public class FilterActivity extends Activity {
         super.onCreate(bundle);
         setContentView(R.layout.activity_filter);
 
-        filterStrings = new String[] { getApplication().getString(R.string.schoolclass), getApplication().getString(R.string.teacher),
-                                        getApplication().getString(R.string.subject_course)};
+        main_filterStrings = new String[] { getApplication().getString(R.string.schoolclass), getApplication().getString(R.string.teacher)};
+
+        filterStrings = new String[] { getApplication().getString(R.string.subject_course), getApplication().getString(R.string.schoolclass),
+                                        getApplication().getString(R.string.teacher)};
 
         listView = (ListView) findViewById(R.id.filter_list);
         adapter = new FilterListAdapter(this, GGApp.GG_APP.filters);
         listView.setAdapter(adapter);
+        listView.setDrawSelectorOnTop(true);
         setListViewHeightBasedOnChildren(listView);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        TextView tv = (TextView) findViewById(R.id.filter_sep_1);
+        tv.setTextColor(GGApp.GG_APP.provider.getColor());
+        TextView tv2 = (TextView) findViewById(R.id.filter_sep_2);
+        tv2.setTextColor(GGApp.GG_APP.provider.getColor());
+
+        FilterList list = GGApp.GG_APP.filters;
+        mainFilterCategory = (TextView) findViewById(R.id.filter_main_category);
+        mainFilterCategory.setText(list.mainFilter.type == FilterActivity.FilterType.CLASS ? getApplication().getString(R.string.schoolclass) : getApplication().getString(R.string.teacher));
+        mainFilterContent = (TextView) findViewById(R.id.filter_main_content);
+        mainFilterContent.setText(list.mainFilter.filter);
+
+        LinearLayout l = (LinearLayout) findViewById(R.id.mainfilter_layout);
+        l.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                AlertDialog.Builder ad = new AlertDialog.Builder(view.getContext());
-                ad.setTitle("test");
-                ad.setMessage("testss");
-                ad.setNegativeButton(GGApp.GG_APP.getResources().getString(R.string.close), new DialogInterface.OnClickListener() {
+            public void onClick(View viewIn) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(FilterActivity.this);
+                builder.setTitle(getApplication().getString(R.string.set_main_filter));
+                builder.setView(getLayoutInflater().inflate(R.layout.filter_dialog, null));
+                builder.setPositiveButton(getApplication().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Spinner spinner = (Spinner) ((Dialog) dialog).findViewById(R.id.filter_spinner);
+                        EditText text = (EditText) ((Dialog) dialog).findViewById(R.id.filter_text);
+                        String text2 = text.getText().toString().trim();
+                        if (text2.isEmpty())
+                            Toast.makeText(((Dialog) dialog).getContext(), getApplication().getString(R.string.invalid_filter), Toast.LENGTH_SHORT).show();
+                        else {
+                            FilterList list = GGApp.GG_APP.filters;
+                            list.mainFilter.filter = text2;
+                            mainFilterContent.setText(list.mainFilter.filter);
+                            list.mainFilter.type = FilterType.values()[spinner.getSelectedItemPosition()];
+                            mainFilterCategory.setText(list.mainFilter.type == FilterActivity.FilterType.CLASS ? getApplication().getString(R.string.schoolclass) : getApplication().getString(R.string.teacher));
+                            FilterActivity.saveFilter(GGApp.GG_APP.filters);
+                        }
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton(getApplication().getString(R.string.abort), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                });
-                ad.show();
+                });//
+                AlertDialog d = builder.create();
+                d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                d.show();
+                Spinner s = (Spinner) d.findViewById(R.id.filter_spinner);
+                ArrayAdapter<String> a = new ArrayAdapter<String>(FilterActivity.this,
+                        android.R.layout.simple_spinner_item, main_filterStrings);
+                a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                s.setAdapter(a);
+                FilterList list = GGApp.GG_APP.filters;
+                s.setSelection(list.mainFilter.type == FilterType.CLASS ? 0 : 1);
+                EditText mainEdit = (EditText) d.findViewById(R.id.filter_text);
+                mainEdit.setText(list.mainFilter.filter);
             }
         });
-
-        TextView tv = (TextView) findViewById(R.id.filter_sep);
-        tv.setTextColor(GGApp.GG_APP.provider.getColor());
-
-        Spinner spin = (Spinner) findViewById(R.id.filter_main_spinner);
-        ArrayAdapter<String> a2 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,
-                new String[] {getApplication().getString(R.string.schoolclass), getApplication().getString(R.string.teacher)});
-        a2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spin.setAdapter(a2);
-
-        FilterList list = GGApp.GG_APP.filters;
-        EditText mainEdit = (EditText) findViewById(R.id.filter_main_edit);
-        mainEdit.setText(list.mainFilter.filter);
-        spin.setSelection(list.mainFilter.type == FilterType.CLASS ? 0 : 1);
 
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setBackgroundColor(GGApp.GG_APP.provider.getColor());
@@ -275,11 +311,6 @@ public class FilterActivity extends Activity {
     @Override
     public void finish() {
         setResult(RESULT_OK);
-        FilterList list = GGApp.GG_APP.filters;
-        EditText edit = (EditText) findViewById(R.id.filter_main_edit);
-        list.mainFilter.filter = edit.getText().toString();
-        Spinner spin = (Spinner) findViewById(R.id.filter_main_spinner);
-        list.mainFilter.type = FilterType.values()[spin.getSelectedItemPosition()];
         saveFilter(GGApp.GG_APP.filters);
         super.finish();
     }

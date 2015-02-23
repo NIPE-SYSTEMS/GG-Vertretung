@@ -58,7 +58,7 @@ public class FilterListAdapter extends BaseAdapter {
                 AlertDialog.Builder builder = new AlertDialog.Builder(c);
                 builder.setTitle(c.getString(R.string.edit_filter));
                 builder.setView(c.getLayoutInflater().inflate(R.layout.filter_dialog, null));
-                builder.setPositiveButton(c.getString(R.string.add), new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(c.getString(R.string.refresh), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Spinner spinner = (Spinner) ((Dialog) dialog).findViewById(R.id.filter_spinner);

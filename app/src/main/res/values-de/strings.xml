@@ -98,5 +98,8 @@
     <string name="message_sent_successfully">Nachricht erfolgreich gesendet</string>
     <string name="please_fill_out_all_inputs">Bitte alle Eingabefelder ausfüllen</string>
     <string name="error_while_sending_message">Fehler beim Senden der Nachricht</string>
+    <string name="ok">OK</string>
+    <string name="mainfilter">Hauptfilter</string>
+    <string name="set_main_filter">Hauptfilter einstellen</string>
 
 </resources>
