@@ -43,10 +43,10 @@
         <Preference android:title="@string/build_version"
             android:summary="Version: x.x.x"
             android:key="buildversion"/>
-        <Preference android:title="@string/helpdesk"
+        <!--<Preference android:title="@string/helpdesk"
             android:summary="@string/contact_us_if_you_have_a_problem_with_this_app"
             android:key="helpdesk"
-            android:icon="@drawable/ic_helpdesk"/>
+            android:icon="@drawable/ic_helpdesk"/>-->
     </PreferenceCategory>
 
 </PreferenceScreen>
