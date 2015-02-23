@@ -36,7 +36,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -60,6 +62,7 @@ public class FilterActivity extends Activity {
     public String[] filterStrings;
     TextView mainFilterCategory;
     TextView mainFilterContent;
+    ImageButton mAddFilterButton;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -152,10 +155,10 @@ public class FilterActivity extends Activity {
 
         mToolBar.setTitle(getTitle());
 
-        mToolBar.inflateMenu(R.menu.filter_menu);
-        mToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+        mAddFilterButton = (ImageButton) findViewById(R.id.addfilter_button);
+        mAddFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
+            public void onClick(View viewIn) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(FilterActivity.this);
                 builder.setTitle(getApplication().getString(R.string.add_filter));
                 builder.setView(getLayoutInflater().inflate(R.layout.filter_dialog, null));
@@ -167,7 +170,7 @@ public class FilterActivity extends Activity {
                         Filter f = new Filter();
                         f.type = Filter.getTypeFromString((String) spinner.getSelectedItem());
                         f.filter = text.getText().toString().trim();
-                        if(f.filter.isEmpty())
+                        if (f.filter.isEmpty())
                             Toast.makeText(((Dialog) dialog).getContext(), getApplication().getString(R.string.invalid_filter), Toast.LENGTH_SHORT).show();
                         else {
                             GGApp.GG_APP.filters.add(f);
@@ -193,7 +196,6 @@ public class FilterActivity extends Activity {
                 a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 s.setAdapter(a);
                 s.setSelection(0);
-                return false;
             }
         });
 

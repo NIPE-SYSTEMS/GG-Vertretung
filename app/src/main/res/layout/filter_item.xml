@@ -3,35 +3,44 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="20dp"
     android:weightSum="1">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
         android:textSize="15sp"
         android:id="@+id/filter_main_text"
-        android:text=""
+        android:text="@string/app_name"
         android:layout_weight="1"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="0">
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <FrameLayout
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="?android:selectableItemBackground"
             android:id="@+id/filter_edit"
-            android:background="@null"
-            android:src="@drawable/ic_action_edit"/>
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:padding="12dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_action_edit"/>
+        </FrameLayout>
+        <FrameLayout
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:background="?android:selectableItemBackground"
             android:id="@+id/filter_delete"
-            android:layout_marginLeft="20dp"
-            android:background="@null"
-            android:src="@drawable/ic_action_delete"/>
+            android:padding="12dp">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_action_delete"/>
+        </FrameLayout>
     </LinearLayout>
 </LinearLayout>

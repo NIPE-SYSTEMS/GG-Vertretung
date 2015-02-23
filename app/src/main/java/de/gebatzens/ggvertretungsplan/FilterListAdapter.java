@@ -26,9 +26,11 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -51,7 +53,7 @@ public class FilterListAdapter extends BaseAdapter {
         final FilterActivity.Filter filter = list.get(position);
         final ViewGroup vg = (ViewGroup) ((LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.filter_item, parent, false);
         ((TextView) vg.findViewById(R.id.filter_main_text)).setText(filter.toString());
-        ImageButton edit = (ImageButton) vg.findViewById(R.id.filter_edit);
+        FrameLayout edit = (FrameLayout) vg.findViewById(R.id.filter_edit);
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +85,7 @@ public class FilterListAdapter extends BaseAdapter {
                     }
                 });
                 AlertDialog d = builder.create();
+                d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 d.show();
                 Spinner s = (Spinner) d.findViewById(R.id.filter_spinner);
                 ArrayAdapter<String> a = new ArrayAdapter<String>(c,
@@ -90,12 +93,12 @@ public class FilterListAdapter extends BaseAdapter {
                 a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 s.setAdapter(a);
                 FilterActivity.FilterType type = list.get(position).type;
-                s.setSelection(type == FilterActivity.FilterType.CLASS ? 0 : type == FilterActivity.FilterType.TEACHER ? 1 : 2);
+                s.setSelection(type == FilterActivity.FilterType.SUBJECT ? 0 : type == FilterActivity.FilterType.CLASS ? 1 : 2);
                 EditText ed = (EditText) d.findViewById(R.id.filter_text);
                 ed.setText(list.get(position).filter);
             }
         });
-        ((ImageButton)vg.findViewById(R.id.filter_delete)).setOnClickListener(new View.OnClickListener() {
+        ((FrameLayout)vg.findViewById(R.id.filter_delete)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 list.remove(getItem(position));
