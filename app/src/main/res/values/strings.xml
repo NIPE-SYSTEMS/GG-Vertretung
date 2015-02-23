@@ -106,5 +106,6 @@
     <string name="autoupdate_summary">Notify if new version is available</string>
     <string name="infoappupdate">SchulinfoAPP update</string>
     <string name="appupdate_available">An update for the SchulinfoAPP is available</string>
+    <string name="read">Read</string>
 
 </resources>

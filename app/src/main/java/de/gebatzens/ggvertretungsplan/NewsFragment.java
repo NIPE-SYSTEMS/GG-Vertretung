@@ -46,12 +46,15 @@ import java.util.ArrayList;
 public class NewsFragment extends RemoteDataFragment {
 
     ListView lv;
+    private NewsFragmentListAdapter nfla;
+    private NewsFragmentDatabaseHelper mDatabaseHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
         ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.fragment_news, group, false);
         if(GGApp.GG_APP.news != null)
             createView(inflater, vg);
+        mDatabaseHelper = new NewsFragmentDatabaseHelper(getActivity().getApplicationContext());
         return vg;
     }
 
@@ -111,9 +114,13 @@ public class NewsFragment extends RemoteDataFragment {
                     }
                 });
                 ad.show();
+                if(!mDatabaseHelper.checkNewsRead(mTitle)) {
+                    mDatabaseHelper.addReadNews(mTitle);
+                    nfla.notifyDataSetChanged();
+                }
             }
         });
-        NewsFragmentListAdapter nfla = new NewsFragmentListAdapter(getActivity(), GGApp.GG_APP.news);
+        nfla = new NewsFragmentListAdapter(getActivity(), GGApp.GG_APP.news);
         lv.setAdapter(nfla);
     }
 

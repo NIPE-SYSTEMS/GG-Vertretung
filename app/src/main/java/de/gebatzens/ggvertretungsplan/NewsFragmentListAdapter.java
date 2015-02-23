@@ -43,11 +43,13 @@ public class NewsFragmentListAdapter extends BaseAdapter {
     private NewsFragment.News mArrayList;
     private LayoutInflater inflater;
     private String formattedDate;
+    private NewsFragmentDatabaseHelper mDatabaseHelper;
 
     /*public NewsFragmentListAdapter(Context pContext, String[] pTitle, String[] pContent, int[] pIcon) {*/
     public NewsFragmentListAdapter(Context pContext, NewsFragment.News pArrayList) {
         context = pContext;
         mArrayList = pArrayList;
+        mDatabaseHelper = new NewsFragmentDatabaseHelper(context);
     }
  
     @SuppressLint("ViewHolder")
@@ -81,6 +83,12 @@ public class NewsFragmentListAdapter extends BaseAdapter {
         GradientDrawable drawable = (GradientDrawable) imgIcon.getBackground();
         drawable.setColor(GGApp.GG_APP.provider.getColor());
         //imgIcon.setImageResource(mIcnewson[position]);
+
+        if(mDatabaseHelper.checkNewsRead(mArrayList.get(position)[4])) {
+            txtTitle.setTextColor(GGApp.GG_APP.provider.getColor());
+            txtTitle.setText("(" + context.getResources().getString(R.string.read) + ") " + mArrayList.get(position)[4]);
+        }
+
         return itemView;
     }
 
