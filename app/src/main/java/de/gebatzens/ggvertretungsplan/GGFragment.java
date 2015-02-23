@@ -513,9 +513,9 @@ public class GGFragment extends Fragment {
         StringBuilder sb = new StringBuilder();
         SimpleDateFormat convertedDateFormat;
         if(Locale.getDefault().getLanguage().equals("en")) {
-            convertedDateFormat = new SimpleDateFormat("EEEE, MM/dd");
+            convertedDateFormat = new SimpleDateFormat("EEEE, MMM dd");
         } else {
-            convertedDateFormat = new SimpleDateFormat("EEEE, dd.MM.");
+            convertedDateFormat = new SimpleDateFormat("EEEE, dd.MMM");
         }
 
         sb.append(convertedDateFormat.format(date));

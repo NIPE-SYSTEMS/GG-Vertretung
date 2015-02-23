@@ -45,7 +45,7 @@
     <string name="news">News</string>
     <string name="cafeteria">Cafeteria</string>
     <string name="close">Close</string>
-    <string name="touch_to_update">Touch to update</string>
+    <string name="touch_to_update">Touchtouch_to_updatetotouch_to_updateupdate</string>
     <string name="not_available_in_debug_mode">Not available in debug mode</string>
     <string name="update_available">Update available</string>
     <string name="should_the_app_be_updated">Should the SchulinfoAPP be updated?</string>
@@ -56,7 +56,7 @@
     <string name="logout_realy">Logout really?</string>
     <string name="logout_on_all_devices">Logout on all devices</string>
     <string name="youre_not_logged_in">You are not logged in</string>
-    <string name="touch_to_logout">Touch to logout</string>
+    <string name="touch_to_logout">Touch\u00A0to\u00A0logout</string>
     <string name="school_settings">School settings</string>
     <string name="school">School</string>
     <string name="schoolclass">Class</string>
