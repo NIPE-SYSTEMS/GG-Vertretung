@@ -51,13 +51,12 @@ public class HelpdeskActivity extends Activity {
 
     @Override
     public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
-        setContentView(R.layout.activity_helpdesk);
-
         setTheme(GGApp.GG_APP.provider.getTheme());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             GGApp.GG_APP.setStatusBarColor(getWindow());
         }
+        super.onCreate(bundle);
+        setContentView(R.layout.activity_helpdesk);
 
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setBackgroundColor(GGApp.GG_APP.provider.getColor());
