@@ -87,7 +87,7 @@ public class GGProvider extends VPProvider {
 
             if(con.getResponseCode() == 401) {
                 logout(true, true);
-                throw new VPLoginException();
+                sessId = null;
             }
 
             Scanner scan = new Scanner(new BufferedInputStream(con.getInputStream()));
