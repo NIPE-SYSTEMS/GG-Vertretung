@@ -253,7 +253,7 @@ public class GGFragment extends Fragment {
 
             CardView cv2 = new CardView(getActivity());
             cv2.setContentPadding(toPixels(16),toPixels(16),toPixels(16),toPixels(16));
-            cv2.setBackgroundColor(Color.WHITE);
+            cv2.setCardBackgroundColor(Color.WHITE);
 
             LinearLayout l2 = new LinearLayout(getActivity());
 
@@ -398,7 +398,7 @@ public class GGFragment extends Fragment {
         } else {
             CardView cv2 = new CardView(getActivity());
             cv2.setContentPadding(toPixels(16),toPixels(16),toPixels(16),toPixels(16));
-            cv2.setBackgroundColor(Color.WHITE);
+            cv2.setCardBackgroundColor(Color.WHITE);
 
             LinearLayout l2 = new LinearLayout(getActivity());
 
