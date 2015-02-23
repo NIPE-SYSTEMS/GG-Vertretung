@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class NewsFragmentDatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "messec";
+    private static final String DATABASE_NAME = "schulinfoapp";
     private static final int DATABASE_VERSION = 2;
     private static final String KEY_ID = "id";
     private static final String KEY_NEWS_TITLE = "news_title";
