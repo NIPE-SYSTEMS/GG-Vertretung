@@ -28,17 +28,14 @@ public class NewsFragmentDatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int old_version, int new_version) {
     }
 
-    public String addReadNews(String news_title) {
+    public void addReadNews(String news_title) {
         SQLiteDatabase db = this.getReadableDatabase();
         ContentValues values = new ContentValues();
-        Long tsLong = System.currentTimeMillis()/1000;
-        String ts = tsLong.toString();
         values.put(KEY_NEWS_TITLE, news_title);
         db.insert(NEWS_TABLE_NAME, null, values);
-        return ts;
     }
 
     public boolean checkNewsRead(String news_title) {
