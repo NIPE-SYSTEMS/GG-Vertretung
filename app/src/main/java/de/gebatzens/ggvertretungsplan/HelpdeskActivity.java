@@ -77,11 +77,6 @@ public class HelpdeskActivity extends Activity {
         final TextView mTextViewSubject = (TextView) findViewById(R.id.reportSubject);
         final TextView mTextViewMessage = (TextView) findViewById(R.id.reportMessage);
 
-        if(!GGApp.GG_APP.provider.getUsername().equals("")) {
-            mTextViewName.setText(GGApp.GG_APP.provider.getUsername());
-            mTextViewName.setEnabled(false);
-        }
-
         Button mButtonSubmit = (Button) findViewById(R.id.reportSubmit);
         mButtonSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +98,12 @@ public class HelpdeskActivity extends Activity {
 
                                 con.setDoOutput(true);
                                 DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                                String urlParams = "name=" + URLEncoder.encode(params[0],"UTF-8") + "&email=" + URLEncoder.encode(params[1],"UTF-8") + "&subject=" + URLEncoder.encode(params[2],"UTF-8") + "&message=" + URLEncoder.encode(params[3],"UTF-8");
+                                String urlParams;
+                                if(!GGApp.GG_APP.provider.getUsername().equals("")) {
+                                    urlParams = "name=" + URLEncoder.encode(params[0],"UTF-8") + "&email=" + URLEncoder.encode(params[1],"UTF-8") + "&subject=" + URLEncoder.encode(params[2],"UTF-8") + "&message=" + URLEncoder.encode(params[3],"UTF-8") + "&username=" + URLEncoder.encode(GGApp.GG_APP.provider.getUsername(),"UTF-8");
+                                } else {
+                                    urlParams = "name=" + URLEncoder.encode(params[0],"UTF-8") + "&email=" + URLEncoder.encode(params[1],"UTF-8") + "&subject=" + URLEncoder.encode(params[2],"UTF-8") + "&message=" + URLEncoder.encode(params[3],"UTF-8");
+                                }
                                 Log.d("urlParams", urlParams);
                                 wr.writeBytes(urlParams);
                                 wr.flush ();
