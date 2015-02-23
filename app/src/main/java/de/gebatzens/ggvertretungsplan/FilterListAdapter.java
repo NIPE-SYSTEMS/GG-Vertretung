@@ -63,10 +63,9 @@ public class FilterListAdapter extends BaseAdapter {
                 builder.setPositiveButton(c.getString(R.string.refresh), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Spinner spinner = (Spinner) ((Dialog) dialog).findViewById(R.id.filter_spinner);
                         EditText text = (EditText) ((Dialog) dialog).findViewById(R.id.filter_text);
                         FilterActivity.Filter f = list.get(position);
-                        f.type = FilterActivity.Filter.getTypeFromString((String) spinner.getSelectedItem());
+                        f.type = FilterActivity.FilterType.SUBJECT;
                         f.filter = text.getText().toString().trim();
                         if (f.filter.isEmpty())
                             Toast.makeText(((Dialog) dialog).getContext(), c.getString(R.string.invalid_filter), Toast.LENGTH_SHORT).show();
@@ -87,13 +86,6 @@ public class FilterListAdapter extends BaseAdapter {
                 AlertDialog d = builder.create();
                 d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 d.show();
-                Spinner s = (Spinner) d.findViewById(R.id.filter_spinner);
-                ArrayAdapter<String> a = new ArrayAdapter<String>(c,
-                        android.R.layout.simple_spinner_item, c.filterStrings);
-                a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                s.setAdapter(a);
-                FilterActivity.FilterType type = list.get(position).type;
-                s.setSelection(type == FilterActivity.FilterType.SUBJECT ? 0 : type == FilterActivity.FilterType.CLASS ? 1 : 2);
                 EditText ed = (EditText) d.findViewById(R.id.filter_text);
                 ed.setText(list.get(position).filter);
             }

@@ -78,9 +78,6 @@ public class FilterActivity extends Activity {
 
         main_filterStrings = new String[] { getApplication().getString(R.string.schoolclass), getApplication().getString(R.string.teacher)};
 
-        filterStrings = new String[] { getApplication().getString(R.string.subject_course), getApplication().getString(R.string.schoolclass),
-                                        getApplication().getString(R.string.teacher)};
-
         listView = (ListView) findViewById(R.id.filter_list);
         adapter = new FilterListAdapter(this, GGApp.GG_APP.filters);
         listView.setAdapter(adapter);
@@ -104,7 +101,7 @@ public class FilterActivity extends Activity {
             public void onClick(View viewIn) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(FilterActivity.this);
                 builder.setTitle(getApplication().getString(R.string.set_main_filter));
-                builder.setView(getLayoutInflater().inflate(R.layout.filter_dialog, null));
+                builder.setView(getLayoutInflater().inflate(R.layout.filter_main_dialog, null));
                 builder.setPositiveButton(getApplication().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -173,10 +170,9 @@ public class FilterActivity extends Activity {
                 builder.setPositiveButton(getApplication().getString(R.string.add), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Spinner spinner = (Spinner) ((Dialog) dialog).findViewById(R.id.filter_spinner);
                         EditText text = (EditText) ((Dialog) dialog).findViewById(R.id.filter_text);
                         Filter f = new Filter();
-                        f.type = Filter.getTypeFromString((String) spinner.getSelectedItem());
+                        f.type = FilterType.SUBJECT;
                         f.filter = text.getText().toString().trim();
                         if (f.filter.isEmpty())
                             Toast.makeText(((Dialog) dialog).getContext(), getApplication().getString(R.string.invalid_filter), Toast.LENGTH_SHORT).show();
@@ -198,12 +194,6 @@ public class FilterActivity extends Activity {
                 AlertDialog d = builder.create();
                 d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 d.show();
-                Spinner s = (Spinner) d.findViewById(R.id.filter_spinner);
-                ArrayAdapter<String> a = new ArrayAdapter<String>(FilterActivity.this,
-                        android.R.layout.simple_spinner_item, filterStrings);
-                a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                s.setAdapter(a);
-                s.setSelection(0);
             }
         });
 
