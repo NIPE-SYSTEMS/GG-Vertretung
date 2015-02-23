@@ -25,6 +25,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -156,6 +159,11 @@ public class FilterActivity extends Activity {
         mToolBar.setTitle(getTitle());
 
         mAddFilterButton = (ImageButton) findViewById(R.id.addfilter_button);
+        mAddFilterButton.setBackgroundResource(R.drawable.floating_action_circle);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            StateListDrawable drawable = (StateListDrawable) mAddFilterButton.getBackground();
+            drawable.setColorFilter(GGApp.GG_APP.provider.getColor(), PorterDuff.Mode.SRC_ATOP);
+        }
         mAddFilterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View viewIn) {
