@@ -81,7 +81,7 @@ public class GGApp extends Application {
         mProviderList.put("sws", SWSProvider.class);
     }
 
-    public void createNotification(String title, String message, int id, String... strings) {
+    public void createNotification(int icon, String title, String message, Intent intent, int id, String... strings) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_gg_star)
@@ -102,8 +102,6 @@ public class GGApp extends Application {
             mBuilder.setStyle(inboxStyle);
         }
         mBuilder.setColor(GGApp.GG_APP.provider.getDarkColor());
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, MainActivity.class);
 
         // The stack builder object will contain an artificial back stack for the
         // started Activity.
@@ -113,7 +111,7 @@ public class GGApp extends Application {
         // Adds the back stack for the Intent (but not the Intent itself)
         stackBuilder.addParentStack(MainActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
+        stackBuilder.addNextIntent(intent);
         PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(
                         0,
@@ -131,7 +129,7 @@ public class GGApp extends Application {
     }
 
     public boolean notificationsEnabled() {
-        return preferences.getBoolean("benachrichtigungen", false);
+        return preferences.getBoolean("benachrichtigungen", true);
     }
 
     public void showToast(String s) {
@@ -179,6 +177,10 @@ public class GGApp extends Application {
 
     public void setFragmentType(FragmentType type) {
         preferences.edit().putString("fragtype", type.toString()).apply();
+    }
+
+    public boolean appUpdatesEnabled() {
+        return preferences.getBoolean("autoappupdates", true);
     }
 
     public void refreshAsync(final Runnable finished, final boolean updateFragments, final FragmentType type) {

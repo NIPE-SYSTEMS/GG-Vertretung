@@ -102,5 +102,9 @@
     <string name="mainfilter">Hauptfilter</string>
     <string name="set_main_filter">Hauptfilter einstellen</string>
     <string name="not_selected">Nicht ausgewählt</string>
+    <string name="autoupdate">App-Updates</string>
+    <string name="autoupdate_summary">Benachrichtigen, wenn eine neue Version der App verfügbar ist</string>
+    <string name="infoappupdate">SchulinfoAPP Update</string>
+    <string name="appupdate_available">Ein Update für die SchulinfoAPP ist verfügbar</string>
 
 </resources>

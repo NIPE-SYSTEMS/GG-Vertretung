@@ -24,6 +24,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.media.audiofx.BassBoost;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -150,8 +151,9 @@ public class GGBroadcast extends BroadcastReceiver {
                 stdtm = stdtm.substring(0, stdtm.length() - 2);
             else
                 stdtm = "Nichts";
-            gg.createNotification(gg.getString(R.string.substitutionplan_change), gg.getString(R.string.the_sp_has_changed), 123,
-                    gg.getString(R.string.affected_lessons) , VPProvider.getWeekday(today.date) + ": " + stdt, VPProvider.getWeekday(tomo.date) + ": " + stdtm);
+            gg.createNotification(R.drawable.ic_gg_star, gg.getString(R.string.substitutionplan_change), gg.getString(R.string.the_sp_has_changed),
+                    new Intent(gg, MainActivity.class), 123, gg.getString(R.string.affected_lessons) , VPProvider.getWeekday(today.date) + ": " + stdt,
+                    VPProvider.getWeekday(tomo.date) + ": " + stdtm);
         } else
             Log.d("ggvp", "Up to date!");
 
@@ -164,6 +166,26 @@ public class GGBroadcast extends BroadcastReceiver {
             gg.showToast(e.getClass().getName() + " " + e.getMessage());
         }
 
+    }
+
+    public void checkForAppUpdates(GGApp gg) {
+        if(!gg.appUpdatesEnabled())
+            return;
+        if(BuildConfig.DEBUG)
+            return;
+        try {
+            String version = SettingsActivity.getVersion();
+            if(!version.equals(BuildConfig.VERSION_NAME)) {
+                Intent intent = new Intent(gg, SettingsActivity.class);
+                intent.putExtra("update", true);
+                intent.putExtra("version", version);
+                gg.createNotification(R.drawable.ic_notification_update, gg.getString(R.string.infoappupdate), gg.getString(R.string.appupdate_available),
+                        intent, 124);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+
+        }
     }
 
     public static void createAlarm(Context context) {
@@ -199,6 +221,7 @@ public class GGBroadcast extends BroadcastReceiver {
                 @Override
                 protected Void doInBackground(GGApp... params) {
                     checkForUpdates(params[0], true);
+                    checkForAppUpdates(params[0]);
                     return null;
                 }
             }.execute((GGApp) context.getApplicationContext());

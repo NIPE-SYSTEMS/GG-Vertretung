@@ -91,64 +91,19 @@ public class SettingsActivity extends Activity {
                         protected Void doInBackground(Object... params) {
                             try {
 
-                                HttpsURLConnection con = (HttpsURLConnection) new URL("https://gymnasium-glinde.logoip.de/infoapp/update.php?version").openConnection();
-                                con.setRequestMethod("POST");
-                                con.setSSLSocketFactory(GGProvider.sslSocketFactory);
+                                final String version = getVersion();
 
-                                if (con.getResponseCode() == 200) {
-                                    BufferedInputStream in = new BufferedInputStream(con.getInputStream());
-                                    Scanner scan = new Scanner(in);
-                                    final StringBuilder resp = new StringBuilder("");
-                                    while (scan.hasNextLine())
-                                        resp.append(scan.nextLine());
-                                    scan.close();
-                                    if (!resp.toString().equals(BuildConfig.VERSION_NAME)) {
-                                        HttpsURLConnection con_changelog = (HttpsURLConnection) new URL("https://gymnasium-glinde.logoip.de/infoapp/update.php?changelog="+resp).openConnection();
-                                        con_changelog.setRequestMethod("GET");
-                                        con_changelog.setSSLSocketFactory(GGProvider.sslSocketFactory);
-
-                                        if(con_changelog.getResponseCode() == 200) {
-                                            BufferedInputStream in_changelog = new BufferedInputStream(con_changelog.getInputStream());
-                                            Scanner scan_changelog = new Scanner(in_changelog);
-                                            String resp_changelog = "";
-                                            while (scan_changelog.hasNextLine())
-                                                resp_changelog += scan_changelog.nextLine();
-                                            scan_changelog.close();
-                                            final String final_resp_changelog = resp_changelog;
-                                            getActivity().runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                                    builder.setTitle(getResources().getString(R.string.update_available));
-                                                    builder.setMessage(Html.fromHtml(getResources().getString(R.string.should_the_app_be_updated) + "<br><br>Changelog:<br>" +
-                                                            final_resp_changelog.replace("|","<br>").replace("*", "&#8226;")));
-                                                    builder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            UpdateActivity ua = new UpdateActivity(getActivity(), getActivity());
-                                                            ua.execute(resp.toString());
-                                                            dialog.dismiss();
-                                                        }
-                                                    });
-                                                    builder.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialog, int which) {
-                                                            dialog.dismiss();
-                                                        }
-                                                    });
-                                                    builder.create().show();
-                                                }
-                                            });
+                                if (!version.toString().equals(BuildConfig.VERSION_NAME)) {
+                                    ((SettingsActivity) getActivity()).showUpdateDialog(version);
+                                } else {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(getActivity().getApplication(), getResources().getString(R.string.no_new_version_available), Toast.LENGTH_SHORT).show();
                                         }
-                                    } else {
-                                        getActivity().runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(getActivity().getApplication(), getResources().getString(R.string.no_new_version_available), Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
+                                    });
                                 }
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 getActivity().runOnUiThread(new Runnable() {
@@ -323,6 +278,28 @@ public class SettingsActivity extends Activity {
         getFragmentManager().beginTransaction().replace(R.id.content_wrapper, frag, "gg_settings_frag").commit();
 
         setContentView(contentView);
+
+        if(getIntent().getBooleanExtra("update", false)) {
+            final String version = getIntent().getStringExtra("version");
+
+            new AsyncTask<Object, Object, Object>() {
+                @Override
+                public Object doInBackground(Object... objects) {
+                    try {
+                        showUpdateDialog(version);
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                        SettingsActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplication(), getResources().getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    return null;
+                }
+            }.execute();
+        }
     }
 
 
@@ -351,6 +328,64 @@ public class SettingsActivity extends Activity {
         Intent i = new Intent();
         setResult(changed ? RESULT_OK : RESULT_CANCELED, i);
         super.finish();
+    }
+
+    public static String getVersion() throws Exception {
+        HttpsURLConnection con = (HttpsURLConnection) new URL("https://gymnasium-glinde.logoip.de/infoapp/update.php?version").openConnection();
+        con.setRequestMethod("POST");
+        con.setSSLSocketFactory(GGProvider.sslSocketFactory);
+
+        if (con.getResponseCode() == 200) {
+            BufferedInputStream in = new BufferedInputStream(con.getInputStream());
+            Scanner scan = new Scanner(in);
+            final StringBuilder resp = new StringBuilder("");
+            while (scan.hasNextLine())
+                resp.append(scan.nextLine());
+            scan.close();
+            return resp.toString();
+        }
+        return null;
+
+    }
+
+    public void showUpdateDialog(final String version) throws Exception {
+        HttpsURLConnection con_changelog = (HttpsURLConnection) new URL("https://gymnasium-glinde.logoip.de/infoapp/update.php?changelog="+version).openConnection();
+        con_changelog.setRequestMethod("GET");
+        con_changelog.setSSLSocketFactory(GGProvider.sslSocketFactory);
+
+        if(con_changelog.getResponseCode() == 200) {
+            BufferedInputStream in_changelog = new BufferedInputStream(con_changelog.getInputStream());
+            Scanner scan_changelog = new Scanner(in_changelog);
+            String resp_changelog = "";
+            while (scan_changelog.hasNextLine())
+                resp_changelog += scan_changelog.nextLine();
+            scan_changelog.close();
+            final String final_resp_changelog = resp_changelog;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+                    builder.setTitle(getResources().getString(R.string.update_available));
+                    builder.setMessage(Html.fromHtml(getResources().getString(R.string.should_the_app_be_updated) + "<br><br>Changelog:<br>" +
+                            final_resp_changelog.replace("|", "<br>").replace("*", "&#8226;")));
+                    builder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            UpdateActivity ua = new UpdateActivity(SettingsActivity.this, SettingsActivity.this);
+                            ua.execute(version.toString());
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.setNegativeButton(getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+                }
+            });
+        }
     }
 
 }
