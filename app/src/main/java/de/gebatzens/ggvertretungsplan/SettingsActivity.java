@@ -199,7 +199,7 @@ public class SettingsActivity extends Activity {
                         builder.setPositiveButton(getResources().getString(R.string.yes), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                GGApp.GG_APP.provider.logout((Boolean) cb.isChecked());
+                                GGApp.GG_APP.provider.logout(false, (Boolean) cb.isChecked());
                                 changed = true;
                                 pref_username.setSummary(getResources().getString(R.string.youre_not_logged_in));
                                 dialog.dismiss();

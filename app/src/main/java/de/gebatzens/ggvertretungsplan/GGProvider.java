@@ -65,7 +65,15 @@ public class GGProvider extends VPProvider {
         super(gg);
 
         prefs = gg.getSharedPreferences("gguser", Context.MODE_PRIVATE);
-        sessId = prefs.getString("sessid", null);
+        //sessId = prefs.getString("sessid", null);
+        new AsyncTask<Object, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Object... params) {
+                startNewSession(prefs.getString("token", null));
+                return null;
+            }
+        }.execute();
 
     }
 
@@ -77,6 +85,11 @@ public class GGProvider extends VPProvider {
             HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/token.php?token=" + token).openConnection();
             con.setSSLSocketFactory(sslSocketFactory);
 
+            if(con.getResponseCode() == 401) {
+                logout(true, true);
+                throw new VPLoginException();
+            }
+
             Scanner scan = new Scanner(new BufferedInputStream(con.getInputStream()));
             String resp = "";
             while(scan.hasNextLine())
@@ -87,7 +100,7 @@ public class GGProvider extends VPProvider {
             Matcher m = p.matcher(resp);
             if(m.find()) {
                 sessId = m.group(1);
-                prefs.edit().putString("sessid", sessId).apply();
+                //prefs.edit().putString("sessid", sessId).apply();
             } else {
                 sessId = null;
                 //Token invalid
@@ -100,7 +113,7 @@ public class GGProvider extends VPProvider {
     }
 
     @Override
-    public void logout(Boolean delete_token) {
+    public void logout(Boolean logout_local_only, Boolean delete_token) {
         GGApp.GG_APP.deleteFile("gguserinfo");
         GGApp.GG_APP.deleteFile("ggvptoday");
         GGApp.GG_APP.deleteFile("ggvptomorrow");
@@ -111,57 +124,59 @@ public class GGProvider extends VPProvider {
         } else {
             delete_token_string = "false";
         }
-        new AsyncTask<String, String, String>() {
-            @Override
-            public String doInBackground(String... s) {
+        if(!logout_local_only) {
+            new AsyncTask<String, String, String>() {
+                @Override
+                public String doInBackground(String... s) {
 
-                if((s[0] != null) && !s[0].isEmpty()) {
-                    try {
-                        String connect_string;
-                        if((s[1]!=null) && s[1].equals("true")) {
-                            connect_string = BASE_URL + "infoapp/logout.php?deltoken=true&sessid=" + s[0];
-                        } else {
-                            connect_string = BASE_URL + "infoapp/logout.php?sessid=" + s[0];
+                    if ((s[0] != null) && !s[0].isEmpty()) {
+                        try {
+                            String connect_string;
+                            if ((s[1] != null) && s[1].equals("true")) {
+                                connect_string = BASE_URL + "infoapp/logout.php?deltoken=true&sessid=" + s[0];
+                            } else {
+                                connect_string = BASE_URL + "infoapp/logout.php?sessid=" + s[0];
+                            }
+                            HttpsURLConnection con = (HttpsURLConnection) new URL(connect_string).openConnection();
+                            con.setRequestMethod("GET");
+                            con.setSSLSocketFactory(sslSocketFactory);
+                            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                            StringBuilder sb = new StringBuilder();
+                            String line;
+                            while ((line = br.readLine()) != null) {
+                                sb.append(line);
+                            }
+                            Log.e("Response", sb.toString());
+                            if (sb.toString().contains("<state>true</state>")) {
+                                GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(GGApp.GG_APP.activity.getApplicationContext(), GGApp.GG_APP.getResources().getString(R.string.logout_successfull), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            } else {
+                                GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(GGApp.GG_APP.activity.getApplicationContext(), GGApp.GG_APP.getResources().getString(R.string.logout_error), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        HttpsURLConnection con = (HttpsURLConnection) new URL(connect_string).openConnection();
-                        con.setRequestMethod("GET");
-                        con.setSSLSocketFactory(sslSocketFactory);
-                        BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                        StringBuilder sb = new StringBuilder();
-                        String line;
-                        while((line = br.readLine()) != null) {
-                            sb.append(line);
-                        }
-                        Log.e("Response",sb.toString());
-                        if(sb.toString().contains("<state>true</state>")) {
-                            GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(GGApp.GG_APP.activity.getApplicationContext(),GGApp.GG_APP.getResources().getString(R.string.logout_successfull),Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        } else {
-                            GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(GGApp.GG_APP.activity.getApplicationContext(),GGApp.GG_APP.getResources().getString(R.string.logout_error),Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                GGApp.GG_APP.activity.mContent.updateFragment();
+                            }
+                        });
+
                     }
-                    GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            GGApp.GG_APP.activity.mContent.updateFragment();
-                        }
-                    });
-
+                    return null;
                 }
-                return null;
-            }
-        }.execute(sessId, delete_token_string);
+            }.execute(sessId, delete_token_string);
+        }
         sessId = null;
     }
 
@@ -185,6 +200,12 @@ public class GGProvider extends VPProvider {
             HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/infoapp_provider_new.php?site=substitutionplan&sessid=" + sessId).openConnection();
             con.setRequestMethod("GET");
             con.setSSLSocketFactory(sslSocketFactory);
+
+            if(con.getResponseCode() == 401) {
+                session = false;
+                logout(true, true);
+                throw new VPLoginException();
+            }
 
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -328,6 +349,11 @@ public class GGProvider extends VPProvider {
              * 4 - Title
              * 5 - Text
              */
+
+            if(con.getResponseCode() == 401) {
+                logout(true, true);
+                throw new VPLoginException();
+            }
 
             if (con.getResponseCode() == 200) {
                 XmlPullParser parser = Xml.newPullParser();
