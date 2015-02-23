@@ -84,7 +84,7 @@ public class GGApp extends Application {
     public void createNotification(int icon, String title, String message, Intent intent, int id, String... strings) {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_gg_star)
+                        .setSmallIcon(icon)
                         .setContentTitle(title)
                         .setContentText(message);
         if(strings.length > 1) {
