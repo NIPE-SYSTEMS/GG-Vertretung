@@ -110,13 +110,13 @@ public class GGBroadcast extends BroadcastReceiver {
             Log.d("ggvp", "Morgenstd nicht gleich " + tmn.length + " " + tm.length);
         }
 
-        if(!today.date.equals(p.getProperty("todaydate"))) {
+        if(today.date.getTime() != Long.parseLong(p.getProperty("todaydate"))) {
             b = true;
             Log.d("ggvp", "Datum anders: " + today.date + " " + p.getProperty("todaydate"));
         }
 
         //Nichts neues, morgen fällt nichts aus
-        if(today.date.equals(p.getProperty("tomdate")) && tmn.length == 0 && tdn.length == tm.length) {
+        if(today.date.getTime() == Long.parseLong(p.getProperty("tomdate")) && tmn.length == 0 && tdn.length == tm.length) {
             b = false;
         }
 
