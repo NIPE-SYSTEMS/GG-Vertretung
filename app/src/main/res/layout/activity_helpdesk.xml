@@ -1,66 +1,88 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    android:clipToPadding="false"
+    android:background="#ffffffff">
+
     <android.support.v7.widget.Toolbar
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         app:theme="@style/ToolBarStyle"/>
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="10dp"
-        android:id="@+id/ShaderTabLayout"
-        android:background="@drawable/tablayoutbackground"/>
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:weightSum="1">
+        android:layout_height="match_parent">
 
-        <EditText
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/reportName"
-            android:layout_gravity="center_horizontal"
-            android:hint="@string/name" />
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:ems="10"
-            android:id="@+id/reportEmail"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:hint="@string/email_address" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:padding="15dp"
+                    android:inputType="text"
+                    android:id="@+id/reportName"
+                    android:hint="@string/name" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/reportSubject"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:hint="@string/email_subject" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#cccccc"/>
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="116dp"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:id="@+id/reportMessage"
-            android:layout_weight="0.70"
-            android:layout_marginTop="10dp"
-            android:hint="@string/message" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:padding="15dp"
+                    android:inputType="textEmailAddress"
+                    android:id="@+id/reportEmail"
+                    android:hint="@string/email_address" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/submit"
-            android:id="@+id/reportSubmit"
-            android:layout_gravity="right" />
-    </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#cccccc"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:padding="15dp"
+                    android:inputType="text"
+                    android:id="@+id/reportSubject"
+                    android:hint="@string/email_subject" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#cccccc"/>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#00000000"
+                    android:gravity="top"
+                    android:padding="15dp"
+                    android:inputType="textMultiLine"
+                    android:id="@+id/reportMessage"
+                    android:hint="@string/message" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="10dp"
+            android:id="@+id/ShaderTabLayout"
+            android:background="@drawable/tablayoutbackground"/>
+
+    </RelativeLayout>
 </LinearLayout>
