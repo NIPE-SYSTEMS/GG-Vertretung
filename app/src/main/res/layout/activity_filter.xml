@@ -81,6 +81,10 @@
             android:layout_height="wrap_content"
             android:id="@+id/filter_list"
             android:drawSelectorOnTop="true"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="87.9dp"/>
     </LinearLayout>
     </ScrollView>
 
