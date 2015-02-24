@@ -21,6 +21,8 @@ package de.gebatzens.ggvertretungsplan;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -82,8 +84,10 @@ public class NewsFragmentListAdapter extends BaseAdapter {
         //imgIcon.setImageResource(mIcnewson[position]);
 
         if(mDatabaseHelper.checkNewsRead(mArrayList.get(position)[4])) {
-            txtTitle.setTextColor(GGApp.GG_APP.provider.getColor());
-            txtTitle.setText("(" + context.getResources().getString(R.string.read) + ") " + mArrayList.get(position)[4]);
+            txtDate.setTextColor(Color.parseColor("#727272"));
+            txtDate.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+            txtTitle.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+            txtContent.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
         }
 
         return itemView;
