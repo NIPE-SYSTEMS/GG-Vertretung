@@ -43,7 +43,7 @@ public class NewsFragmentDatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db)h {
+    public void onCreate(SQLiteDatabase db) {
         db.execSQL(NEWS_TABLE_CREATE);
     }
 
