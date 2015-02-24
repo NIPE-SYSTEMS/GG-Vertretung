@@ -22,6 +22,7 @@ package de.gebatzens.ggvertretungsplan;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 import android.util.Xml;
 import android.widget.Toast;
@@ -32,9 +33,14 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.cert.CertificateException;
@@ -73,8 +79,47 @@ public class GGProvider extends VPProvider {
                 startNewSession(prefs.getString("token", null));
                 return null;
             }
+
+            @Override
+            protected void onPostExecute(Void result) {
+                write_log("Current TOKEN: " + prefs.getString("token", null));
+                write_log("Current SESSID: " + sessId);
+                new AsyncTask<Object, Void, Void>() {
+
+                    @Override
+                    protected Void doInBackground(Object... obj) {
+                        write_log("Current LOGINSTATE: " + checkLoginState());
+                        return null;
+                    }
+                }.execute();
+            }
         }.execute();
 
+    }
+
+    private String checkLoginState() {
+        try {
+            HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/infoapp_provider_new.php?site=profile&sessid=" + sessId).openConnection();
+            con.setRequestMethod("GET");
+            con.setSSLSocketFactory(sslSocketFactory);
+            if(con.getResponseCode() == 401) {
+                return "false";
+            } else if(con.getResponseCode() == 200) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while((line = br.readLine()) != null) {
+                    sb.append(line);
+                }
+                write_log("From 'public void checkLoginState()': " + sb.toString());
+                return "true";
+            } else {
+                return "false";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "false";
+        }
     }
 
     private void startNewSession(String token) {
@@ -86,7 +131,7 @@ public class GGProvider extends VPProvider {
             con.setSSLSocketFactory(sslSocketFactory);
 
             if(con.getResponseCode() == 401) {
-                logout(true, true);
+                logout(true, false);
                 sessId = null;
                 return;
             }
@@ -528,6 +573,25 @@ public class GGProvider extends VPProvider {
     @Override
     public String getUsername() {
         return prefs.getString("username", null);
+    }
+
+    private void write_log(String log_entry) {
+        //File file = GGApp.GG_APP.getApplicationContext().openFileOutput("",Context.MODE_APPEND);
+        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+            //no SDCARD
+        } else {
+            String filename = Environment.getExternalStorageDirectory()+File.separator+"schulinfoapp_log.txt";
+            PrintWriter writer = null;
+            try {
+                writer = new PrintWriter(new FileOutputStream(new File(filename), true));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Long tsLong = System.currentTimeMillis()/1000;
+            String ts = tsLong.toString();
+            writer.println("[" + ts + "] " + log_entry);
+            writer.close();
+        }
     }
 
     private static TrustManager[] ggTrustMgr = new TrustManager[]{ new X509TrustManager() {
