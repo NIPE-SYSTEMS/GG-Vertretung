@@ -114,17 +114,11 @@ public class GGProvider extends VPProvider {
     }
 
     @Override
-    public void logout(Boolean logout_local_only, Boolean delete_token) {
+    public void logout(Boolean logout_local_only, final Boolean delete_token) {
         GGApp.GG_APP.deleteFile("gguserinfo");
         GGApp.GG_APP.deleteFile("ggvptoday");
         GGApp.GG_APP.deleteFile("ggvptomorrow");
         prefs.edit().clear().apply();
-        String delete_token_string;
-        if(delete_token) {
-            delete_token_string = "true";
-        } else {
-            delete_token_string = "false";
-        }
         if(!logout_local_only) {
             new AsyncTask<String, String, String>() {
                 @Override
@@ -133,7 +127,7 @@ public class GGProvider extends VPProvider {
                     if ((s[0] != null) && !s[0].isEmpty()) {
                         try {
                             String connect_string;
-                            if ((s[1] != null) && s[1].equals("true")) {
+                            if (delete_token) {
                                 connect_string = BASE_URL + "infoapp/logout.php?deltoken=true&sessid=" + s[0];
                             } else {
                                 connect_string = BASE_URL + "infoapp/logout.php?sessid=" + s[0];
@@ -176,7 +170,7 @@ public class GGProvider extends VPProvider {
                     }
                     return null;
                 }
-            }.execute(sessId, delete_token_string);
+            }.execute(sessId);
         }
         sessId = null;
     }

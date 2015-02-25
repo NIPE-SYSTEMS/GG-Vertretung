@@ -57,12 +57,13 @@ public class GGContentFragment extends RemoteDataFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         bundle = ((MainActivity) getActivity()).savedState;
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        mGGFrag = new GGFragmentAdapter(getActivity().getSupportFragmentManager(), savedInstanceState, (MainActivity) getActivity());
+        mGGFrag = new GGFragmentAdapter(this, savedInstanceState, (MainActivity) getActivity());
         if(bundle != null) {
             mGGFrag.heute.spinnerPos = bundle.getInt("ggvp_frag_today_spinner");
             mGGFrag.morgen.spinnerPos = bundle.getInt("ggvp_frag_tomorrow_spinner");
         }
         mViewPager.setAdapter(mGGFrag);
+        mViewPager.setOffscreenPageLimit(3);
         if(bundle != null)
             mViewPager.setCurrentItem(bundle.getInt("ggvp_tab"));
 

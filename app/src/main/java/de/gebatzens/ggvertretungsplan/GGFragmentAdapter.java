@@ -34,8 +34,8 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
     GGFragment heute, morgen, overview;
     MainActivity mActivity;
 
-    public GGFragmentAdapter(FragmentManager m, Bundle savedState, MainActivity ma) {
-        super(m);
+    public GGFragmentAdapter(Fragment m, Bundle savedState, MainActivity ma) {
+        super(m.getChildFragmentManager());
         createFragments();
         mActivity = ma;
 
