@@ -152,6 +152,7 @@ public class GGProvider extends VPProvider {
                 //Token invalid
             }
         } catch(Exception e) {
+            write_log(e.toString());
             e.printStackTrace();
         }
 
@@ -209,6 +210,7 @@ public class GGProvider extends VPProvider {
                                 });
                             }
                         } catch (Exception e) {
+                            write_log(e.toString());
                             e.printStackTrace();
                         }
                         GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
@@ -302,6 +304,7 @@ public class GGProvider extends VPProvider {
             }
 
         } catch(Exception e) {
+            write_log(e.toString());
             e.printStackTrace();
 
             if(session && (e instanceof XmlPullParserException || e instanceof VPLoginException)) {
@@ -445,6 +448,7 @@ public class GGProvider extends VPProvider {
                 n.save("ggnews");
             }
         } catch (Exception e) {
+            write_log(e.toString());
             e.printStackTrace();
             if(!n.load("ggnews")) {
                 n.throwable = e;
@@ -554,6 +558,7 @@ public class GGProvider extends VPProvider {
 
 
         } catch (Exception e) {
+            write_log(e.toString());
             e.printStackTrace();
             if (e instanceof IOException)
                 return 2;
