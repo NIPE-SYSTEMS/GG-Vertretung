@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 import android.view.Gravity;
@@ -62,7 +63,7 @@ public class NewsFragment extends RemoteDataFragment {
     public void onViewCreated(View v, Bundle b) {
         super.onViewCreated(v, b);
 
-        /*final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.news_refresh);
+        final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.news_refresh);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -78,7 +79,7 @@ public class NewsFragment extends RemoteDataFragment {
                         });
 
                     }
-                }, true, GGApp.FragmentType.PLAN);
+                }, true, GGApp.FragmentType.NEWS);
             }
         });
         // Configure the refreshing colors
@@ -86,7 +87,7 @@ public class NewsFragment extends RemoteDataFragment {
                 R.color.custom_material_red,
                 R.color.custom_material_blue,
                 R.color.custom_material_orange);
-        */
+
 
         if(GGApp.GG_APP.plans == null) {
             ((ViewGroup) getView().findViewById(R.id.news_content)).addView(createLoadingView());
