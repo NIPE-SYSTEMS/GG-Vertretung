@@ -143,14 +143,14 @@ public class GGBroadcast extends BroadcastReceiver {
             if(!stdt.isEmpty())
                 stdt = stdt.substring(0, stdt.length() - 2);
             else
-                stdt = "Nichts";
+                stdt = gg.getString(R.string.nothing);
             String stdtm = "";
             for(String s : tmn)
                 stdtm += s + ", ";
             if(!stdtm.isEmpty())
                 stdtm = stdtm.substring(0, stdtm.length() - 2);
             else
-                stdtm = "Nichts";
+                stdtm = gg.getString(R.string.nothing);
             gg.createNotification(R.drawable.ic_gg_star, gg.getString(R.string.substitutionplan_change), gg.getString(R.string.the_sp_has_changed),
                     new Intent(gg, MainActivity.class), 123, gg.getString(R.string.affected_lessons) , VPProvider.getWeekday(today.date) + ": " + stdt,
                     VPProvider.getWeekday(tomo.date) + ": " + stdtm);

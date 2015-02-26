@@ -107,5 +107,6 @@
     <string name="infoappupdate">SchulinfoAPP Update</string>
     <string name="appupdate_available">Ein Update für die SchulinfoAPP ist verfügbar</string>
     <string name="read">Gelesen</string>
+    <string name="nothing">Nichts</string>
 
 </resources>

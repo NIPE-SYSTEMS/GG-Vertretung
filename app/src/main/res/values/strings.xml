@@ -77,7 +77,7 @@
     <string name="as_of">As of</string>
     <string name="refresh">Refresh</string>
     <string name="filter">Filter</string>
-    <string name="filters">Filters</string>
+    <string name="filters">Subject filters</string>
     <string name="teacher">Teacher</string>
     <string name="subject_course">Subject</string>
     <string name="invalid_filter">Invalid filter</string>
@@ -107,5 +107,6 @@
     <string name="infoappupdate">SchulinfoAPP update</string>
     <string name="appupdate_available">An update for the SchulinfoAPP is available</string>
     <string name="read">Read</string>
+    <string name="nothing">Nothing</string>
 
 </resources>
