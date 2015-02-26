@@ -118,7 +118,7 @@ public class GGProvider extends VPProvider {
         GGApp.GG_APP.deleteFile("gguserinfo");
         GGApp.GG_APP.deleteFile("ggvptoday");
         GGApp.GG_APP.deleteFile("ggvptomorrow");
-        prefs.edit().clear().apply();
+        prefs.edit().clear().commit();
         if(!logout_local_only) {
             new AsyncTask<String, String, String>() {
                 @Override
@@ -197,8 +197,8 @@ public class GGProvider extends VPProvider {
             con.setSSLSocketFactory(sslSocketFactory);
 
             if(con.getResponseCode() == 401) {
-                session = false;
-                logout(true, true);
+                if(!session)
+                    logout(true, true);
                 throw new VPLoginException();
             }
 

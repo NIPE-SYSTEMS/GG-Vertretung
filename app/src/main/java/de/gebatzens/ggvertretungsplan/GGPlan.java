@@ -259,7 +259,7 @@ public class GGPlan {
                 type =  GGApp.GG_APP.getResources().getString(R.string.elemination);
 
                 if(aufgm.find())
-                    comment =  GGApp.GG_APP.getResources().getString(R.string.task_through) + aufgm.group(1);
+                    comment =  GGApp.GG_APP.getResources().getString(R.string.task_through) + " " + aufgm.group(1);
                 else
                     comment = "";
             } else if(commentl.contains("klausur")) {
@@ -296,7 +296,7 @@ public class GGPlan {
             else if(!subject.isEmpty() && !repsub.isEmpty() && !subject.equals(repsub))
                 subject += " &#x2192; " + repsub;
 
-
+            comment = comment.replace("  ", " ");
 
         }
     }
