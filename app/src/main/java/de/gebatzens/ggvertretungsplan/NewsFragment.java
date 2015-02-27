@@ -99,6 +99,7 @@ public class NewsFragment extends RemoteDataFragment {
         int p = GGFragment.toPixels(10);
         //lv.getDivider().setColorFilter(GGApp.GG_APP.provider.getColor(), PorterDuff.Mode.ADD);
         lv.setDrawSelectorOnTop(true);
+        lv.setDivider(getResources().getDrawable(R.drawable.listview_divider));
         ((LinearLayout) view.findViewById(R.id.news_content)).addView(lv);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
