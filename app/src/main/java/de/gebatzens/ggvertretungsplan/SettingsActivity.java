@@ -37,6 +37,7 @@ import android.preference.PreferenceFragment;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -271,7 +272,6 @@ public class SettingsActivity extends Activity {
                 finish();
             }
         });
-
         mToolBar.setTitle(getTitle());
 
         frag = new GGPFragment();

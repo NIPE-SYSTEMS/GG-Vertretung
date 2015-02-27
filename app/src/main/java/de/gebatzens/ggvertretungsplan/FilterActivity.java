@@ -150,8 +150,27 @@ public class FilterActivity extends Activity {
                 finish();
             }
         });
-
+        mToolBar.inflateMenu(R.menu.filter_menu);
         mToolBar.setTitle(getTitle());
+
+        mToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                if(menuItem.getItemId() == R.id.action_help) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(FilterActivity.this);
+                    builder.setTitle(getApplication().getString(R.string.help));
+                    builder.setMessage(getApplication().getString(R.string.helptext));
+                    builder.setPositiveButton("Schließen", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    builder.create().show();
+                }
+                return false;
+            }
+        });
 
         mAddFilterButton = (ImageButton) findViewById(R.id.addfilter_button);
         mAddFilterButton.setBackgroundResource(R.drawable.floating_action_circle);
