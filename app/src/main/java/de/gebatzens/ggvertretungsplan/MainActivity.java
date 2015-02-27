@@ -89,6 +89,12 @@ public class MainActivity extends FragmentActivity {
         GGApp.GG_APP.activity = this;
         savedState = savedInstanceState;
 
+        Intent intent = getIntent();
+        if(intent != null && intent.getStringExtra("fragment") != null) {
+            GGApp.FragmentType type = GGApp.FragmentType.valueOf(intent.getStringExtra("fragment"));
+            GGApp.GG_APP.setFragmentType(type);
+        }
+
         NotificationManager nm =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         nm.cancel(123);
