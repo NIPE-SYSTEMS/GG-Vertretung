@@ -23,7 +23,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
+import android.widget.ListView;
 import android.widget.ScrollView;
 
 public class NewsSwipeLayout extends SwipeRefreshLayout {
@@ -39,7 +41,12 @@ public class NewsSwipeLayout extends SwipeRefreshLayout {
             case MotionEvent.ACTION_MOVE:
 
                 if(GGApp.GG_APP.getFragmentType() == GGApp.FragmentType.NEWS) {
-                    int i = ((NewsFragment) ((MainActivity) getContext()).mContent).lv.getFirstVisiblePosition();
+                    ListView lv = ((NewsFragment) ((MainActivity) getContext()).mContent).lv;
+                    if(lv.getChildCount() == 0)
+                        return super.onInterceptTouchEvent(event);
+
+                    View c = lv.getChildAt(0);
+                    int i = -c.getTop() + lv.getFirstVisiblePosition() * c.getHeight();
 
                     if (i != 0)
                         return false;
