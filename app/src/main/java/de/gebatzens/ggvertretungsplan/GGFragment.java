@@ -111,7 +111,7 @@ public class GGFragment extends Fragment {
         vg.addView(createLoadingView());
     }
 
-    private static int toPixels(float dp) {
+    public static int toPixels(float dp) {
         float scale = GGApp.GG_APP.getResources().getDisplayMetrics().density;
         return (int) (dp * scale);
     }

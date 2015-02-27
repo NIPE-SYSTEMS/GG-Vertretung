@@ -96,6 +96,8 @@ public class NewsFragment extends RemoteDataFragment {
 
     private void createView(LayoutInflater inflater, ViewGroup view) {
         lv = new ListView(getActivity());
+        int p = GGFragment.toPixels(10);
+        //lv.getDivider().setColorFilter(GGApp.GG_APP.provider.getColor(), PorterDuff.Mode.ADD);
         lv.setDrawSelectorOnTop(true);
         ((LinearLayout) view.findViewById(R.id.news_content)).addView(lv);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -58,7 +58,7 @@ public class NewsFragmentListAdapter extends BaseAdapter {
         TextView txtDate = (TextView) itemView.findViewById(R.id.newsDate);
         TextView txtTitle = (TextView) itemView.findViewById(R.id.newsTitle);
         TextView txtContent = (TextView) itemView.findViewById(R.id.newsContent);
-        ImageView imgIcon = (ImageView) itemView.findViewById(R.id.newsIcon);
+        //ImageView imgIcon = (ImageView) itemView.findViewById(R.id.newsIcon);
 
         DateFormat parser = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         DateFormat dateFormatter = new SimpleDateFormat("d. MMM yy");
@@ -77,10 +77,10 @@ public class NewsFragmentListAdapter extends BaseAdapter {
         txtDate.setTextColor(GGApp.GG_APP.provider.getColor());
         txtTitle.setText(mArrayList.get(position)[4]);
         txtContent.setText(Html.fromHtml(mArrayList.get(position)[5]));
-        imgIcon.setImageResource(R.drawable.news_icon_white);
-        imgIcon.setBackgroundResource(R.drawable.news_img_background);
-        GradientDrawable drawable = (GradientDrawable) imgIcon.getBackground();
-        drawable.setColor(GGApp.GG_APP.provider.getColor());
+        //imgIcon.setImageResource(R.drawable.news_icon_white);
+       // imgIcon.setBackgroundResource(R.drawable.news_img_background);
+        //GradientDrawable drawable = (GradientDrawable) imgIcon.getBackground();
+        //drawable.setColor(GGApp.GG_APP.provider.getColor());
         //imgIcon.setImageResource(mIcnewson[position]);
 
         if(mDatabaseHelper.checkNewsRead(mArrayList.get(position)[4])) {

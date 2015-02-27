@@ -10,14 +10,14 @@
 
     <EditText android:layout_height="wrap_content"
         android:id="@+id/usernameInput"
-        android:hint="Benutzername"
+        android:hint="@string/username"
         android:singleLine="true"
         android:layout_width="match_parent"/>
 
     <EditText android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:id="@+id/passwordInput"
-        android:hint="Passwort"
+        android:hint="@string/password"
         android:layout_width="match_parent"/>
 
 </LinearLayout>

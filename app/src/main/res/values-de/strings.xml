@@ -110,5 +110,6 @@
     <string name="nothing">Nichts</string>
     <string name="help">Hilfe</string>
     <string name="helptext"></string>
+    <string name="password">Passwort</string>
 
 </resources>
