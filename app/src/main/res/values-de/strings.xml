@@ -111,5 +111,7 @@
     <string name="help">Hilfe</string>
     <string name="helptext"></string>
     <string name="password">Passwort</string>
+    <string name="vegi">Vegetarisch</string>
+    <string name="garnish">Beilage</string>
 
 </resources>

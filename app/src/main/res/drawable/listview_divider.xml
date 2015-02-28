@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <inset xmlns:android="http://schemas.android.com/apk/res/android"
-    android:insetLeft="5dp"
-    android:insetRight="5dp" >
+    android:insetLeft="8dp"
+    android:insetRight="8dp" >
 
     <shape>
         <solid android:color="#d1d1d1" />

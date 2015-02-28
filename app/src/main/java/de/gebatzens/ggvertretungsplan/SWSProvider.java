@@ -174,6 +174,10 @@ public class SWSProvider extends VPProvider {
         return new NewsFragment.News();
     }
 
+    public MensaFragment.Mensa getMensa() {
+        return new MensaFragment.Mensa();
+    }
+
     @Override
     public int getColor() {
         return GGApp.GG_APP.getResources().getColor(R.color.main_blue);

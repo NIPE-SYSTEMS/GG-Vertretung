@@ -405,6 +405,78 @@ public class GGProvider extends VPProvider {
         }
     }
 
+    public MensaFragment.Mensa getMensa() {
+        MensaFragment.Mensa m = new MensaFragment.Mensa();
+        try {
+            HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/infoapp_provider_new.php?site=mensa&sessid="+sessId).openConnection();
+            con.setRequestMethod("GET");
+            con.setSSLSocketFactory(GGProvider.sslSocketFactory);
+
+            /*
+             * 0 - ID
+             * 1 - Date
+             * 2 - Meal
+             * 3 - Garnish
+             * 4 - Vegi
+             */
+
+            if(con.getResponseCode() == 401) {
+                logout(true, true);
+                throw new VPLoginException();
+            }
+
+            if (con.getResponseCode() == 200) {
+                XmlPullParser parser = Xml.newPullParser();
+                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                parser.setInput(new BufferedReader(new InputStreamReader(con.getInputStream())));
+                parser.nextTag();
+                parser.require(XmlPullParser.START_TAG, null, "mensa");
+
+                while (parser.next() != XmlPullParser.END_TAG) {
+                    if (parser.getEventType() != XmlPullParser.START_TAG)
+                        continue;
+
+                    String name = parser.getName();
+                    if (name.equals("item")) {
+
+                        String[] s = new String[5];
+                        m.add(s);
+
+                        while (parser.next() != XmlPullParser.END_TAG) {
+                            if (parser.getEventType() != XmlPullParser.START_TAG)
+                                continue;
+
+                            if (parser.getName().equals("id"))
+                                s[0] = parser.nextText();
+
+                            else if (parser.getName().equals("date"))
+                                s[1] = parser.nextText();
+
+                            else if (parser.getName().equals("meal"))
+                                s[2] = parser.nextText();
+
+                            else if (parser.getName().equals("garnish"))
+                                s[3] = parser.nextText();
+
+                            else if (parser.getName().equals("vegi"))
+                                s[4] = parser.nextText();
+                        }
+                    }
+                }
+                m.save("ggmensa");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if(!m.load("ggmensa")) {
+                m.throwable = e;
+                return m;
+            }
+
+        } finally {
+            return m;
+        }
+    }
+
     @Override
     public int getColor() {
         return GGApp.GG_APP.getResources().getColor(R.color.main_orange);

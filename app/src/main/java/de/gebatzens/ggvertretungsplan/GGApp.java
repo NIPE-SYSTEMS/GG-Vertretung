@@ -41,6 +41,7 @@ public class GGApp extends Application {
 
     public GGPlan[] plans = null;
     public NewsFragment.News news;
+    public MensaFragment.Mensa mensa;
     public MainActivity activity;
     public VPProvider provider;
     public static final int UPDATE_DISABLE = 0, UPDATE_WLAN = 1, UPDATE_ALL = 2;
@@ -200,7 +201,7 @@ public class GGApp extends Application {
                         news = provider.getNews();
                         break;
                     case MENSA:
-                        //TODO
+                        mensa = provider.getMensa();
                         break;
                 }
 
