@@ -50,6 +50,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class MensaFragment extends RemoteDataFragment {
 
@@ -185,11 +186,11 @@ public class MensaFragment extends RemoteDataFragment {
         cardColorIndex++;
         if(cardColorIndex == colors.length)
             cardColorIndex = 0;
-        ((TextView) mcv.findViewById(R.id.mcv_date)).setText(mensa_item.date);
+        ((TextView) mcv.findViewById(R.id.mcv_date)).setText(getFormatedDate(mensa_item.date));
         ((TextView) mcv.findViewById(R.id.mcv_meal)).setText(mensa_item.meal);
-        ((TextView) mcv.findViewById(R.id.mcv_garnish)).setText(mensa_item.garnish);
+        ((TextView) mcv.findViewById(R.id.mcv_garnish)).setText(getResources().getString(R.string.garnish) + ": " + mensa_item.garnish.replace("mit ","").replace("mit",""));
         ((TextView) mcv.findViewById(R.id.mcv_day)).setText(getDayByDate(mensa_item.date));
-        ((TextView) mcv.findViewById(R.id.mcv_vegi)).setText("Vegi: " + ((Integer.valueOf(mensa_item.vegi) == 1) ? getResources().getString(R.string.yes) : getResources().getString(R.string.no)));
+        ((TextView) mcv.findViewById(R.id.mcv_vegi)).setText(getResources().getString(R.string.vegi) + ": " + ((Integer.valueOf(mensa_item.vegi) == 1) ? getResources().getString(R.string.yes) : getResources().getString(R.string.no)));
         return mcv;
     }
 
@@ -208,6 +209,30 @@ public class MensaFragment extends RemoteDataFragment {
         String formattedDate;
         DateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat dateFormatter = new SimpleDateFormat("EEE");
+        try
+        {
+            Date parsedDate = parser.parse(date);
+            formattedDate = dateFormatter.format(parsedDate);
+            return formattedDate;
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    private String getFormatedDate(String date) {
+        String formattedDate;
+        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dateFormatter;
+        if(Locale.getDefault().getLanguage().equals("de")) {
+            dateFormatter = new SimpleDateFormat("d. MMM");
+        } else if(Locale.getDefault().getLanguage().equals("en")) {
+            dateFormatter = new SimpleDateFormat("MM/dd/yyyy");
+        } else {
+            dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        }
         try
         {
             Date parsedDate = parser.parse(date);
