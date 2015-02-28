@@ -201,7 +201,7 @@ public class MensaFragment extends RemoteDataFragment {
         ((TextView) mcv.findViewById(R.id.mcv_meal)).setText(mensa_item.meal);
         ((TextView) mcv.findViewById(R.id.mcv_garnish)).setText(getResources().getString(R.string.garnish) + ": " + mensa_item.garnish.replace("mit ","").replace("mit",""));
         ((TextView) mcv.findViewById(R.id.mcv_day)).setText(getDayByDate(mensa_item.date));
-        ((TextView) mcv.findViewById(R.id.mcv_vegi)).setText(getResources().getString(R.string.vegi) + ": " + ((Integer.valueOf(mensa_item.vegi) == 1) ? getResources().getString(R.string.yes) : getResources().getString(R.string.no)));
+        ((ImageView) mcv.findViewById(R.id.mcv_imgvegi)).setImageBitmap((Integer.valueOf(mensa_item.vegi) == 1) ? BitmapFactory.decodeResource(getResources(),R.drawable.vegi) : BitmapFactory.decodeResource(getResources(),R.drawable.meat));
         ViewHolder vh = new ViewHolder();
         vh.imgview = (ImageView) mcv.findViewById(R.id.mcv_image);
         vh.filename = mensa_item.image;
