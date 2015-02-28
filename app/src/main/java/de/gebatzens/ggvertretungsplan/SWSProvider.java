@@ -19,9 +19,11 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -176,6 +178,10 @@ public class SWSProvider extends VPProvider {
 
     public MensaFragment.Mensa getMensa() {
         return new MensaFragment.Mensa();
+    }
+
+    public Bitmap getMensaImage(String filename) throws IOException {
+        return null;
     }
 
     @Override

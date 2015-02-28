@@ -18,6 +18,9 @@
  */
 package de.gebatzens.ggvertretungsplan;
 
+import android.graphics.Bitmap;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.SimpleTimeZone;
@@ -67,6 +70,7 @@ public abstract class VPProvider {
     public abstract void logout(Boolean logout_local_only, Boolean delete_token);
     public abstract NewsFragment.News getNews();
     public abstract MensaFragment.Mensa getMensa();
+    public abstract Bitmap getMensaImage(String filename) throws IOException;
     public abstract int getColorArray();
 
     /**

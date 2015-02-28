@@ -3,54 +3,82 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:orientation="vertical">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/mcv_header_outer"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:id="@+id/header_outer_background">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="160dp">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <ImageView
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:id="@+id/mcv_image"
+                android:adjustViewBounds="true"/>
 
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/mcv_day"
-                    android:textSize="35dp"
-                    android:layout_marginBottom="-6dp"
-                    android:layout_marginTop="-6dp"
-                    android:textColor="#fff"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/mcv_date"
-                    android:textSize="15dp"
-                    android:textColor="#fff"/>
-            </LinearLayout>
+         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="25dp"
-            android:layout_marginStart="25dp"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#fff"
-                android:textSize="20dp"
-                android:id="@+id/mcv_meal"/>
+                android:id="@+id/mcv_header_outer"
+                android:paddingTop="4dp"
+                android:paddingRight="8dp"
+                android:paddingLeft="8dp"
+                android:alpha="0.8"
+                android:background="?colorPrimary">
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center_horizontal">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/mcv_day"
+                            android:textSize="35dp"
+                            android:layout_marginBottom="-6dp"
+                            android:layout_marginTop="-6dp"
+                            android:textColor="#fff"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/mcv_date"
+                            android:textSize="15dp"
+                            android:textColor="#fff"/>
+                    </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="25dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#fff"
+                        android:textSize="20dp"
+                        android:id="@+id/mcv_meal"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
-
-    </LinearLayout>
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

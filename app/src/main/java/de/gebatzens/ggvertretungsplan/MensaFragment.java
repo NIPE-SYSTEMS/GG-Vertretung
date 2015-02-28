@@ -22,8 +22,11 @@ package de.gebatzens.ggvertretungsplan;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
@@ -36,21 +39,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class MensaFragment extends RemoteDataFragment {
 
@@ -133,6 +142,7 @@ public class MensaFragment extends RemoteDataFragment {
             mi.garnish = GGApp.GG_APP.mensa.get(i)[3];
             mi.meal = GGApp.GG_APP.mensa.get(i)[2];
             mi.vegi = GGApp.GG_APP.mensa.get(i)[4];
+            mi.image = GGApp.GG_APP.mensa.get(i)[5];
             ((LinearLayout) view.findViewById(R.id.mensa_content)).addView(createCardItem(mi,inflater));
         }
         cardColorIndex = 0;
@@ -182,15 +192,44 @@ public class MensaFragment extends RemoteDataFragment {
         CardView mcv = createCardView();
         i.inflate(R.layout.mensa_cardview_entry, mcv, true);
         String[] colors = getActivity().getResources().getStringArray(GGApp.GG_APP.provider.getColorArray());
-        ((LinearLayout) mcv.findViewById(R.id.mcv_header_outer)).setBackgroundColor(Color.parseColor(colors[cardColorIndex]));
+        //((ImageView) mcv.findViewById(R.id.mcv_image)).setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.block_house_steak));
+        /*((LinearLayout) mcv.findViewById(R.id.mcv_header_outer)).setBackgroundColor(Color.parseColor(colors[cardColorIndex]));
         cardColorIndex++;
         if(cardColorIndex == colors.length)
-            cardColorIndex = 0;
+            cardColorIndex = 0;*/
         ((TextView) mcv.findViewById(R.id.mcv_date)).setText(getFormatedDate(mensa_item.date));
         ((TextView) mcv.findViewById(R.id.mcv_meal)).setText(mensa_item.meal);
         ((TextView) mcv.findViewById(R.id.mcv_garnish)).setText(getResources().getString(R.string.garnish) + ": " + mensa_item.garnish.replace("mit ","").replace("mit",""));
         ((TextView) mcv.findViewById(R.id.mcv_day)).setText(getDayByDate(mensa_item.date));
         ((TextView) mcv.findViewById(R.id.mcv_vegi)).setText(getResources().getString(R.string.vegi) + ": " + ((Integer.valueOf(mensa_item.vegi) == 1) ? getResources().getString(R.string.yes) : getResources().getString(R.string.no)));
+        ViewHolder vh = new ViewHolder();
+        vh.imgview = (ImageView) mcv.findViewById(R.id.mcv_image);
+        vh.filename = mensa_item.image;
+        new AsyncTask<ViewHolder, Void, ViewHolder>() {
+
+            @Override
+            protected ViewHolder doInBackground(ViewHolder... params) {
+                //params[0].bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.block_house_steak);
+                try {
+                    params[0].bitmap = GGApp.GG_APP.provider.getMensaImage(params[0].filename);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    params[0].bitmap = null;
+                }
+
+                return params[0];
+            }
+
+            @Override
+            protected void onPostExecute(ViewHolder result) {
+                try {
+                    ImageView imgView = (ImageView) result.imgview;
+                    imgView.setImageBitmap((Bitmap) result.bitmap);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.execute(vh);
         return mcv;
     }
 
@@ -246,12 +285,19 @@ public class MensaFragment extends RemoteDataFragment {
         }
     }
 
+    private class ViewHolder {
+        ImageView imgview;
+        Bitmap bitmap;
+        String filename;
+    }
+
     public class MensaItem {
         String id;
         String date;
         String meal;
         String garnish;
         String vegi;
+        String image;
     }
 
     public static class Mensa extends ArrayList<String[]> {
@@ -273,6 +319,7 @@ public class MensaFragment extends RemoteDataFragment {
                     writer.name("meal").value(s[2]);
                     writer.name("garnish").value(s[3]);
                     writer.name("vegi").value(s[4]);
+                    writer.name("image").value(s[5]);
 
                     writer.endObject();
                 }
@@ -291,7 +338,7 @@ public class MensaFragment extends RemoteDataFragment {
                 reader.beginArray();
                 while(reader.hasNext()) {
                     reader.beginObject();
-                    String[] s = new String[5];
+                    String[] s = new String[6];
 
                     while(reader.hasNext()) {
                         String name = reader.nextName();
@@ -305,6 +352,8 @@ public class MensaFragment extends RemoteDataFragment {
                             s[3] = reader.nextString();
                         else if(name.equals("vegi"))
                             s[4] = reader.nextString();
+                        else if(name.equals("image"))
+                            s[5] = reader.nextString();
                         else
                             reader.skipValue();
                     }
