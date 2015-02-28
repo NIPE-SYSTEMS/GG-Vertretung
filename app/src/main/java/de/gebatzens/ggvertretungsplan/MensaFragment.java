@@ -26,6 +26,9 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.JsonReader;
 import android.util.JsonWriter;
 import android.view.Gravity;
@@ -42,12 +45,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MensaFragment extends RemoteDataFragment {
 
-    ListView lv;
-    private MensaFragmentListAdapter mfla;
+    SwipeRefreshLayout swipeContainer;
+    int cardColorIndex = 0;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
         ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.fragment_mensa, group, false);
@@ -60,7 +68,7 @@ public class MensaFragment extends RemoteDataFragment {
     public void onViewCreated(View v, Bundle b) {
         super.onViewCreated(v, b);
 
-        final SwipeRefreshLayout swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.mensa_refresh);
+        swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.mensa_refresh);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -92,7 +100,7 @@ public class MensaFragment extends RemoteDataFragment {
     }
 
     private void createView(LayoutInflater inflater, ViewGroup view) {
-        lv = new ListView(getActivity());
+        /*lv = new ListView(getActivity());
         lv.setDrawSelectorOnTop(true);
         lv.setDivider(getResources().getDrawable(R.drawable.listview_divider));
         ((LinearLayout) view.findViewById(R.id.mensa_content)).addView(lv);
@@ -102,7 +110,7 @@ public class MensaFragment extends RemoteDataFragment {
                 TextView txtTitle = (TextView) view.findViewById(R.id.mensaTitle);
                 String mTitle = txtTitle.getText().toString();
                 String vegi = (Integer.valueOf(mfla.getMensaMeal(position)[4]) == 1) ? getResources().getString(R.string.yes) : getResources().getString(R.string.no);
-                String mContent = getResources().getString(R.string.vegi) + ": " + vegi +  "\r\n" + getResources().getString(R.string.garnish) + ": " + mfla.getMensaMeal(position)[3].replace("mit ","").replace("mit","");
+                Spanned mContent = Html.fromHtml("<b>" + getResources().getString(R.string.vegi) + ":</b> " + vegi +  "<br /><b>" + getResources().getString(R.string.garnish) + ":</b> " + mfla.getMensaMeal(position)[3].replace("mit ","").replace("mit",""));
                 AlertDialog.Builder ad = new AlertDialog.Builder(view.getContext());
                 ad.setTitle(mTitle);
                 ad.setMessage(mContent);
@@ -116,7 +124,17 @@ public class MensaFragment extends RemoteDataFragment {
             }
         });
         mfla = new MensaFragmentListAdapter(getActivity(), GGApp.GG_APP.mensa);
-        lv.setAdapter(mfla);
+        lv.setAdapter(mfla);*/
+        for(int i = 0; i < GGApp.GG_APP.mensa.size(); i++) {
+            MensaItem mi = new MensaItem();
+            mi.id = GGApp.GG_APP.mensa.get(i)[0];
+            mi.date = GGApp.GG_APP.mensa.get(i)[1];
+            mi.garnish = GGApp.GG_APP.mensa.get(i)[3];
+            mi.meal = GGApp.GG_APP.mensa.get(i)[2];
+            mi.vegi = GGApp.GG_APP.mensa.get(i)[4];
+            ((LinearLayout) view.findViewById(R.id.mensa_content)).addView(createCardItem(mi,inflater));
+        }
+        cardColorIndex = 0;
     }
 
     private View createLoadingView() {
@@ -157,6 +175,58 @@ public class MensaFragment extends RemoteDataFragment {
         vg.removeAllViews();
 
         createView(getActivity().getLayoutInflater(), vg);
+    }
+
+    private CardView createCardItem(MensaItem mensa_item, LayoutInflater i) {
+        CardView mcv = createCardView();
+        i.inflate(R.layout.mensa_cardview_entry, mcv, true);
+        String[] colors = getActivity().getResources().getStringArray(GGApp.GG_APP.provider.getColorArray());
+        ((LinearLayout) mcv.findViewById(R.id.mcv_header_outer)).setBackgroundColor(Color.parseColor(colors[cardColorIndex]));
+        cardColorIndex++;
+        if(cardColorIndex == colors.length)
+            cardColorIndex = 0;
+        ((TextView) mcv.findViewById(R.id.mcv_date)).setText(mensa_item.date);
+        ((TextView) mcv.findViewById(R.id.mcv_meal)).setText(mensa_item.meal);
+        ((TextView) mcv.findViewById(R.id.mcv_garnish)).setText(mensa_item.garnish);
+        ((TextView) mcv.findViewById(R.id.mcv_day)).setText(getDayByDate(mensa_item.date));
+        ((TextView) mcv.findViewById(R.id.mcv_vegi)).setText("Vegi: " + ((Integer.valueOf(mensa_item.vegi) == 1) ? getResources().getString(R.string.yes) : getResources().getString(R.string.no)));
+        return mcv;
+    }
+
+    private CardView createCardView() {
+        CardView c2 = new CardView(getActivity());
+        CardView.LayoutParams c2params = new CardView.LayoutParams(
+                CardView.LayoutParams.MATCH_PARENT,
+                CardView.LayoutParams.WRAP_CONTENT
+        );
+        c2.setLayoutParams(c2params);
+        c2.setUseCompatPadding(true);
+        return c2;
+    }
+
+    private String getDayByDate(String date) {
+        String formattedDate;
+        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dateFormatter = new SimpleDateFormat("EEE");
+        try
+        {
+            Date parsedDate = parser.parse(date);
+            formattedDate = dateFormatter.format(parsedDate);
+            return formattedDate;
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public class MensaItem {
+        String id;
+        String date;
+        String meal;
+        String garnish;
+        String vegi;
     }
 
     public static class Mensa extends ArrayList<String[]> {
