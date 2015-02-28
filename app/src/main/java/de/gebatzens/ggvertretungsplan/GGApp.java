@@ -147,7 +147,7 @@ public class GGApp extends Application {
             throw new RuntimeException("Provider for " + id + " not found");
 
         try {
-            provider = (VPProvider) clas.getConstructors()[0].newInstance(this);
+            provider = (VPProvider) clas.getConstructors()[0].newInstance(this, id);
         } catch (Exception e) {
             e.printStackTrace();
         }

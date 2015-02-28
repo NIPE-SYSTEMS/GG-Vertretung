@@ -18,6 +18,9 @@
  */
 package de.gebatzens.ggvertretungsplan;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.SimpleTimeZone;
@@ -25,9 +28,13 @@ import java.util.SimpleTimeZone;
 public abstract class VPProvider {
 
     GGApp gg;
+    SharedPreferences prefs;
+    String id;
 
-    public VPProvider(GGApp app) {
+    public VPProvider(GGApp app, String id) {
         this.gg = app;
+        this.id = id;
+        prefs = gg.getSharedPreferences(id + "user", Context.MODE_PRIVATE);
     }
 
     public static String decode(String html) {
@@ -73,7 +80,9 @@ public abstract class VPProvider {
      * Gibt den Benutzernamen oder null, wenn man nicht angemeldet ist, zurück
      * @return
      */
-    public abstract String getUsername();
+    public String getUsername() {
+        return prefs.getString("username", null);
+    }
 
     public static String getWeekday(Date date) {
         return new SimpleDateFormat("EEEE").format(date);

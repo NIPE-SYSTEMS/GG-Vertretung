@@ -59,13 +59,10 @@ public class GGProvider extends VPProvider {
 
     GGApp ggapp;
     String sessId;
-    SharedPreferences prefs;
 
-    public GGProvider(GGApp gg) {
-        super(gg);
+    public GGProvider(GGApp gg, String id) {
+        super(gg, id);
 
-        prefs = gg.getSharedPreferences("gguser", Context.MODE_PRIVATE);
-        //sessId = prefs.getString("sessid", null);
         new AsyncTask<Object, Void, Void>() {
 
             @Override
@@ -589,11 +586,6 @@ public class GGProvider extends VPProvider {
     @Override
     public String getFullName() {
         return "Gymnasium Glinde";
-    }
-
-    @Override
-    public String getUsername() {
-        return prefs.getString("username", null);
     }
 
     private static TrustManager[] ggTrustMgr = new TrustManager[]{ new X509TrustManager() {
