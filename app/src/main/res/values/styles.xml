@@ -11,6 +11,7 @@
         <item name="colorAccent">#2196F3</item>
         <item name="android:textColor">#444444</item>
         <item name="android:alertDialogTheme">@style/Theme.AlertDialog.Blue</item>
+        <item name="android:windowActionModeOverlay">true</item>
     </style>
 
     <style name="AppThemeOrange.Base" parent="Theme.AppCompat.Light">
@@ -19,6 +20,7 @@
         <item name="colorAccent">#FF9800</item>
         <item name="android:textColor">#444444</item>
         <item name="android:alertDialogTheme">@style/Theme.AlertDialog.Orange</item>
+        <item name="android:windowActionModeOverlay">true</item>
     </style>
 
     <style name="boldText">
