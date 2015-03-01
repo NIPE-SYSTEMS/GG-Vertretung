@@ -21,6 +21,8 @@ package de.gebatzens.ggvertretungsplan;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Xml;
@@ -436,7 +438,7 @@ public class GGProvider extends VPProvider {
                     String name = parser.getName();
                     if (name.equals("item")) {
 
-                        String[] s = new String[5];
+                        String[] s = new String[6];
                         m.add(s);
 
                         while (parser.next() != XmlPullParser.END_TAG) {
@@ -457,6 +459,9 @@ public class GGProvider extends VPProvider {
 
                             else if (parser.getName().equals("vegi"))
                                 s[4] = parser.nextText();
+
+                            else if (parser.getName().equals("image"))
+                                s[5] = parser.nextText();
                         }
                     }
                 }
@@ -471,6 +476,18 @@ public class GGProvider extends VPProvider {
 
         } finally {
             return m;
+        }
+    }
+
+    public Bitmap getMensaImage(String filename) throws IOException {
+        URL imageURL = new URL("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=mensa_image&sessid=" + sessId + "&filename=" + filename);
+        HttpsURLConnection con = (HttpsURLConnection) imageURL.openConnection();
+        con.setRequestMethod("GET");
+        con.setSSLSocketFactory(GGProvider.sslSocketFactory);
+        if(con.getResponseCode() == 200) {
+            return BitmapFactory.decodeStream(con.getInputStream());
+        } else {
+            throw new IOException();
         }
     }
 
