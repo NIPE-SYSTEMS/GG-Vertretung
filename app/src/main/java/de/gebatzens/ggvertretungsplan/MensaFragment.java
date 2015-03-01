@@ -139,6 +139,15 @@ public class MensaFragment extends RemoteDataFragment {
     private CardView createCardItem(MensaItem mensa_item, LayoutInflater i) {
         CardView mcv = createCardView();
         i.inflate(R.layout.mensa_cardview_entry, mcv, true);
+        Date dt = new Date();
+        dt.getTime();
+        try {
+            if(getDate(mensa_item.date).before(dt)) {
+                mcv.setAlpha(0.65f);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         String[] colors = getActivity().getResources().getStringArray(GGApp.GG_APP.provider.getColorArray());
         ((TextView) mcv.findViewById(R.id.mcv_date)).setText(getFormatedDate(mensa_item.date));
         ((TextView) mcv.findViewById(R.id.mcv_meal)).setText(mensa_item.meal);
@@ -191,6 +200,18 @@ public class MensaFragment extends RemoteDataFragment {
         return mcv;
     }
 
+    @Override
+    public CardView createCardView() {
+        CardView c2 = new CardView(getActivity());
+        CardView.LayoutParams c2params = new CardView.LayoutParams(
+                CardView.LayoutParams.MATCH_PARENT,
+                CardView.LayoutParams.WRAP_CONTENT
+        );
+        c2.setLayoutParams(c2params);
+        c2.setUseCompatPadding(true);
+        return c2;
+    }
+
     private String getDayByDate(String date) {
         String formattedDate;
         DateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
@@ -230,6 +251,11 @@ public class MensaFragment extends RemoteDataFragment {
             e.printStackTrace();
             return "";
         }
+    }
+
+    private Date getDate(String date) throws ParseException {
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.parse(date);
     }
 
     private boolean cacheCheckDir() {
