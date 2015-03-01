@@ -138,6 +138,7 @@ public class MensaFragment extends RemoteDataFragment {
 
     private CardView createCardItem(MensaItem mensa_item, LayoutInflater i) {
         CardView mcv = createCardView();
+        mcv.setContentPadding(0, 0, 0, 0);
         i.inflate(R.layout.mensa_cardview_entry, mcv, true);
         Date dt = new Date();
         dt.getTime();
@@ -198,18 +199,6 @@ public class MensaFragment extends RemoteDataFragment {
             }
         }.execute(vh);
         return mcv;
-    }
-
-    @Override
-    public CardView createCardView() {
-        CardView c2 = new CardView(getActivity());
-        CardView.LayoutParams c2params = new CardView.LayoutParams(
-                CardView.LayoutParams.MATCH_PARENT,
-                CardView.LayoutParams.WRAP_CONTENT
-        );
-        c2.setLayoutParams(c2params);
-        c2.setUseCompatPadding(true);
-        return c2;
     }
 
     private String getDayByDate(String date) {
