@@ -76,10 +76,10 @@ public class HelpdeskActivity extends Activity {
         mToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                        String name = mTextViewName.getText().toString();
-                        String email = mTextViewEmail.getText().toString();
-                        String subject = mTextViewSubject.getText().toString();
-                        String message = mTextViewMessage.getText().toString();
+                        String name = mTextViewName.getText().toString().replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+                        String email = mTextViewEmail.getText().toString().replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+                        String subject = mTextViewSubject.getText().toString().replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+                        String message = mTextViewMessage.getText().toString().replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 
                         new AsyncTask<String, Integer, Integer>() {
                             @Override
