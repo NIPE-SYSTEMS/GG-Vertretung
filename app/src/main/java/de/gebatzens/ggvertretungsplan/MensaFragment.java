@@ -73,6 +73,10 @@ public class MensaFragment extends RemoteDataFragment {
     int cardColorIndex = 0;
     String cache_file_prefix = "cache_mensa_";
 
+    public MensaFragment() {
+        type = GGApp.FragmentType.MENSA;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
         ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.fragment_mensa, group, false);
@@ -110,13 +114,10 @@ public class MensaFragment extends RemoteDataFragment {
                 R.color.custom_material_blue,
                 R.color.custom_material_orange);
 
-
-        if(GGApp.GG_APP.plans == null) {
-            ((ViewGroup) getView().findViewById(R.id.mensa_content)).addView(createLoadingView());
-        }
     }
 
-    private void createView(LayoutInflater inflater, ViewGroup view) {
+    @Override
+    public void createView(LayoutInflater inflater, ViewGroup view) {
         /*lv = new ListView(getActivity());
         lv.setDrawSelectorOnTop(true);
         lv.setDivider(getResources().getDrawable(R.drawable.listview_divider));
@@ -155,44 +156,9 @@ public class MensaFragment extends RemoteDataFragment {
         cardColorIndex = 0;
     }
 
-    private View createLoadingView() {
-        LinearLayout l = new LinearLayout(getActivity());
-        l.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        l.setGravity(Gravity.CENTER);
-
-        ProgressBar pb = new ProgressBar(getActivity());
-        pb.getIndeterminateDrawable().setColorFilter(GGApp.GG_APP.provider.getColor(), PorterDuff.Mode.SRC_IN);
-        pb.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        pb.setVisibility(ProgressBar.VISIBLE);
-
-        l.addView(pb);
-        return l;
-    }
-
     @Override
-    public void setFragmentLoading() {
-        if(getView() == null)
-            return;
-
-        ViewGroup vg = (ViewGroup) getView().findViewById(R.id.mensa_content);
-        if(vg == null)
-            return;
-        vg.removeAllViews();
-
-        vg.addView(createLoadingView());
-    }
-
-    @Override
-    public void updateFragment() {
-        if(getView() == null)
-            return;
-
-        ViewGroup vg = (ViewGroup) getView().findViewById(R.id.mensa_content);
-        if(vg == null)
-            return;
-        vg.removeAllViews();
-
-        createView(getActivity().getLayoutInflater(), vg);
+    public ViewGroup getContentView() {
+        return (ViewGroup) getView().findViewById(R.id.mensa_content);
     }
 
     private CardView createCardItem(MensaItem mensa_item, LayoutInflater i) {
@@ -253,17 +219,6 @@ public class MensaFragment extends RemoteDataFragment {
             }
         }.execute(vh);
         return mcv;
-    }
-
-    private CardView createCardView() {
-        CardView c2 = new CardView(getActivity());
-        CardView.LayoutParams c2params = new CardView.LayoutParams(
-                CardView.LayoutParams.MATCH_PARENT,
-                CardView.LayoutParams.WRAP_CONTENT
-        );
-        c2.setLayoutParams(c2params);
-        c2.setUseCompatPadding(true);
-        return c2;
     }
 
     private String getDayByDate(String date) {

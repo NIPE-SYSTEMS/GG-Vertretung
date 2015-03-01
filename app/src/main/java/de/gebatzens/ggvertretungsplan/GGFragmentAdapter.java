@@ -55,16 +55,16 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
         heute.setParams(GGFragment.TYPE_TODAY);
         morgen.setParams(GGFragment.TYPE_TOMORROW);
         overview.setParams(GGFragment.TYPE_OVERVIEW);
-        heute.recreate();
-        morgen.recreate();
-        overview.recreate();
+        heute.updateFragment();
+        morgen.updateFragment();
+        overview.updateFragment();
         ((GGContentFragment)mActivity.mContent).mSlidingTabLayout.setViewPager(((GGContentFragment)mActivity.mContent).mViewPager);
     }
 
     public void setFragmentsLoading() {
-        heute.createLoadingFragment();
-        morgen.createLoadingFragment();
-        overview.createLoadingFragment();
+        heute.setFragmentLoading();
+        morgen.setFragmentLoading();
+        overview.setFragmentLoading();
         ((GGContentFragment)mActivity.mContent).mSlidingTabLayout.setViewPager(((GGContentFragment)mActivity.mContent).mViewPager);
     }
 

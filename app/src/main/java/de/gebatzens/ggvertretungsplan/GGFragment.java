@@ -55,13 +55,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class GGFragment extends Fragment {
+public class GGFragment extends RemoteDataFragment {
 
     public static final int TYPE_OVERVIEW = 0, TYPE_TODAY = 1, TYPE_TOMORROW = 2;
 
     GGPlan plan, planh, planm;
     int type = -1;
     int spinnerPos = 0;
+
+    public GGFragment() {
+        super.type = GGApp.FragmentType.PLAN;
+    }
 
     public void setParams(int type) {
         this.type = type;
@@ -74,56 +78,6 @@ public class GGFragment extends Fragment {
         else if(type == TYPE_TOMORROW)
             plan = planm;
 
-    }
-
-    public void recreate() {
-        if(getView() == null)
-            return;
-
-        ViewGroup vg = (ViewGroup) getView();
-
-        vg.removeAllViews();
-
-        createView(getActivity().getLayoutInflater(), vg);
-
-    }
-
-    private View createLoadingView() {
-        LinearLayout l = new LinearLayout(getActivity());
-        l.setGravity(Gravity.CENTER);
-
-        ProgressBar pb = new ProgressBar(getActivity());
-        pb.getIndeterminateDrawable().setColorFilter(GGApp.GG_APP.provider.getColor(),PorterDuff.Mode.SRC_IN);
-        pb.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        pb.setVisibility(ProgressBar.VISIBLE);
-
-        l.addView(pb);
-        return l;
-    }
-
-    public void createLoadingFragment() {
-        if(getView() == null)
-            return;
-
-        ViewGroup vg = (ViewGroup) getView();
-        vg.removeAllViews();
-
-        vg.addView(createLoadingView());
-    }
-
-    public static int toPixels(float dp) {
-        float scale = GGApp.GG_APP.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale);
-    }
-
-    private TextView createTextView(String text, int size, LayoutInflater inflater, ViewGroup group) {
-        // TextView t = (TextView) inflater.inflate(R.layout.plan_text, group, true).findViewById(R.id.plan_entry);
-        TextView t = new TextView(getActivity());
-        t.setText(text);
-        t.setPadding(0, 0, toPixels(20), 0);
-        t.setTextSize(size);
-        group.addView(t);
-        return t;
     }
 
     private void createCardItems(List<GGPlan.Entry> list, ViewGroup group, LayoutInflater inflater) {
@@ -164,17 +118,7 @@ public class GGFragment extends Fragment {
         return cv;
     }
 
-    private CardView createCardView() {
-        CardView c2 = new CardView(getActivity());
-        CardView.LayoutParams c2params = new CardView.LayoutParams(
-                CardView.LayoutParams.MATCH_PARENT,
-                CardView.LayoutParams.WRAP_CONTENT
-        );
-        c2.setLayoutParams(c2params);
-        c2.setUseCompatPadding(true);
-        c2.setContentPadding(toPixels(16), toPixels(16), toPixels(16), toPixels(16));
-        return c2;
-    }
+
 
     private ArrayList<TextView> createSMViews(GGPlan plan) {
         ArrayList<TextView> tvl = new ArrayList<TextView>();
@@ -192,37 +136,6 @@ public class GGFragment extends Fragment {
         }
 
         return tvl;
-    }
-
-    private static void createButtonWithText(Activity activity, LinearLayout l, String text, String button, View.OnClickListener onclick) {
-        RelativeLayout r = new RelativeLayout(activity);
-        r.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-        TextView tv = new TextView(activity);
-        RelativeLayout.LayoutParams tvparams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        tvparams.addRule(RelativeLayout.ABOVE, R.id.reload_button);
-        tvparams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        tv.setLayoutParams(tvparams);
-        tv.setText(text);
-        tv.setTextSize(23);
-        tv.setPadding( 0, 0, 0, toPixels(15));
-        tv.setGravity(Gravity.CENTER_HORIZONTAL);
-        r.addView(tv);
-
-        Button b = new Button(activity);
-        RelativeLayout.LayoutParams bparams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
-        bparams.addRule(RelativeLayout.CENTER_VERTICAL);
-        bparams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        b.setLayoutParams(bparams);
-        b.setId(R.id.reload_button);
-        b.setText(button);
-        b.setTextSize(23);
-        b.setAllCaps(false);
-        b.setTypeface(null, Typeface.NORMAL);
-        b.setOnClickListener(onclick);
-        r.addView(b);
-
-        l.addView(r);
     }
 
     public void createView(final LayoutInflater inflater, ViewGroup group) {
@@ -491,6 +404,11 @@ public class GGFragment extends Fragment {
     }
 
     @Override
+    public ViewGroup getContentView() {
+        return (ViewGroup) getView();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
         LinearLayout l = new LinearLayout(getActivity());
         l.setOrientation(LinearLayout.VERTICAL);
@@ -515,7 +433,7 @@ public class GGFragment extends Fragment {
         if(Locale.getDefault().getLanguage().equals("en")) {
             convertedDateFormat = new SimpleDateFormat("EEEE, MMM dd");
         } else {
-            convertedDateFormat = new SimpleDateFormat("EEEE, dd.MMM");
+            convertedDateFormat = new SimpleDateFormat("EEEE, dd. MMM");
         }
 
         sb.append(convertedDateFormat.format(date));

@@ -117,6 +117,16 @@ public class GGContentFragment extends RemoteDataFragment {
     }
 
     @Override
+    public void createView(LayoutInflater inflater, ViewGroup vg) {
+
+    }
+
+    @Override
+    public ViewGroup getContentView() {
+        return null;
+    }
+
+    @Override
     public void setFragmentLoading() {
         mGGFrag.setFragmentsLoading();
     }

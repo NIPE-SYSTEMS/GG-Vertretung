@@ -50,6 +50,10 @@ public class NewsFragment extends RemoteDataFragment {
     private NewsFragmentListAdapter nfla;
     private NewsFragmentDatabaseHelper mDatabaseHelper;
 
+    public NewsFragment() {
+        type = GGApp.FragmentType.NEWS;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
         ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.fragment_news, group, false);
@@ -88,15 +92,12 @@ public class NewsFragment extends RemoteDataFragment {
                 R.color.custom_material_blue,
                 R.color.custom_material_orange);
 
-
-        if(GGApp.GG_APP.plans == null) {
-            ((ViewGroup) getView().findViewById(R.id.news_content)).addView(createLoadingView());
-        }
     }
 
-    private void createView(LayoutInflater inflater, ViewGroup view) {
+    @Override
+    public void createView(LayoutInflater inflater, ViewGroup view) {
         lv = new ListView(getActivity());
-        int p = GGFragment.toPixels(10);
+        int p = toPixels(10);
         //lv.getDivider().setColorFilter(GGApp.GG_APP.provider.getColor(), PorterDuff.Mode.ADD);
         lv.setDrawSelectorOnTop(true);
         lv.setDivider(getResources().getDrawable(R.drawable.listview_divider));
@@ -128,44 +129,9 @@ public class NewsFragment extends RemoteDataFragment {
         lv.setAdapter(nfla);
     }
 
-    private View createLoadingView() {
-        LinearLayout l = new LinearLayout(getActivity());
-        l.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        l.setGravity(Gravity.CENTER);
-
-        ProgressBar pb = new ProgressBar(getActivity());
-        pb.getIndeterminateDrawable().setColorFilter(GGApp.GG_APP.provider.getColor(), PorterDuff.Mode.SRC_IN);
-        pb.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        pb.setVisibility(ProgressBar.VISIBLE);
-
-        l.addView(pb);
-        return l;
-    }
-
     @Override
-    public void setFragmentLoading() {
-        if(getView() == null)
-            return;
-
-        ViewGroup vg = (ViewGroup) getView().findViewById(R.id.news_content);
-        if(vg == null)
-            return;
-        vg.removeAllViews();
-
-        vg.addView(createLoadingView());
-    }
-
-    @Override
-    public void updateFragment() {
-        if(getView() == null)
-            return;
-
-        ViewGroup vg = (ViewGroup) getView().findViewById(R.id.news_content);
-        if(vg == null)
-            return;
-        vg.removeAllViews();
-
-        createView(getActivity().getLayoutInflater(), vg);
+    public ViewGroup getContentView() {
+        return (ViewGroup) getView().findViewById(R.id.news_content);
     }
 
     public static class News extends ArrayList<String[]> {

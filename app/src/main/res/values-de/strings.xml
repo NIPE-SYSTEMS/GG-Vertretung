@@ -113,5 +113,6 @@
     <string name="password">Passwort</string>
     <string name="vegi">Vegetarisch</string>
     <string name="garnish">Beilage</string>
+    <string name="exams">Klausurenplan</string>
 
 </resources>

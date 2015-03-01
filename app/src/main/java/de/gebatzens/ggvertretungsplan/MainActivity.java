@@ -42,6 +42,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -54,7 +55,8 @@ public class MainActivity extends FragmentActivity {
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mToggle;
     String[] mStrings;
-    int[] mIcons = new int[] {R.drawable.drawer_list_button_image_vertretungsplan, R.drawable.drawer_list_button_image_news, R.drawable.drawer_list_button_image_mensa};
+    int[] mIcons = new int[] {R.drawable.drawer_list_button_image_vertretungsplan, R.drawable.drawer_list_button_image_news, R.drawable.drawer_list_button_image_mensa,
+                                R.drawable.drawer_list_button_image_exam};
     ImageView mNacvigationImage;
     View mNavigationSchoolpictureLink;
     Bundle savedState;
@@ -67,6 +69,8 @@ public class MainActivity extends FragmentActivity {
                 return new NewsFragment();
             case MENSA:
                 return new MensaFragment();
+            case EXAMS:
+                return new ExamFragment();
             default:
                 return null;
         }
@@ -95,13 +99,14 @@ public class MainActivity extends FragmentActivity {
             GGApp.GG_APP.setFragmentType(type);
         }
 
+        mStrings = new String[] {getResources().getString(R.string.substitutionplan), getResources().getString(R.string.news), getResources().getString(R.string.cafeteria),
+                getResources().getString(R.string.exams)};
+
         NotificationManager nm =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         nm.cancel(123);
 
         setContentView(getLayoutInflater().inflate(R.layout.activity_main, null));
-
-        mStrings = new String[] {getResources().getString(R.string.substitutionplan), getResources().getString(R.string.news), getResources().getString(R.string.cafeteria)};
 
         removeAllFragments();
 
@@ -134,7 +139,7 @@ public class MainActivity extends FragmentActivity {
         });
 
         mToolbar.setTitle(GGApp.GG_APP.provider.getFullName());
-        mToolbar.setSubtitle(mStrings[fragTypeToInt(GGApp.GG_APP.getFragmentType())]);
+        mToolbar.setSubtitle(mStrings[Arrays.asList(GGApp.FragmentType.values()).indexOf(GGApp.GG_APP.getFragmentType())]);
         mToolbar.inflateMenu(R.menu.toolbar_menu);
         mToolbar.setTitleTextColor(Color.WHITE);
         mToolbar.setSubtitleTextColor(Color.WHITE);
@@ -184,7 +189,7 @@ public class MainActivity extends FragmentActivity {
         //ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.drawer_list_item, mStrings);
         RibbonMenuListAdapter aa = new RibbonMenuListAdapter(this, mStrings, mIcons);
         mDrawerList.setAdapter(aa);
-        mDrawerList.setItemChecked(fragTypeToInt(GGApp.GG_APP.getFragmentType()), true);
+        mDrawerList.setItemChecked(Arrays.asList(GGApp.FragmentType.values()).indexOf(GGApp.GG_APP.getFragmentType()), true);
 
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -243,19 +248,6 @@ public class MainActivity extends FragmentActivity {
             }
         }.execute();
 
-    }
-
-    public int fragTypeToInt(GGApp.FragmentType type) {
-        switch(type) {
-            case PLAN:
-                return 0;
-            case NEWS:
-                return 1;
-            case MENSA:
-                return 2;
-            default:
-                return -1;
-        }
     }
 
     @Override

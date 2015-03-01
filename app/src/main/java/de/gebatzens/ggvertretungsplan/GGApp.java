@@ -70,6 +70,8 @@ public class GGApp extends Application {
             case NEWS:
                 return news;
             case MENSA:
+                return mensa;
+            case EXAMS:
                 return null;
             default:
                 return null;
@@ -235,7 +237,7 @@ public class GGApp extends Application {
     }
 
     public static enum FragmentType {
-        PLAN, NEWS, MENSA
+        PLAN, NEWS, MENSA, EXAMS
     }
 
 
