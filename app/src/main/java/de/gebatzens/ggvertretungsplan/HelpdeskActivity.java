@@ -72,6 +72,12 @@ public class HelpdeskActivity extends Activity {
         final TextView mTextViewSubject = (TextView) findViewById(R.id.reportSubject);
         final TextView mTextViewMessage = (TextView) findViewById(R.id.reportMessage);
 
+        String s1 = GGApp.GG_APP.provider.prefs.getString("firstname", null);
+        String s2 = GGApp.GG_APP.provider.prefs.getString("lastname", null);
+        if(s1 != null && s2 != null) {
+            mTextViewName.setText(s1 + " " + s2);
+        }
+
         mToolBar.inflateMenu(R.menu.helpdesk_menu);
         mToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override

@@ -118,31 +118,6 @@ public class MensaFragment extends RemoteDataFragment {
 
     @Override
     public void createView(LayoutInflater inflater, ViewGroup view) {
-        /*lv = new ListView(getActivity());
-        lv.setDrawSelectorOnTop(true);
-        lv.setDivider(getResources().getDrawable(R.drawable.listview_divider));
-        ((LinearLayout) view.findViewById(R.id.mensa_content)).addView(lv);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView txtTitle = (TextView) view.findViewById(R.id.mensaTitle);
-                String mTitle = txtTitle.getText().toString();
-                String vegi = (Integer.valueOf(mfla.getMensaMeal(position)[4]) == 1) ? getResources().getString(R.string.yes) : getResources().getString(R.string.no);
-                Spanned mContent = Html.fromHtml("<b>" + getResources().getString(R.string.vegi) + ":</b> " + vegi +  "<br /><b>" + getResources().getString(R.string.garnish) + ":</b> " + mfla.getMensaMeal(position)[3].replace("mit ","").replace("mit",""));
-                AlertDialog.Builder ad = new AlertDialog.Builder(view.getContext());
-                ad.setTitle(mTitle);
-                ad.setMessage(mContent);
-                ad.setNegativeButton(GGApp.GG_APP.getResources().getString(R.string.close), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                ad.show();
-            }
-        });
-        mfla = new MensaFragmentListAdapter(getActivity(), GGApp.GG_APP.mensa);
-        lv.setAdapter(mfla);*/
         for(int i = 0; i < GGApp.GG_APP.mensa.size(); i++) {
             MensaItem mi = new MensaItem();
             mi.id = GGApp.GG_APP.mensa.get(i)[0];
@@ -165,11 +140,6 @@ public class MensaFragment extends RemoteDataFragment {
         CardView mcv = createCardView();
         i.inflate(R.layout.mensa_cardview_entry, mcv, true);
         String[] colors = getActivity().getResources().getStringArray(GGApp.GG_APP.provider.getColorArray());
-        //((ImageView) mcv.findViewById(R.id.mcv_image)).setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.block_house_steak));
-        /*((LinearLayout) mcv.findViewById(R.id.mcv_header_outer)).setBackgroundColor(Color.parseColor(colors[cardColorIndex]));
-        cardColorIndex++;
-        if(cardColorIndex == colors.length)
-            cardColorIndex = 0;*/
         ((TextView) mcv.findViewById(R.id.mcv_date)).setText(getFormatedDate(mensa_item.date));
         ((TextView) mcv.findViewById(R.id.mcv_meal)).setText(mensa_item.meal);
         ((TextView) mcv.findViewById(R.id.mcv_garnish)).setText(getResources().getString(R.string.garnish) + ": " + mensa_item.garnish.replace("mit ","").replace("mit",""));

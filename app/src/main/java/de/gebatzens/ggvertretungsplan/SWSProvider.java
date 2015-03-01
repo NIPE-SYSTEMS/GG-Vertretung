@@ -37,8 +37,8 @@ public class SWSProvider extends VPProvider {
 
     GGApp ggapp;
 
-    public SWSProvider(GGApp gg) {
-        super(gg);
+    public SWSProvider(GGApp gg, String id) {
+        super(gg, id);
     }
 
     public GGPlan[] getPlans(boolean toast) {
