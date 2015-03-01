@@ -286,9 +286,14 @@ public class MensaFragment extends RemoteDataFragment {
         String image;
     }
 
-    public static class Mensa extends ArrayList<String[]> {
+    public static class Mensa extends ArrayList<String[]> implements RemoteData {
 
         Throwable throwable;
+
+        @Override
+        public Throwable getThrowable() {
+            return throwable;
+        }
 
         public void save(String file) {
             try {

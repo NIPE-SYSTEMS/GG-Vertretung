@@ -262,7 +262,7 @@ public class GGProvider extends VPProvider {
         }
 
         if(plans[0].throwable != null) {
-            if (plans[0].load(GGApp.GG_APP, "ggvptoday") && plans[1].load(GGApp.GG_APP, "ggvptomorrow")) {
+            if (plans[0].load("ggvptoday") && plans[1].load("ggvptomorrow")) {
                 final Throwable t = plans[0].throwable;
                 String s = GGApp.GG_APP.getResources().getString(R.string.no_internet_connection)+"\n" + plans[0].loadDate;
                 plans[0].loadDate = s;
@@ -278,8 +278,8 @@ public class GGProvider extends VPProvider {
                     });
             }
         } else {
-            plans[0].save(GGApp.GG_APP, "ggvptoday");
-            plans[1].save(GGApp.GG_APP, "ggvptomorrow");
+            plans[0].save("ggvptoday");
+            plans[1].save("ggvptomorrow");
         }
 
         return plans;
@@ -489,6 +489,36 @@ public class GGProvider extends VPProvider {
         } else {
             throw new IOException();
         }
+    }
+
+    @Override
+    public ExamFragment.Exams getExams() {
+        ExamFragment.Exams exams = new ExamFragment.Exams();
+        if(!exams.load("ggexams")) {
+            try {
+                if (sessId == null || sessId.isEmpty()) {
+                    startNewSession(prefs.getString("token", null));
+                    if (sessId == null || sessId.isEmpty())
+                        throw new VPLoginException();
+                }
+
+                URL imageURL = new URL("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=examplan_image&sessid=" + sessId);
+                HttpsURLConnection con = (HttpsURLConnection) imageURL.openConnection();
+                con.setRequestMethod("GET");
+                con.setSSLSocketFactory(GGProvider.sslSocketFactory);
+                if (con.getResponseCode() == 200) {
+                    exams.bitmap = BitmapFactory.decodeStream(con.getInputStream());
+                } else if (con.getResponseCode() == 401) {
+                    logout(true, true);
+                    throw new VPLoginException();
+                }
+                exams.save("ggexams");
+            } catch (Exception e) {
+                e.printStackTrace();
+                exams.throwable = e;
+            }
+        }
+        return exams;
     }
 
     @Override

@@ -158,4 +158,11 @@ public abstract class RemoteDataFragment extends Fragment {
 
     }
 
+    public static interface RemoteData {
+        public Throwable getThrowable();
+        public void save(String file);
+        public boolean load(String file);
+
+    }
+
 }

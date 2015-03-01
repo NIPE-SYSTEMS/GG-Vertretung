@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GGPlan {
+public class GGPlan implements RemoteDataFragment.RemoteData {
 
     public ArrayList<Entry> entries = new ArrayList<Entry>();
     public Date date;
@@ -48,14 +48,19 @@ public class GGPlan {
 
     }
 
-    public boolean load(Context c, String file) {
+    @Override
+    public Throwable getThrowable() {
+        return throwable;
+    }
+
+    public boolean load(String file) {
         Log.w("ggvp", "Lade " + file);
         entries.clear();
         special.clear();
         loadDate = "";
 
         try {
-            InputStream in = c.openFileInput(file);
+            InputStream in = GGApp.GG_APP.openFileInput(file);
             JsonReader reader = new JsonReader(new InputStreamReader(in));
             reader.beginObject();
             while(reader.hasNext()) {
@@ -119,10 +124,10 @@ public class GGPlan {
         return true;
     }
 
-    public void save(Context c, String file) {
+    public void save(String file) {
         Log.w("ggvp", "Speichere " + file);
         try {
-            OutputStream out = c.openFileOutput(file, Context.MODE_PRIVATE);
+            OutputStream out = GGApp.GG_APP.openFileOutput(file, Context.MODE_PRIVATE);
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(out, "UTF-8"));
 
             writer.setIndent("  ");

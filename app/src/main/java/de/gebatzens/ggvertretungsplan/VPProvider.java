@@ -76,6 +76,7 @@ public abstract class VPProvider {
     public abstract void logout(Boolean logout_local_only, Boolean delete_token);
     public abstract NewsFragment.News getNews();
     public abstract MensaFragment.Mensa getMensa();
+    public abstract ExamFragment.Exams getExams();
     public abstract Bitmap getMensaImage(String filename) throws IOException;
     public abstract int getColorArray();
 

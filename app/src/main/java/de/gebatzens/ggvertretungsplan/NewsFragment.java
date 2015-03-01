@@ -134,9 +134,14 @@ public class NewsFragment extends RemoteDataFragment {
         return (ViewGroup) getView().findViewById(R.id.news_content);
     }
 
-    public static class News extends ArrayList<String[]> {
+    public static class News extends ArrayList<String[]> implements RemoteData {
 
         Throwable throwable;
+
+        @Override
+        public Throwable getThrowable() {
+            return throwable;
+        }
 
         public void save(String file) {
             try {

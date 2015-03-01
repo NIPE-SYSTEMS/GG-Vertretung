@@ -26,6 +26,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -44,6 +45,7 @@ public class GGApp extends Application {
     public MensaFragment.Mensa mensa;
     public MainActivity activity;
     public VPProvider provider;
+    public ExamFragment.Exams exams;
     public static final int UPDATE_DISABLE = 0, UPDATE_WLAN = 1, UPDATE_ALL = 2;
     private SharedPreferences preferences;
     public static GGApp GG_APP;
@@ -72,7 +74,7 @@ public class GGApp extends Application {
             case MENSA:
                 return mensa;
             case EXAMS:
-                return null;
+                return exams;
             default:
                 return null;
         }
@@ -204,6 +206,9 @@ public class GGApp extends Application {
                         break;
                     case MENSA:
                         mensa = provider.getMensa();
+                        break;
+                    case EXAMS:
+                        exams = provider.getExams();
                         break;
                 }
 

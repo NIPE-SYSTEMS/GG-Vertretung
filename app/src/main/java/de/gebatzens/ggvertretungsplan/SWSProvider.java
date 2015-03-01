@@ -20,6 +20,7 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -145,9 +146,9 @@ public class SWSProvider extends VPProvider {
         boolean b = url.contains("001.htm");
 
         if(plan.throwable == null)
-            plan.save(GGApp.GG_APP, b ? "swstd" : "swstm");
+            plan.save(b ? "swstd" : "swstm");
         else {
-            if(plan.load(GGApp.GG_APP, b ? "swstd" : "swstm")) {
+            if(plan.load(b ? "swstd" : "swstm")) {
                 final String message = plan.throwable.getMessage();
                 plan.loadDate = GGApp.GG_APP.getResources().getString(R.string.no_internet_connection) + "\n" + plan.loadDate;
                 plan.throwable = null;
@@ -178,6 +179,13 @@ public class SWSProvider extends VPProvider {
 
     public MensaFragment.Mensa getMensa() {
         return new MensaFragment.Mensa();
+    }
+
+    @Override
+    public ExamFragment.Exams getExams() {
+        ExamFragment.Exams e = new ExamFragment.Exams();
+        e.bitmap = BitmapFactory.decodeResource(GGApp.GG_APP.getResources(), R.drawable.mensa_icon);
+        return e;
     }
 
     public Bitmap getMensaImage(String filename) throws IOException {
