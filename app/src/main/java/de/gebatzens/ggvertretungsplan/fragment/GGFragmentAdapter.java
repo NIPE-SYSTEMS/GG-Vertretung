@@ -95,9 +95,9 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
             case 0:
                 return GGApp.GG_APP.getResources().getString(R.string.overview);
             case 1:
-                return GGApp.GG_APP.plans == null ? GGApp.GG_APP.getResources().getString(R.string.today)  : VPProvider.getWeekday(GGApp.GG_APP.plans[0].date);
+                return GGApp.GG_APP.plans == null ? GGApp.GG_APP.getResources().getString(R.string.today)  : VPProvider.getWeekday(GGApp.GG_APP.plans.today.date);
             case 2:
-                return GGApp.GG_APP.plans == null ? GGApp.GG_APP.getResources().getString(R.string.tomorrow) : VPProvider.getWeekday(GGApp.GG_APP.plans[1].date);
+                return GGApp.GG_APP.plans == null ? GGApp.GG_APP.getResources().getString(R.string.tomorrow) : VPProvider.getWeekday(GGApp.GG_APP.plans.tomorrow.date);
             default:
                 return null;
         }

@@ -53,128 +53,129 @@ public class SWSProvider extends VPProvider {
         super(gg, id);
     }
 
-    public GGPlan[] getPlans(boolean toast) {
+    public GGPlan.GGPlans getPlans(boolean toast) {
         Log.w("ggvp", "Lade SWS PLäne");
-        GGPlan[] plans = new GGPlan[2];
+        final GGPlan.GGPlans plans = new GGPlan.GGPlans();
+        plans.today = new GGPlan();
+        plans.tomorrow = new GGPlan();
 
-        plans[0] = getPlan("http://contao.sachsenwaldschule.org/files/dateiablage_extern/vertretungsplanung/schueler_online/subst_001.htm", toast);
-        plans[1] = getPlan("http://contao.sachsenwaldschule.org/files/dateiablage_extern/vertretungsplanung/schueler_online/subst_002.htm", false);
+        try {
+            plans.today = getPlan("http://contao.sachsenwaldschule.org/files/dateiablage_extern/vertretungsplanung/schueler_online/subst_001.htm", toast);
+            plans.tomorrow = getPlan("http://contao.sachsenwaldschule.org/files/dateiablage_extern/vertretungsplanung/schueler_online/subst_002.htm", false);
+            plans.save("sws");
+        } catch(Exception e) {
+            e.printStackTrace();
+            plans.throwable = e;
+        }
+
+        if(plans.throwable != null) {
+            if (plans.load("sws")) {
+                final String message = plans.throwable.getMessage();
+                plans.tomorrow.loadDate = GGApp.GG_APP.getResources().getString(R.string.no_internet_connection) + "\n" + plans.today.loadDate;
+                plans.today.loadDate = plans.tomorrow.loadDate;
+                plans.throwable = null;
+                if (toast)
+                    GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            GGApp.GG_APP.showToast(plans.throwable instanceof UnknownHostException ? "Konnte contao.sachsenwaldschule.org nicht auflösen" :
+                                    plans.throwable instanceof GGInvalidSourceException ? "Ungültige Antwort vom Server" : "Konnte keine Verbindung zu http://contao.sachsenwaldschule.org aufbauen");
+                        }
+                    });
+            } else {
+                plans.today.date = new Date();
+                plans.tomorrow.date = new Date();
+            }
+        }
 
         return plans;
     }
 
-    public GGPlan getPlan(String url, boolean toast) {
+    public GGPlan getPlan(String url, boolean toast) throws Exception {
         final GGPlan plan = new GGPlan();
 
-        try {
-            URLConnection con = new URL(url).openConnection();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
+        URLConnection con = new URL(url).openConnection();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(con.getInputStream(), "ISO-8859-1"));
 
-            Pattern date = Pattern.compile("<div class=\"mon_title\">(.*)</div>");
-            Pattern tables = Pattern.compile("<table class=\"mon_list\" >");
-            Pattern tdata = Pattern.compile("<td .*?>(.*?)</td>");
-            String specialBegin = "<tr class=\"info\"><th class=\"info\" align=\"center\" colspan=\"2\">Nachrichten zum Tag</th></tr>";
-            Pattern specialCont = Pattern.compile("<tr class='info'><td class='info' colspan=\"2\">(.*?)</td></tr>");
-            int h = 0;
-            String lastClass = "Bug";
-            int ln = 0;
+        Pattern date = Pattern.compile("<div class=\"mon_title\">(.*)</div>");
+        Pattern tables = Pattern.compile("<table class=\"mon_list\" >");
+        Pattern tdata = Pattern.compile("<td .*?>(.*?)</td>");
+        String specialBegin = "<tr class=\"info\"><th class=\"info\" align=\"center\" colspan=\"2\">Nachrichten zum Tag</th></tr>";
+        Pattern specialCont = Pattern.compile("<tr class='info'><td class='info' colspan=\"2\">(.*?)</td></tr>");
+        int h = 0;
+        String lastClass = "Bug";
+        int ln = 0;
 
-            String line;
-            while ((line = decode(reader.readLine())) != null) {
-                ln++;
+        String line;
+        while ((line = decode(reader.readLine())) != null) {
+            ln++;
 
-                if(plan.date == null) {
-                    Matcher md = date.matcher(line);
-                    if (md.find())
-                        plan.date = new SimpleDateFormat("dd.M.yyyy").parse(md.group(1).trim().split(" ")[0]);
-                } else if(line.equals(specialBegin)) { //Nachrichten
-                    String line2 = "";
-                    while(!(line = decode(reader.readLine())).equals("</table>")) {
-                        Matcher mc = specialCont.matcher(line);
-                        if(mc.find()) {
-                            plan.special.add("&#8226;  " + mc.group(1));
-                        }
+            if(plan.date == null) {
+                Matcher md = date.matcher(line);
+                if (md.find())
+                    plan.date = new SimpleDateFormat("dd.M.yyyy").parse(md.group(1).trim().split(" ")[0]);
+            } else if(line.equals(specialBegin)) { //Nachrichten
+                String line2 = "";
+                while(!(line = decode(reader.readLine())).equals("</table>")) {
+                    Matcher mc = specialCont.matcher(line);
+                    if(mc.find()) {
+                        plan.special.add("&#8226;  " + mc.group(1));
                     }
-                } else {
-                    Matcher mt = tables.matcher(line);
-                    if(mt.find()) {
-                        reader.readLine(); //ignore header
+                }
+            } else {
+                Matcher mt = tables.matcher(line);
+                if(mt.find()) {
+                    reader.readLine(); //ignore header
+                    ln++;
+                    String tline;
+                    String current = null;
+                    while(!(tline = decode(reader.readLine())).equals("</table>")) {
                         ln++;
-                        String tline;
-                        String current = null;
-                        while(!(tline = decode(reader.readLine())).equals("</table>")) {
-                            ln++;
-                            if(tline.contains("colspan=\"6\"")) {
-                                Matcher m = tdata.matcher(tline);
-                                if(m.find()) {
-                                    current = m.group(1).trim();
-                                    if(current.equals("--")) // decode löscht schon zwei
-                                        current = "Sonstiges";
-                                } else
-                                    throw new GGInvalidSourceException("Malformed class row (" + ln + "): " + tline);
+                        if(tline.contains("colspan=\"6\"")) {
+                            Matcher m = tdata.matcher(tline);
+                            if(m.find()) {
+                                current = m.group(1).trim();
+                                if(current.equals("--")) // decode löscht schon zwei
+                                    current = "Sonstiges";
+                            } else
+                                throw new GGInvalidSourceException("Malformed class row (" + ln + "): " + tline);
 
-                                if(current == "---") //AG (?) ignorieren
-                                    current = null;
-                            } else {
-                                if(current == null)
-                                    continue;
-                                Matcher m = tdata.matcher(tline);
-                                String[] data = new String[6];
-                                int i = 0;
-                                while(m.find()) {
-                                    data[i] = m.group(1).trim();
-                                    i++;
-                                }
-                                if(i != 6)
-                                    throw new GGInvalidSourceException("Not enough data in line " + ln + ": " + tline);
-
-                                //Die SWS hat keine Lehrereinträge
-                                GGPlan.Entry e = new GGPlan.Entry();
-                                e.subst = "";
-                                e.clazz = current;
-                                e.hour = data[0]; //Stunde
-                                e.repsub = data[2]; //Vertr.
-                                e.subject = data[1]; //Fach
-                                e.comment = data[5]; //Typ
-                                e.room = data[3];
-                                e.comment += " " + data[4];
-
-                                e.unify();
-                                plan.entries.add(e);
+                            if(current == "---") //AG (?) ignorieren
+                                current = null;
+                        } else {
+                            if(current == null)
+                                continue;
+                            Matcher m = tdata.matcher(tline);
+                            String[] data = new String[6];
+                            int i = 0;
+                            while(m.find()) {
+                                data[i] = m.group(1).trim();
+                                i++;
                             }
+                            if(i != 6)
+                                throw new GGInvalidSourceException("Not enough data in line " + ln + ": " + tline);
+
+                            //Die SWS hat keine Lehrereinträge
+                            GGPlan.Entry e = new GGPlan.Entry();
+                            e.subst = "";
+                            e.clazz = current;
+                            e.hour = data[0]; //Stunde
+                            e.repsub = data[2]; //Vertr.
+                            e.subject = data[1]; //Fach
+                            e.comment = data[5]; //Typ
+                            e.room = data[3];
+                            e.comment += " " + data[4];
+
+                            e.unify();
+                            plan.entries.add(e);
                         }
                     }
                 }
-
             }
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-            plan.loadDate = "Stand: " + sdf.format(new Date());
-        } catch (Exception e) {
-            e.printStackTrace();
-            plan.throwable = e;
-        }
 
-        boolean b = url.contains("001.htm");
-
-        if(plan.throwable == null)
-            plan.save(b ? "swstd" : "swstm");
-        else {
-            if(plan.load(b ? "swstd" : "swstm")) {
-                final String message = plan.throwable.getMessage();
-                plan.loadDate = GGApp.GG_APP.getResources().getString(R.string.no_internet_connection) + "\n" + plan.loadDate;
-                plan.throwable = null;
-                if(toast)
-                    GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            GGApp.GG_APP.showToast(plan.throwable instanceof UnknownHostException ? "Konnte contao.sachsenwaldschule.org nicht auflösen" :
-                                    plan.throwable instanceof GGInvalidSourceException ? "Ungültige Antwort vom Server" : "Konnte keine Verbindung zu http://contao.sachsenwaldschule.org aufbauen");
-                        }
-                    });
-            } else {
-                plan.date = new Date();
-            }
         }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        plan.loadDate = "Stand: " + sdf.format(new Date());
 
         return plan;
     }

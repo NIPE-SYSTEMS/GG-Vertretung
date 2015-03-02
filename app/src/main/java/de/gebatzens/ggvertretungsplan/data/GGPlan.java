@@ -39,21 +39,38 @@ import de.gebatzens.ggvertretungsplan.GGApp;
 import de.gebatzens.ggvertretungsplan.R;
 import de.gebatzens.ggvertretungsplan.fragment.RemoteDataFragment;
 
-public class GGPlan implements RemoteDataFragment.RemoteData {
+public class GGPlan {
 
     public ArrayList<Entry> entries = new ArrayList<Entry>();
     public Date date;
     public List<String> special = new ArrayList<String>();
-    public Throwable throwable = null;
     public String loadDate = "";
 
     public GGPlan() {
 
     }
 
-    @Override
-    public Throwable getThrowable() {
-        return throwable;
+    public static class GGPlans implements RemoteDataFragment.RemoteData {
+
+        public Throwable throwable;
+        public GGPlan today, tomorrow;
+
+
+        @Override
+        public Throwable getThrowable() {
+            return throwable;
+        }
+
+        @Override
+        public void save(String file) {
+            today.save(file + "today");
+            tomorrow.save(file + "tomorrow");
+        }
+
+        @Override
+        public boolean load(String file) {
+            return today.load(file + "today") && tomorrow.load(file + "tomorrow");
+        }
     }
 
     public boolean load(String file) {

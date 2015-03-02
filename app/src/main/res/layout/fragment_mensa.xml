@@ -11,10 +11,6 @@
             android:layout_height="match_parent"
             android:id="@+id/mensa_refresh">
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -22,7 +18,6 @@
                     android:id="@+id/mensa_content"
                     android:padding="5dp" />
 
-            </ScrollView>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 

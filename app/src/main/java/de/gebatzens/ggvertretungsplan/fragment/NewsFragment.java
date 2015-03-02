@@ -49,7 +49,7 @@ public class NewsFragment extends RemoteDataFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
         ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.fragment_news, group, false);
         if(GGApp.GG_APP.news != null)
-            createView(inflater, vg);
+            createRootView(inflater, vg);
         mDatabaseHelper = new NewsFragmentDatabaseHelper(getActivity().getApplicationContext());
         return vg;
     }

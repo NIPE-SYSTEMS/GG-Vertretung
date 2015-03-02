@@ -54,11 +54,11 @@ public class GGBroadcast extends BroadcastReceiver {
         }
         VPProvider prov = gg.provider;
 
-        GGPlan[] plans = gg.plans = prov.getPlans(false);
-        GGPlan today = plans[0];
-        GGPlan tomo = plans[1];
+        GGPlan.GGPlans plans = gg.plans = prov.getPlans(false);
+        GGPlan today = plans.today;
+        GGPlan tomo = plans.tomorrow;
 
-        if(today.throwable != null || tomo.throwable != null)
+        if(plans.throwable != null)
             return;
 
         if(gg.activity != null && gg.getFragmentType() == GGApp.FragmentType.PLAN)

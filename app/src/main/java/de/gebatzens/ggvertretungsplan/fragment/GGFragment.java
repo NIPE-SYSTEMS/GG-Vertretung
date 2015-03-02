@@ -71,8 +71,8 @@ public class GGFragment extends RemoteDataFragment {
     public void setParams(int type) {
         this.type = type;
         if(GGApp.GG_APP.plans != null) {
-            planh = GGApp.GG_APP.plans[0];
-            planm = GGApp.GG_APP.plans[1];
+            planh = GGApp.GG_APP.plans.today;
+            planm = GGApp.GG_APP.plans.tomorrow;
         }
         if(type == TYPE_TODAY)
             plan = planh;
@@ -139,6 +139,7 @@ public class GGFragment extends RemoteDataFragment {
         return tvl;
     }
 
+    @Override
     public void createView(final LayoutInflater inflater, ViewGroup group) {
         cardColorIndex = 0;
         ScrollView sv = new ScrollView(getActivity());
@@ -157,7 +158,7 @@ public class GGFragment extends RemoteDataFragment {
             tv.setText("Error: " + type);
             l.addView(tv);
             Log.w("ggvp", "setParams not called " + type + " " + this + " " + getParentFragment());
-        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.filters.mainFilter.filter.equals("") && planh.throwable == null && planm.throwable == null) {
+        } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.filters.mainFilter.filter.equals("")) {
             //normale Übersicht
             Filter.FilterList filters = GGApp.GG_APP.filters;
 
@@ -225,7 +226,7 @@ public class GGFragment extends RemoteDataFragment {
 
             createCardItems(list, l, inflater);
 
-        } else if(type == TYPE_OVERVIEW && planh.throwable == null && planm.throwable == null) {
+        } else if(type == TYPE_OVERVIEW) {
             //Keine Klasse
             createButtonWithText(getActivity(), l, getResources().getString(R.string.no_filter_applied), getResources().getString(R.string.settings), new View.OnClickListener() {
 
@@ -237,76 +238,6 @@ public class GGFragment extends RemoteDataFragment {
             });
 
 
-        } else if((type == TYPE_OVERVIEW && (planm.throwable != null || planh.throwable != null)) || (plan != null && plan.throwable != null)) {
-            //Irgendein Error
-            LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            boolean b = planm.throwable != null && planm.throwable instanceof VPLoginException;
-            if(!b)
-                createButtonWithText(getActivity(), l, getResources().getString(R.string.check_connection_and_repeat), getResources().getString(R.string.again), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        GGApp.GG_APP.refreshAsync(null, true, GGApp.FragmentType.PLAN);
-                    }
-                });
-            else
-                createButtonWithText(getActivity(), l, getResources().getString(R.string.login_required), getResources().getString(R.string.do_login), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View c) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        AlertDialog dialog;
-                        builder.setTitle(getResources().getString(R.string.login));
-                        builder.setView(inflater.inflate(R.layout.login_dialog, null));
-
-                        builder.setPositiveButton(getResources().getString(R.string.do_login_submit), new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(final DialogInterface dialog, int which) {
-                                GGApp.GG_APP.activity.mContent.setFragmentLoading();
-                                new AsyncTask<Integer, Integer, Integer>() {
-
-                                    @Override
-                                    public void onPostExecute(Integer v) {
-                                        switch(v) {
-                                            case 1:
-                                                GGApp.GG_APP.showToast(getResources().getString(R.string.username_or_password_wrong));
-                                                break;
-                                            case 2:
-                                                GGApp.GG_APP.showToast(getResources().getString(R.string.could_not_contact_logon_server));
-                                                break;
-                                            case 3:
-                                                GGApp.GG_APP.showToast(getResources().getString(R.string.unknown_error_at_logon));
-                                                break;
-                                        }
-
-                                    }
-
-                                    @Override
-                                    protected Integer doInBackground(Integer... params) {
-                                        String user = ((EditText) ((Dialog) dialog).findViewById(R.id.usernameInput)).getText().toString();
-                                        String pass = ((EditText) ((Dialog) dialog).findViewById(R.id.passwordInput)).getText().toString();
-                                        return GGApp.GG_APP.provider.login(user, pass);
-
-                                    }
-
-                                }.execute();
-                                dialog.dismiss();
-                            }
-                        });
-
-
-                        builder.setNegativeButton(getResources().getString(R.string.abort), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-
-                        dialog = builder.create();
-                        dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-                        dialog.show();
-
-                    }
-                });
         } else {
             CardView cv2 = new CardView(getActivity());
             cv2.setContentPadding(toPixels(16),toPixels(16),toPixels(16),toPixels(16));
@@ -414,18 +345,8 @@ public class GGFragment extends RemoteDataFragment {
         LinearLayout l = new LinearLayout(getActivity());
         l.setOrientation(LinearLayout.VERTICAL);
         if(GGApp.GG_APP.plans != null)
-            createView(inflater, l);
+            createRootView(inflater, l);
         return l;
-    }
-
-    @Override
-    public void onViewCreated(View v, Bundle b) {
-        super.onViewCreated(v, b);
-
-        if(GGApp.GG_APP.plans == null) {
-            ((ViewGroup) getView()).addView(createLoadingView());
-        }
-
     }
 
     private String translateDay(Date date) {

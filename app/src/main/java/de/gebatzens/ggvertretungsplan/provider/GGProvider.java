@@ -123,6 +123,7 @@ public class GGProvider extends VPProvider {
         GGApp.GG_APP.deleteFile("gguserinfo");
         GGApp.GG_APP.deleteFile("ggvptoday");
         GGApp.GG_APP.deleteFile("ggvptomorrow");
+
         prefs.edit().clear().commit();
         if(!logout_local_only) {
             new AsyncTask<String, String, String>() {
@@ -181,29 +182,27 @@ public class GGProvider extends VPProvider {
     }
 
     @Override
-    public GGPlan[] getPlans(boolean toast) {
-        return getPlans(toast, true);
-    }
-
-    public GGPlan[] getPlans(boolean toast, boolean session) {
+    public GGPlan.GGPlans getPlans(boolean toast) {
         Log.w("ggvp", "Get GG Plans " + sessId);
-        GGPlan[] plans = new GGPlan[2];
-        plans[0] = new GGPlan();
-        plans[1] = new GGPlan();
-        plans[0].date = new Date();
-        plans[1].date = new Date();
+        GGPlan.GGPlans plans = new GGPlan.GGPlans();
+        plans.tomorrow = new GGPlan();
+        plans.today = new GGPlan();
+        plans.today.date = new Date();
+        plans.tomorrow.date = new Date();
 
         try {
-            if (sessId == null || sessId.isEmpty())
-                throw new VPLoginException();
+            if (sessId == null || sessId.isEmpty()) {
+                startNewSession(prefs.getString("token", null));
+                if (sessId == null || sessId.isEmpty())
+                    throw new VPLoginException();
+            }
 
             HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/infoapp_provider_new.php?site=substitutionplan&sessid=" + sessId).openConnection();
             con.setRequestMethod("GET");
             con.setSSLSocketFactory(sslSocketFactory);
 
             if(con.getResponseCode() == 401) {
-                if(!session)
-                    logout(true, true);
+                logout(true, true);
                 throw new VPLoginException();
             }
 
@@ -227,22 +226,22 @@ public class GGProvider extends VPProvider {
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                         String name2 = parser.getName();
                         if(name2.equals("date-today"))
-                            plans[0].date = format.parse(parser.nextText());
+                            plans.today.date = format.parse(parser.nextText());
                         else if(name2.equals("date-tomorrow"))
-                            plans[1].date = format.parse(parser.nextText());
+                            plans.tomorrow.date = format.parse(parser.nextText());
 
                     }
                 } else if(name.equals("list-today")) {
-                    getPlan(parser, plans[0]);
+                    getPlan(parser, plans.today);
                 } else if(name.equals("list-tomorrow")) {
-                    getPlan(parser, plans[1]);
+                    getPlan(parser, plans.tomorrow);
                 } else if(name.equals("important-today")) {
                     while(parser.next() != XmlPullParser.END_TAG) {
                         if(parser.getEventType() != XmlPullParser.START_TAG)
                             continue;
 
                         if(parser.getName().equals("item"))
-                            plans[0].special.add("&#8226;  " + parser.nextText());
+                            plans.today.special.add("&#8226;  " + parser.nextText());
                     }
                 } else if(name.equals("important-tomorrow")) {
                     while(parser.next() != XmlPullParser.END_TAG) {
@@ -250,31 +249,24 @@ public class GGProvider extends VPProvider {
                             continue;
 
                         if(parser.getName().equals("item"))
-                            plans[1].special.add("&#8226;  " + parser.nextText());
+                            plans.tomorrow.special.add("&#8226;  " + parser.nextText());
                     }
                 }
             }
 
         } catch(Exception e) {
             e.printStackTrace();
+            plans.throwable = e;
 
-            if(session && (e instanceof XmlPullParserException || e instanceof VPLoginException)) {
-                startNewSession(prefs.getString("token", null));
-                return getPlans(toast, false);
-            } else {
-                plans[0].throwable = e;
-                plans[1].throwable = e;
-            }
         }
 
-        if(plans[0].throwable != null) {
-            if (plans[0].load("ggvptoday") && plans[1].load("ggvptomorrow")) {
-                final Throwable t = plans[0].throwable;
-                String s = GGApp.GG_APP.getResources().getString(R.string.no_internet_connection)+"\n" + plans[0].loadDate;
-                plans[0].loadDate = s;
-                plans[1].loadDate = s;
-                plans[0].throwable = null;
-                plans[1].throwable = null;
+        if(plans.throwable != null) {
+            if (plans.load("ggvp")) {
+                final Throwable t = plans.throwable;
+                String s = GGApp.GG_APP.getResources().getString(R.string.no_internet_connection)+"\n" + plans.today.loadDate;
+                plans.today.loadDate = s;
+                plans.tomorrow.loadDate = s;
+                plans.throwable = null;
                 if(toast)
                     GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
                         @Override
@@ -284,8 +276,7 @@ public class GGProvider extends VPProvider {
                     });
             }
         } else {
-            plans[0].save("ggvptoday");
-            plans[1].save("ggvptomorrow");
+            plans.save("ggvp");
         }
 
         return plans;
@@ -413,6 +404,12 @@ public class GGProvider extends VPProvider {
     public Mensa getMensa() {
         Mensa m = new Mensa();
         try {
+            if (sessId == null || sessId.isEmpty()) {
+                startNewSession(prefs.getString("token", null));
+                if (sessId == null || sessId.isEmpty())
+                    throw new VPLoginException();
+            }
+
             HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/infoapp_provider_new.php?site=mensa&sessid="+sessId).openConnection();
             con.setRequestMethod("GET");
             con.setSSLSocketFactory(GGProvider.sslSocketFactory);

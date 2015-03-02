@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -61,7 +62,7 @@ public class MensaFragment extends RemoteDataFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
         ViewGroup vg = (ViewGroup) inflater.inflate(R.layout.fragment_mensa, group, false);
         if(GGApp.GG_APP.mensa != null)
-            createView(inflater, vg);
+            createRootView(inflater, vg);
         return vg;
     }
 
@@ -98,6 +99,10 @@ public class MensaFragment extends RemoteDataFragment {
 
     @Override
     public void createView(LayoutInflater inflater, ViewGroup view) {
+        ScrollView sv = new ScrollView(getActivity());
+        ((LinearLayout) view.findViewById(R.id.mensa_content)).addView(sv);
+        LinearLayout l = new LinearLayout(getActivity());
+        sv.addView(l);
         for(int i = 0; i < GGApp.GG_APP.mensa.size(); i++) {
             MensaItem mi = new MensaItem();
             mi.id = GGApp.GG_APP.mensa.get(i)[0];
@@ -106,7 +111,7 @@ public class MensaFragment extends RemoteDataFragment {
             mi.meal = GGApp.GG_APP.mensa.get(i)[2];
             mi.vegi = GGApp.GG_APP.mensa.get(i)[4];
             mi.image = GGApp.GG_APP.mensa.get(i)[5];
-            ((LinearLayout) view.findViewById(R.id.mensa_content)).addView(createCardItem(mi,inflater));
+            l.addView(createCardItem(mi, inflater));
         }
         cardColorIndex = 0;
     }

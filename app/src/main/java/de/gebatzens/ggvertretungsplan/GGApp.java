@@ -42,13 +42,14 @@ import de.gebatzens.ggvertretungsplan.data.Filter;
 import de.gebatzens.ggvertretungsplan.data.GGPlan;
 import de.gebatzens.ggvertretungsplan.data.Mensa;
 import de.gebatzens.ggvertretungsplan.data.News;
+import de.gebatzens.ggvertretungsplan.fragment.RemoteDataFragment;
 import de.gebatzens.ggvertretungsplan.provider.GGProvider;
 import de.gebatzens.ggvertretungsplan.provider.SWSProvider;
 import de.gebatzens.ggvertretungsplan.provider.VPProvider;
 
 public class GGApp extends Application {
 
-    public GGPlan[] plans = null;
+    public GGPlan.GGPlans plans = null;
     public News news;
     public Mensa mensa;
     public MainActivity activity;
@@ -73,7 +74,7 @@ public class GGApp extends Application {
 
     }
 
-    public Object getDataForFragment(FragmentType type) {
+    public RemoteDataFragment.RemoteData getDataForFragment(FragmentType type) {
         switch(type) {
             case PLAN:
                 return plans;
@@ -204,7 +205,7 @@ public class GGApp extends Application {
                 boolean update = updateFragments;
                 switch(type) {
                     case PLAN:
-                        GGPlan[] nplans = provider.getPlans(updateFragments);
+                        GGPlan.GGPlans nplans = provider.getPlans(updateFragments);
                         //if(plans != null)
                         //    update = update && !(nplans[0].equals(plans[0]) && nplans[1].equals(plans[1]));
                         plans = nplans;

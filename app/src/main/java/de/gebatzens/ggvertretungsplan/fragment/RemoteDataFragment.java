@@ -20,8 +20,12 @@
 package de.gebatzens.ggvertretungsplan.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -29,7 +33,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -37,6 +43,7 @@ import android.widget.TextView;
 
 import de.gebatzens.ggvertretungsplan.GGApp;
 import de.gebatzens.ggvertretungsplan.R;
+import de.gebatzens.ggvertretungsplan.VPLoginException;
 
 public abstract class RemoteDataFragment extends Fragment {
 
@@ -63,7 +70,7 @@ public abstract class RemoteDataFragment extends Fragment {
 
         vg.removeAllViews();
 
-        createView(getActivity().getLayoutInflater(), vg);
+        createRootView(getActivity().getLayoutInflater(), vg);
     }
 
     public CardView createCardView() {
@@ -107,7 +114,7 @@ public abstract class RemoteDataFragment extends Fragment {
         return l;
     }
 
-    public void createButtonWithText(Activity activity, LinearLayout l, String text, String button, View.OnClickListener onclick) {
+    public void createButtonWithText(Activity activity, ViewGroup l, String text, String button, View.OnClickListener onclick) {
         RelativeLayout r = new RelativeLayout(activity);
         r.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -138,12 +145,91 @@ public abstract class RemoteDataFragment extends Fragment {
         l.addView(r);
     }
 
+    public void createRootView(final LayoutInflater inflater, ViewGroup vg) {
+        RemoteData data = GGApp.GG_APP.getDataForFragment(type);
+        if(data == null) {
+            setFragmentLoading();
+        } else if(data.getThrowable() != null) {
+            Throwable t = data.getThrowable();
+            if(t instanceof VPLoginException) {
+                createButtonWithText(getActivity(), vg, getResources().getString(R.string.login_required), getResources().getString(R.string.do_login), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View c) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        AlertDialog dialog;
+                        builder.setTitle(getResources().getString(R.string.login));
+                        builder.setView(inflater.inflate(R.layout.login_dialog, null));
+
+                        builder.setPositiveButton(getResources().getString(R.string.do_login_submit), new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(final DialogInterface dialog, int which) {
+                                GGApp.GG_APP.activity.mContent.setFragmentLoading();
+                                new AsyncTask<Integer, Integer, Integer>() {
+
+                                    @Override
+                                    public void onPostExecute(Integer v) {
+                                        switch(v) {
+                                            case 1:
+                                                GGApp.GG_APP.showToast(getResources().getString(R.string.username_or_password_wrong));
+                                                break;
+                                            case 2:
+                                                GGApp.GG_APP.showToast(getResources().getString(R.string.could_not_contact_logon_server));
+                                                break;
+                                            case 3:
+                                                GGApp.GG_APP.showToast(getResources().getString(R.string.unknown_error_at_logon));
+                                                break;
+                                        }
+
+                                    }
+
+                                    @Override
+                                    protected Integer doInBackground(Integer... params) {
+                                        String user = ((EditText) ((Dialog) dialog).findViewById(R.id.usernameInput)).getText().toString();
+                                        String pass = ((EditText) ((Dialog) dialog).findViewById(R.id.passwordInput)).getText().toString();
+                                        return GGApp.GG_APP.provider.login(user, pass);
+
+                                    }
+
+                                }.execute();
+                                dialog.dismiss();
+                            }
+                        });
+
+
+                        builder.setNegativeButton(getResources().getString(R.string.abort), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+
+                        dialog = builder.create();
+                        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                        dialog.show();
+
+                    }
+                });
+            } else {
+                createButtonWithText(getActivity(), vg, getResources().getString(R.string.check_connection_and_repeat), getResources().getString(R.string.again), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        GGApp.GG_APP.refreshAsync(null, true, GGApp.FragmentType.PLAN);
+                    }
+                });
+            }
+        } else {
+            createView(inflater, vg);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup group, Bundle bundle) {
         LinearLayout l = new LinearLayout(getActivity());
+        l.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         l.setOrientation(LinearLayout.VERTICAL);
         if(GGApp.GG_APP.getDataForFragment(type) != null)
-            createView(inflater, l);
+            createRootView(inflater, l);
         return l;
     }
 
