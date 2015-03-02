@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <de.gebatzens.ggvertretungsplan.view.MensaSwipeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/mensa_refresh">
@@ -15,11 +15,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:id="@+id/mensa_content"
-                    android:padding="5dp" />
+                    android:id="@+id/mensa_content"/>
 
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </de.gebatzens.ggvertretungsplan.view.MensaSwipeLayout>
 
         <View
             android:layout_width="match_parent"

@@ -100,8 +100,14 @@ public class MensaFragment extends RemoteDataFragment {
     @Override
     public void createView(LayoutInflater inflater, ViewGroup view) {
         ScrollView sv = new ScrollView(getActivity());
+        sv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        sv.setTag("mensa_scroll");
         ((LinearLayout) view.findViewById(R.id.mensa_content)).addView(sv);
         LinearLayout l = new LinearLayout(getActivity());
+        l.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        l.setOrientation(LinearLayout.VERTICAL);
+        int p = toPixels(6);
+        l.setPadding(p, p, p, p);
         sv.addView(l);
         for(int i = 0; i < GGApp.GG_APP.mensa.size(); i++) {
             MensaItem mi = new MensaItem();
@@ -124,6 +130,9 @@ public class MensaFragment extends RemoteDataFragment {
     private CardView createCardItem(MensaItem mensa_item, LayoutInflater i) {
         CardView mcv = createCardView();
         mcv.setContentPadding(0, 0, 0, 0);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.setMargins(0, 0, 0, toPixels(6));
+        mcv.setLayoutParams(params);
         i.inflate(R.layout.mensa_cardview_entry, mcv, true);
         Date d = new Date();
         Calendar c = Calendar.getInstance();
