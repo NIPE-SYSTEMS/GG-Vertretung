@@ -61,6 +61,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -140,8 +141,11 @@ public class MensaFragment extends RemoteDataFragment {
         CardView mcv = createCardView();
         mcv.setContentPadding(0, 0, 0, 0);
         i.inflate(R.layout.mensa_cardview_entry, mcv, true);
-        Date dt = new Date();
-        dt.getTime();
+        Date d = new Date();
+        Calendar c = Calendar.getInstance();
+        c.setTime(d);
+        c.add(Calendar.DAY_OF_YEAR, -1);
+        Date dt = c.getTime();
         try {
             if(getDate(mensa_item.date).before(dt)) {
                 mcv.setAlpha(0.65f);
