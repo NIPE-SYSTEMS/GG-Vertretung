@@ -17,7 +17,7 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.fragment;
 
 import android.app.Activity;
 import android.graphics.PorterDuff;
@@ -34,6 +34,9 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.R;
 
 public abstract class RemoteDataFragment extends Fragment {
 

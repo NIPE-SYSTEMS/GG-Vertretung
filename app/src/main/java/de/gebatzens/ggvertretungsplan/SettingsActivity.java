@@ -37,7 +37,6 @@ import android.preference.PreferenceFragment;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -50,6 +49,8 @@ import java.net.URL;
 import java.util.Scanner;
 
 import javax.net.ssl.HttpsURLConnection;
+
+import de.gebatzens.ggvertretungsplan.provider.GGProvider;
 
 public class SettingsActivity extends Activity {
 

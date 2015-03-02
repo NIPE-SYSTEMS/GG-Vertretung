@@ -17,7 +17,7 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.view;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -28,7 +28,9 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
- 
+
+import de.gebatzens.ggvertretungsplan.R;
+
 public class RibbonMenuListAdapter extends BaseAdapter {
     private Context context;
     private String[] mTitle;

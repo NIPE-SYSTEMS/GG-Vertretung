@@ -17,36 +17,27 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.fragment;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.JsonReader;
-import android.util.JsonWriter;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.NewsFragmentDatabaseHelper;
+import de.gebatzens.ggvertretungsplan.R;
 
 public class NewsFragment extends RemoteDataFragment {
 
-    ListView lv;
+    public ListView lv;
     private NewsFragmentListAdapter nfla;
     private NewsFragmentDatabaseHelper mDatabaseHelper;
 
@@ -134,79 +125,5 @@ public class NewsFragment extends RemoteDataFragment {
         return (ViewGroup) getView().findViewById(R.id.news_content);
     }
 
-    public static class News extends ArrayList<String[]> implements RemoteData {
 
-        Throwable throwable;
-
-        @Override
-        public Throwable getThrowable() {
-            return throwable;
-        }
-
-        public void save(String file) {
-            try {
-                OutputStream out = GGApp.GG_APP.openFileOutput(file, Context.MODE_PRIVATE);
-                JsonWriter writer = new JsonWriter(new OutputStreamWriter(out));
-
-                writer.setIndent("  ");
-                writer.beginArray();
-                for(String[] s : this) {
-                    writer.beginObject();
-
-                    writer.name("id").value(s[0]);
-                    writer.name("date").value(s[1]);
-                    writer.name("topic").value(s[2]);
-                    writer.name("source").value(s[3]);
-                    writer.name("title").value(s[4]);
-                    writer.name("text").value(s[5]);
-
-                    writer.endObject();
-                }
-                writer.endArray();
-                writer.close();
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        public boolean load(String file) {
-            clear();
-            try {
-                InputStream in = GGApp.GG_APP.openFileInput(file);
-                JsonReader reader = new JsonReader(new InputStreamReader(in));
-                reader.beginArray();
-                while(reader.hasNext()) {
-                    reader.beginObject();
-                    String[] s = new String[6];
-
-                    while(reader.hasNext()) {
-                        String name = reader.nextName();
-                        if(name.equals("id"))
-                            s[0] = reader.nextString();
-                        else if(name.equals("date"))
-                            s[1] = reader.nextString();
-                        else if(name.equals("topic"))
-                            s[2] = reader.nextString();
-                        else if(name.equals("source"))
-                            s[3] = reader.nextString();
-                        else if(name.equals("title"))
-                            s[4] = reader.nextString();
-                        else if(name.equals("text"))
-                            s[5] = reader.nextString();
-                        else
-                            reader.skipValue();
-                    }
-                    reader.endObject();
-                    add(s);
-                }
-                reader.endArray();
-                reader.close();
-            } catch(Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            return true;
-        }
-    }
 }

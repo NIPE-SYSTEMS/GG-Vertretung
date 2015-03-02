@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <de.gebatzens.ggvertretungsplan.NewsSwipeLayout
+        <de.gebatzens.ggvertretungsplan.view.NewsSwipeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/news_refresh">
@@ -17,7 +17,7 @@
                 android:orientation="vertical"
                 android:id="@+id/news_content" />
 
-        </de.gebatzens.ggvertretungsplan.NewsSwipeLayout>
+        </de.gebatzens.ggvertretungsplan.view.NewsSwipeLayout>
 
         <View
             android:layout_width="match_parent"

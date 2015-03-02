@@ -17,7 +17,7 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.view;
 
 import android.content.Context;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -26,6 +26,11 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.widget.ScrollView;
+
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.MainActivity;
+import de.gebatzens.ggvertretungsplan.fragment.GGContentFragment;
+import de.gebatzens.ggvertretungsplan.fragment.GGFragment;
 
 public class GGSwipeLayout extends SwipeRefreshLayout {
 

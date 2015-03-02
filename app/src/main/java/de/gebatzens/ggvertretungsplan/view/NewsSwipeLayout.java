@@ -16,17 +16,18 @@
  * You should have received a copy of the GNU General Public License
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.view;
 
 import android.content.Context;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.widget.ListView;
-import android.widget.ScrollView;
+
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.MainActivity;
+import de.gebatzens.ggvertretungsplan.fragment.NewsFragment;
 
 public class NewsSwipeLayout extends SwipeRefreshLayout {
 

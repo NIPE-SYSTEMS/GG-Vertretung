@@ -17,17 +17,17 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.MainActivity;
+import de.gebatzens.ggvertretungsplan.R;
+import de.gebatzens.ggvertretungsplan.provider.VPProvider;
 
 public class GGFragmentAdapter extends FragmentPagerAdapter {
 

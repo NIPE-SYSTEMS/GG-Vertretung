@@ -17,7 +17,7 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.data;
 
 import android.content.Context;
 import android.util.JsonReader;
@@ -28,13 +28,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import de.gebatzens.ggvertretungsplan.FilterActivity;
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.R;
+import de.gebatzens.ggvertretungsplan.fragment.RemoteDataFragment;
 
 public class GGPlan implements RemoteDataFragment.RemoteData {
 
@@ -185,14 +188,14 @@ public class GGPlan implements RemoteDataFragment.RemoteData {
             return false;
     }
 
-    public List<Entry> filter(FilterActivity.FilterList filters) {
+    public List<Entry> filter(Filter.FilterList filters) {
         ArrayList<Entry> list = new ArrayList<Entry>();
         for(Entry e : entries) {
             if(filters.mainFilter.matches(e))
                 list.add(e);
         }
 
-        for(FilterActivity.Filter f : filters) {
+        for(Filter f : filters) {
             ArrayList<Entry> rlist = new ArrayList<Entry>();
             for(Entry e : list)
                 if(f.matches(e))
@@ -205,16 +208,16 @@ public class GGPlan implements RemoteDataFragment.RemoteData {
     }
 
     public static class Entry {
-        String type;
-        String clazz;
+        public String type;
+        public String clazz;
         //String missing;
-        String subst = "";
-        String subject = "";
+        public String subst = "";
+        public String subject = "";
         //Neues Fach
-        String repsub = "";
-        String comment = "";
-        String hour = "";
-        String room = "";
+        public String repsub = "";
+        public String comment = "";
+        public String hour = "";
+        public String room = "";
 
         @Override
         public boolean equals(Object o) {

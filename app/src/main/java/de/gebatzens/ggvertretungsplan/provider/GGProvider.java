@@ -17,10 +17,8 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.provider;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -42,9 +40,7 @@ import java.net.URLEncoder;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,6 +50,16 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
+import de.gebatzens.ggvertretungsplan.FilterActivity;
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.R;
+import de.gebatzens.ggvertretungsplan.VPLoginException;
+import de.gebatzens.ggvertretungsplan.data.Exams;
+import de.gebatzens.ggvertretungsplan.data.Filter;
+import de.gebatzens.ggvertretungsplan.data.GGPlan;
+import de.gebatzens.ggvertretungsplan.data.Mensa;
+import de.gebatzens.ggvertretungsplan.data.News;
 
 public class GGProvider extends VPProvider {
 
@@ -328,8 +334,8 @@ public class GGProvider extends VPProvider {
         p.loadDate = GGApp.GG_APP.getResources().getString(R.string.as_of) + ": " + sdf.format(new Date());
     }
 
-    public NewsFragment.News getNews() {
-        NewsFragment.News n = new NewsFragment.News();
+    public News getNews() {
+        News n = new News();
         try {
             HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/infoapp_provider_new.php?site=news&sessid="+sessId).openConnection();
             con.setRequestMethod("GET");
@@ -404,8 +410,8 @@ public class GGProvider extends VPProvider {
         }
     }
 
-    public MensaFragment.Mensa getMensa() {
-        MensaFragment.Mensa m = new MensaFragment.Mensa();
+    public Mensa getMensa() {
+        Mensa m = new Mensa();
         try {
             HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/infoapp_provider_new.php?site=mensa&sessid="+sessId).openConnection();
             con.setRequestMethod("GET");
@@ -492,8 +498,8 @@ public class GGProvider extends VPProvider {
     }
 
     @Override
-    public ExamFragment.Exams getExams() {
-        ExamFragment.Exams exams = new ExamFragment.Exams();
+    public Exams getExams() {
+        Exams exams = new Exams();
         if(!exams.load("ggexams")) {
             try {
                 if (sessId == null || sessId.isEmpty()) {
@@ -597,10 +603,10 @@ public class GGProvider extends VPProvider {
 
                     String group = prefs.getString("group", null);
                     if(group != null && !group.equals("lehrer")) {
-                        gg.filters.mainFilter.type = FilterActivity.FilterType.CLASS;
+                        gg.filters.mainFilter.type = Filter.FilterType.CLASS;
                         gg.filters.mainFilter.filter = group;
                     } else {
-                        gg.filters.mainFilter.type = FilterActivity.FilterType.TEACHER;
+                        gg.filters.mainFilter.type = Filter.FilterType.TEACHER;
                         gg.filters.mainFilter.filter = user;
                     }
                     FilterActivity.saveFilter(GGApp.GG_APP.filters);

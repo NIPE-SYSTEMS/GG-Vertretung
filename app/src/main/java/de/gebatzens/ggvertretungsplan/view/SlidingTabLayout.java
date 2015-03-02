@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.view;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -29,6 +29,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
+
+import de.gebatzens.ggvertretungsplan.R;
 
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to

@@ -17,19 +17,15 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.fragment;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.util.Log;
@@ -40,12 +36,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -54,6 +47,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import de.gebatzens.ggvertretungsplan.FilterActivity;
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.data.Filter;
+import de.gebatzens.ggvertretungsplan.data.GGPlan;
+import de.gebatzens.ggvertretungsplan.R;
+import de.gebatzens.ggvertretungsplan.SettingsActivity;
+import de.gebatzens.ggvertretungsplan.VPLoginException;
 
 public class GGFragment extends RemoteDataFragment {
 
@@ -158,7 +159,7 @@ public class GGFragment extends RemoteDataFragment {
             Log.w("ggvp", "setParams not called " + type + " " + this + " " + getParentFragment());
         } else if(type == TYPE_OVERVIEW && !GGApp.GG_APP.filters.mainFilter.filter.equals("") && planh.throwable == null && planm.throwable == null) {
             //normale Übersicht
-            FilterActivity.FilterList filters = GGApp.GG_APP.filters;
+            Filter.FilterList filters = GGApp.GG_APP.filters;
 
             List<GGPlan.Entry> list = planh.filter(filters);
 
@@ -174,7 +175,7 @@ public class GGFragment extends RemoteDataFragment {
             createTextView(planh.loadDate, 15, inflater, l2);
 
             TextView tv2 = createTextView(
-                    filters.mainFilter.type == FilterActivity.FilterType.CLASS ? getActivity().getString(R.string.schoolclass) + " " + filters.mainFilter.filter :
+                    filters.mainFilter.type == Filter.FilterType.CLASS ? getActivity().getString(R.string.schoolclass) + " " + filters.mainFilter.filter :
                     getActivity().getString(R.string.teacher) + " " + filters.mainFilter.filter, 15, inflater, l2);
             tv2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             tv2.setGravity(Gravity.RIGHT | Gravity.CENTER);
@@ -369,10 +370,10 @@ public class GGFragment extends RemoteDataFragment {
                     if (!item.equals(getActivity().getString(R.string.all))) {
                         l3.removeAllViews();
                         cardColorIndex = 0;
-                        FilterActivity.FilterList fl = new FilterActivity.FilterList();
-                        FilterActivity.Filter main = new FilterActivity.Filter();
+                        Filter.FilterList fl = new Filter.FilterList();
+                        Filter main = new Filter();
                         fl.mainFilter = main;
-                        main.type = FilterActivity.FilterType.CLASS;
+                        main.type = Filter.FilterType.CLASS;
                         main.filter = item;
                         createCardItems(plan.filter(fl), l3, inflater);
 
@@ -383,11 +384,11 @@ public class GGFragment extends RemoteDataFragment {
                         List<String> classes = plan.getAllClasses();
                         for(String s : classes) {
                             createTextView(s, 30, inflater, l3).setPadding(0, toPixels(20), 0, 0);
-                            FilterActivity.FilterList fl = new FilterActivity.FilterList();
-                            FilterActivity.Filter main = new FilterActivity.Filter();
+                            Filter.FilterList fl = new Filter.FilterList();
+                            Filter main = new Filter();
                             fl.mainFilter = main;
                             main.filter = s;
-                            main.type = FilterActivity.FilterType.CLASS;
+                            main.type = Filter.FilterType.CLASS;
                             createCardItems(plan.filter(fl), l3, inflater);
                         }
                     }

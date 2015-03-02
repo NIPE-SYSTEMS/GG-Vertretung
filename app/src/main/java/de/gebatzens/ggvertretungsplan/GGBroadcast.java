@@ -24,7 +24,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.media.audiofx.BassBoost;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -34,6 +33,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Properties;
+
+import de.gebatzens.ggvertretungsplan.data.GGPlan;
+import de.gebatzens.ggvertretungsplan.fragment.GGContentFragment;
+import de.gebatzens.ggvertretungsplan.provider.VPProvider;
 
 public class GGBroadcast extends BroadcastReceiver {
 

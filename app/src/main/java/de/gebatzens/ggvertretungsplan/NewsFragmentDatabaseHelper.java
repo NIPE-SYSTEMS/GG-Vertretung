@@ -37,7 +37,7 @@ public class NewsFragmentDatabaseHelper extends SQLiteOpenHelper {
                     KEY_ID + " INTEGER PRIMARY KEY," +
                     KEY_NEWS_TITLE + " TEXT);";
 
-    NewsFragmentDatabaseHelper(Context context) {
+    public NewsFragmentDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

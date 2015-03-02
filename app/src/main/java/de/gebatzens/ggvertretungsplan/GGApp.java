@@ -26,7 +26,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -38,19 +37,28 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 
+import de.gebatzens.ggvertretungsplan.data.Exams;
+import de.gebatzens.ggvertretungsplan.data.Filter;
+import de.gebatzens.ggvertretungsplan.data.GGPlan;
+import de.gebatzens.ggvertretungsplan.data.Mensa;
+import de.gebatzens.ggvertretungsplan.data.News;
+import de.gebatzens.ggvertretungsplan.provider.GGProvider;
+import de.gebatzens.ggvertretungsplan.provider.SWSProvider;
+import de.gebatzens.ggvertretungsplan.provider.VPProvider;
+
 public class GGApp extends Application {
 
     public GGPlan[] plans = null;
-    public NewsFragment.News news;
-    public MensaFragment.Mensa mensa;
+    public News news;
+    public Mensa mensa;
     public MainActivity activity;
     public VPProvider provider;
-    public ExamFragment.Exams exams;
+    public Exams exams;
     public static final int UPDATE_DISABLE = 0, UPDATE_WLAN = 1, UPDATE_ALL = 2;
     private SharedPreferences preferences;
     public static GGApp GG_APP;
     private HashMap<String, Class<? extends VPProvider>> mProviderList = new HashMap<String, Class<? extends VPProvider>>();
-    public FilterActivity.FilterList filters = new FilterActivity.FilterList();
+    public Filter.FilterList filters = new Filter.FilterList();
 
     @Override
     public void onCreate() {

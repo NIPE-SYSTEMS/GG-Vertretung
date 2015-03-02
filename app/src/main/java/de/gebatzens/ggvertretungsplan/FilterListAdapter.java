@@ -46,19 +46,21 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import de.gebatzens.ggvertretungsplan.data.Filter;
+
 public class FilterListAdapter extends BaseAdapter {
 
-    FilterActivity.FilterList list;
+    Filter.FilterList list;
     FilterActivity c;
 
-    public FilterListAdapter(FilterActivity c, FilterActivity.FilterList filters) {
+    public FilterListAdapter(FilterActivity c, Filter.FilterList filters) {
         this.c = c;
         list = filters;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final FilterActivity.Filter filter = list.get(position);
+        final Filter filter = list.get(position);
         final ViewGroup vg = (ViewGroup) ((LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.filter_item, parent, false);
         ((TextView) vg.findViewById(R.id.filter_main_text)).setText(filter.toString(false));
         FrameLayout edit = (FrameLayout) vg.findViewById(R.id.filter_edit);
@@ -72,8 +74,8 @@ public class FilterListAdapter extends BaseAdapter {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         EditText text = (EditText) ((Dialog) dialog).findViewById(R.id.filter_text);
-                        FilterActivity.Filter f = list.get(position);
-                        f.type = FilterActivity.FilterType.SUBJECT;
+                        Filter f = list.get(position);
+                        f.type = Filter.FilterType.SUBJECT;
                         f.filter = text.getText().toString().trim();
                         if (f.filter.isEmpty())
                             Toast.makeText(((Dialog) dialog).getContext(), c.getString(R.string.invalid_filter), Toast.LENGTH_SHORT).show();

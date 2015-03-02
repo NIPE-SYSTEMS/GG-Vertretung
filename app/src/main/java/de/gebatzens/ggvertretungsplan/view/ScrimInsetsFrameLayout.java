@@ -1,4 +1,4 @@
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.view;
 
 /*
 * Copyright 2014 Google Inc.
@@ -24,6 +24,8 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+
+import de.gebatzens.ggvertretungsplan.R;
 
 /**
  * A layout that draws something in the insets passed to

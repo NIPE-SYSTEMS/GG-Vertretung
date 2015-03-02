@@ -26,7 +26,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,9 +36,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -54,6 +51,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+
+import de.gebatzens.ggvertretungsplan.data.Filter;
+import de.gebatzens.ggvertretungsplan.data.GGPlan;
 
 public class FilterActivity extends Activity {
 
@@ -87,9 +87,9 @@ public class FilterActivity extends Activity {
         TextView tv2 = (TextView) findViewById(R.id.filter_sep_2);
         tv2.setTextColor(GGApp.GG_APP.provider.getColor());
 
-        FilterList list = GGApp.GG_APP.filters;
+        Filter.FilterList list = GGApp.GG_APP.filters;
         mainFilterCategory = (TextView) findViewById(R.id.filter_main_category);
-        mainFilterCategory.setText(list.mainFilter.filter.isEmpty() ? getString(R.string.not_selected) : list.mainFilter.type == FilterActivity.FilterType.CLASS ? getApplication().getString(R.string.schoolclass) : getApplication().getString(R.string.teacher));
+        mainFilterCategory.setText(list.mainFilter.filter.isEmpty() ? getString(R.string.not_selected) : list.mainFilter.type == Filter.FilterType.CLASS ? getApplication().getString(R.string.schoolclass) : getApplication().getString(R.string.teacher));
         mainFilterContent = (TextView) findViewById(R.id.filter_main_content);
         mainFilterContent.setText(list.mainFilter.filter);
 
@@ -109,11 +109,11 @@ public class FilterActivity extends Activity {
                         if (text2.isEmpty())
                             Toast.makeText(((Dialog) dialog).getContext(), getApplication().getString(R.string.invalid_filter), Toast.LENGTH_SHORT).show();
                         else {
-                            FilterList list = GGApp.GG_APP.filters;
+                            Filter.FilterList list = GGApp.GG_APP.filters;
                             list.mainFilter.filter = text2;
                             mainFilterContent.setText(list.mainFilter.filter);
-                            list.mainFilter.type = FilterType.values()[spinner.getSelectedItemPosition()];
-                            mainFilterCategory.setText(list.mainFilter.type == FilterActivity.FilterType.CLASS ? getApplication().getString(R.string.schoolclass) : getApplication().getString(R.string.teacher));
+                            list.mainFilter.type = Filter.FilterType.values()[spinner.getSelectedItemPosition()];
+                            mainFilterCategory.setText(list.mainFilter.type == Filter.FilterType.CLASS ? getApplication().getString(R.string.schoolclass) : getApplication().getString(R.string.teacher));
                             FilterActivity.saveFilter(GGApp.GG_APP.filters);
                         }
                         dialog.dismiss();
@@ -133,8 +133,8 @@ public class FilterActivity extends Activity {
                         android.R.layout.simple_spinner_item, main_filterStrings);
                 a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 s.setAdapter(a);
-                FilterList list = GGApp.GG_APP.filters;
-                s.setSelection(list.mainFilter.type == FilterType.CLASS ? 0 : 1);
+                Filter.FilterList list = GGApp.GG_APP.filters;
+                s.setSelection(list.mainFilter.type == Filter.FilterType.CLASS ? 0 : 1);
                 EditText mainEdit = (EditText) d.findViewById(R.id.filter_text);
                 mainEdit.setText(list.mainFilter.filter);
             }
@@ -189,7 +189,7 @@ public class FilterActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         EditText text = (EditText) ((Dialog) dialog).findViewById(R.id.filter_text);
                         Filter f = new Filter();
-                        f.type = FilterType.SUBJECT;
+                        f.type = Filter.FilterType.SUBJECT;
                         f.filter = text.getText().toString().trim();
                         if (f.filter.isEmpty())
                             Toast.makeText(((Dialog) dialog).getContext(), getApplication().getString(R.string.invalid_filter), Toast.LENGTH_SHORT).show();
@@ -221,73 +221,8 @@ public class FilterActivity extends Activity {
         finish();
     }
 
-    public static class FilterList extends ArrayList<Filter> {
-        public Filter mainFilter;
-    }
-
-    public static class Filter {
-        FilterType type;
-        String filter;
-
-        public boolean matches(GGPlan.Entry e) {
-            if(filter.isEmpty())
-                return false;
-            switch(type) {
-                case CLASS:
-                    return e.clazz.toLowerCase().equals(filter.toLowerCase());
-                case TEACHER:
-                    return e.subst.toLowerCase().equals(filter.toLowerCase());
-                case SUBJECT:
-                    return e.subject.toLowerCase().replace(" ", "").equals(filter.toLowerCase().replace(" ", ""));
-            }
-            return false;
-        }
-
-        public static String getTypeString(FilterType type) {
-            String s;
-            switch(type) {
-                case CLASS:
-                    s = GGApp.GG_APP.getString(R.string.schoolclass);
-                    break;
-                case TEACHER:
-                    s = GGApp.GG_APP.getString(R.string.teacher);
-                    break;
-                case SUBJECT:
-                    s = GGApp.GG_APP.getString(R.string.subject_course);
-                    break;
-                default:
-                    s = "";
-            }
-            return s;
-        }
-
-        public static FilterType getTypeFromString(String s) {
-            if(s.equals(GGApp.GG_APP.getString(R.string.teacher)))
-                return FilterType.TEACHER;
-            else if(s.equals(GGApp.GG_APP.getString(R.string.schoolclass)))
-                return FilterType.CLASS;
-            else if(s.equals(GGApp.GG_APP.getString(R.string.subject_course)))
-                return FilterType.SUBJECT;
-            else
-                return null;
-        }
-
-        @Override
-        public String toString() {
-            return toString(true);
-        }
-
-        public String toString(boolean st) {
-            return (st ? (getTypeString(type) + " ") : "") + filter;
-        }
-    }
-
-    public static enum FilterType {
-        CLASS, TEACHER, SUBJECT
-    }
-
-    public static FilterList loadFilter() {
-        FilterList list = new FilterList();
+    public static Filter.FilterList loadFilter() {
+        Filter.FilterList list = new Filter.FilterList();
         list.mainFilter = null;
 
         try {
@@ -304,7 +239,7 @@ public class FilterActivity extends Activity {
                 while(reader.hasNext()) {
                     String name = reader.nextName();
                     if(name.equals("type"))
-                        f.type = FilterType.valueOf(reader.nextString());
+                        f.type = Filter.FilterType.valueOf(reader.nextString());
                     else if(name.equals("filter"))
                         f.filter = reader.nextString();
                     else
@@ -322,7 +257,7 @@ public class FilterActivity extends Activity {
         if(list.mainFilter == null) {
             Filter f = new Filter();
             list.mainFilter = f;
-            f.type = FilterType.CLASS;
+            f.type = Filter.FilterType.CLASS;
             f.filter = "";
         }
 
@@ -336,7 +271,7 @@ public class FilterActivity extends Activity {
         super.finish();
     }
 
-    public static void saveFilter(FilterList list) {
+    public static void saveFilter(Filter.FilterList list) {
         try {
             OutputStream out = GGApp.GG_APP.openFileOutput("ggfilter", Context.MODE_PRIVATE);
             JsonWriter writer = new JsonWriter(new OutputStreamWriter(out));

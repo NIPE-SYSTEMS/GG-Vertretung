@@ -45,11 +45,18 @@ import android.widget.TextView;
 import java.util.Arrays;
 import java.util.List;
 
+import de.gebatzens.ggvertretungsplan.fragment.ExamFragment;
+import de.gebatzens.ggvertretungsplan.fragment.GGContentFragment;
+import de.gebatzens.ggvertretungsplan.fragment.MensaFragment;
+import de.gebatzens.ggvertretungsplan.fragment.NewsFragment;
+import de.gebatzens.ggvertretungsplan.fragment.RemoteDataFragment;
+import de.gebatzens.ggvertretungsplan.view.RibbonMenuListAdapter;
+
 
 public class MainActivity extends FragmentActivity {
 
     public RemoteDataFragment mContent;
-    Toolbar mToolbar;
+    public Toolbar mToolbar;
     ListView mDrawerList;
     TextView mDrawerSettings;
     DrawerLayout mDrawerLayout;
@@ -59,7 +66,7 @@ public class MainActivity extends FragmentActivity {
                                 R.drawable.drawer_list_button_image_exam};
     ImageView mNacvigationImage;
     View mNavigationSchoolpictureLink;
-    Bundle savedState;
+    public Bundle savedState;
 
     public RemoteDataFragment createFragment() {
         switch(GGApp.GG_APP.getFragmentType()) {

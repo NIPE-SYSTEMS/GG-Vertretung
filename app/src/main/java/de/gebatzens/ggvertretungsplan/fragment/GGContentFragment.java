@@ -17,7 +17,7 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.fragment;
 
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
@@ -29,14 +29,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.MainActivity;
+import de.gebatzens.ggvertretungsplan.R;
+import de.gebatzens.ggvertretungsplan.view.SlidingTabLayout;
+
 public class GGContentFragment extends RemoteDataFragment {
 
-    Toolbar mToolbar;
-    ViewPager mViewPager;
-    SlidingTabLayout mSlidingTabLayout;
-    GGFragmentAdapter mGGFrag;
-    SwipeRefreshLayout swipeContainer;
-    Bundle bundle;
+    public Toolbar mToolbar;
+    public ViewPager mViewPager;
+    public SlidingTabLayout mSlidingTabLayout;
+    public GGFragmentAdapter mGGFrag;
+    public SwipeRefreshLayout swipeContainer;
+    public Bundle bundle;
 
     public GGContentFragment() {
 

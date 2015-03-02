@@ -17,7 +17,7 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.provider;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -33,6 +33,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.GGInvalidSourceException;
+import de.gebatzens.ggvertretungsplan.R;
+import de.gebatzens.ggvertretungsplan.data.Exams;
+import de.gebatzens.ggvertretungsplan.data.GGPlan;
+import de.gebatzens.ggvertretungsplan.data.Mensa;
+import de.gebatzens.ggvertretungsplan.data.News;
+import de.gebatzens.ggvertretungsplan.fragment.ExamFragment;
+import de.gebatzens.ggvertretungsplan.fragment.MensaFragment;
+import de.gebatzens.ggvertretungsplan.fragment.NewsFragment;
 
 public class SWSProvider extends VPProvider {
 
@@ -173,17 +184,17 @@ public class SWSProvider extends VPProvider {
         return R.array.blueColors;
     }
 
-    public NewsFragment.News getNews() {
-        return new NewsFragment.News();
+    public News getNews() {
+        return new News();
     }
 
-    public MensaFragment.Mensa getMensa() {
-        return new MensaFragment.Mensa();
+    public Mensa getMensa() {
+        return new Mensa();
     }
 
     @Override
-    public ExamFragment.Exams getExams() {
-        ExamFragment.Exams e = new ExamFragment.Exams();
+    public Exams getExams() {
+        Exams e = new Exams();
         e.bitmap = BitmapFactory.decodeResource(GGApp.GG_APP.getResources(), R.drawable.mensa_icon);
         return e;
     }

@@ -41,6 +41,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import de.gebatzens.ggvertretungsplan.provider.GGProvider;
+
 public class HelpdeskActivity extends Activity {
 
     Toolbar mToolBar;

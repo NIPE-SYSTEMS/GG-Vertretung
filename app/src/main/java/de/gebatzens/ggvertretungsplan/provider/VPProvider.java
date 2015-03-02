@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.provider;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -25,13 +25,18 @@ import android.graphics.Bitmap;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.SimpleTimeZone;
+
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.data.Exams;
+import de.gebatzens.ggvertretungsplan.data.GGPlan;
+import de.gebatzens.ggvertretungsplan.data.Mensa;
+import de.gebatzens.ggvertretungsplan.data.News;
 
 public abstract class VPProvider {
 
     GGApp gg;
-    SharedPreferences prefs;
-    String id;
+    public SharedPreferences prefs;
+    public String id;
 
     public VPProvider(GGApp app, String id) {
         this.gg = app;
@@ -74,9 +79,9 @@ public abstract class VPProvider {
     public abstract boolean loginNeeded();
     public abstract int login(String u, String p);
     public abstract void logout(Boolean logout_local_only, Boolean delete_token);
-    public abstract NewsFragment.News getNews();
-    public abstract MensaFragment.Mensa getMensa();
-    public abstract ExamFragment.Exams getExams();
+    public abstract News getNews();
+    public abstract Mensa getMensa();
+    public abstract Exams getExams();
     public abstract Bitmap getMensaImage(String filename) throws IOException;
     public abstract int getColorArray();
 

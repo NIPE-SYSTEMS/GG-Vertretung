@@ -25,7 +25,7 @@
  * Extends Android ImageView to include pinch zooming, panning, fling and double tap zoom.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;

@@ -17,19 +17,15 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -37,30 +33,29 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class NewsFragmentListAdapter extends BaseAdapter {
+import de.gebatzens.ggvertretungsplan.R;
+import de.gebatzens.ggvertretungsplan.data.Mensa;
+
+public class MensaFragmentListAdapter extends BaseAdapter {
     private Context context;
-    private NewsFragment.News mArrayList;
+    private Mensa mArrayList;
     private LayoutInflater inflater;
     private String formattedDate;
-    private NewsFragmentDatabaseHelper mDatabaseHelper;
 
-    /*public NewsFragmentListAdapter(Context pContext, String[] pTitle, String[] pContent, int[] pIcon) {*/
-    public NewsFragmentListAdapter(Context pContext, NewsFragment.News pArrayList) {
+    public MensaFragmentListAdapter(Context pContext, Mensa pArrayList) {
         context = pContext;
         mArrayList = pArrayList;
-        mDatabaseHelper = new NewsFragmentDatabaseHelper(context);
     }
  
     @SuppressLint("ViewHolder")
 	public View getView(int position, View convertView, ViewGroup parent) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View itemView = inflater.inflate(R.layout.news_fragment_list_item, parent, false);
-        TextView txtDate = (TextView) itemView.findViewById(R.id.newsDate);
-        TextView txtTitle = (TextView) itemView.findViewById(R.id.newsTitle);
-        TextView txtContent = (TextView) itemView.findViewById(R.id.newsContent);
-        //ImageView imgIcon = (ImageView) itemView.findViewById(R.id.newsIcon);
+        View itemView = inflater.inflate(R.layout.mensa_fragment_list_item, parent, false);
+        TextView txtDate = (TextView) itemView.findViewById(R.id.mensaDate);
+        TextView txtTitle = (TextView) itemView.findViewById(R.id.mensaTitle);
+        TextView txtContent = (TextView) itemView.findViewById(R.id.mensaContent);
 
-        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        DateFormat parser = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat dateFormatter = new SimpleDateFormat("d. MMM yy");
         try
         {
@@ -70,27 +65,20 @@ public class NewsFragmentListAdapter extends BaseAdapter {
         }
         catch (ParseException e)
         {
+            formattedDate = mArrayList.get(position)[1];
             e.printStackTrace();
         }
 
         txtDate.setText(formattedDate);
-        txtDate.setTextColor(GGApp.GG_APP.provider.getColor());
-        txtTitle.setText(mArrayList.get(position)[4]);
-        txtContent.setText(Html.fromHtml(mArrayList.get(position)[5]));
-        //imgIcon.setImageResource(R.drawable.news_icon_white);
-       // imgIcon.setBackgroundResource(R.drawable.news_img_background);
-        //GradientDrawable drawable = (GradientDrawable) imgIcon.getBackground();
-        //drawable.setColor(GGApp.GG_APP.provider.getColor());
-        //imgIcon.setImageResource(mIcnewson[position]);
-
-        if(mDatabaseHelper.checkNewsRead(mArrayList.get(position)[4])) {
-            txtDate.setTextColor(Color.parseColor("#727272"));
-            txtDate.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
-            txtTitle.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
-            txtContent.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
-        }
+        txtDate.setTextColor(Color.parseColor("#727272"));
+        txtTitle.setText(mArrayList.get(position)[2]);
+        txtContent.setText(mArrayList.get(position)[3].replace("mit ","").replace("mit",""));
 
         return itemView;
+    }
+
+    public String[] getMensaMeal(int position) {
+        return mArrayList.get(position);
     }
 
     @Override
@@ -100,7 +88,7 @@ public class NewsFragmentListAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return mArrayList.get(position)[4];
+        return mArrayList.get(position)[2];
     }
 
     @Override

@@ -17,23 +17,17 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.fragment;
 
-import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.R;
+import de.gebatzens.ggvertretungsplan.view.TouchImageView;
 
 public class ExamFragment extends RemoteDataFragment {
 
@@ -63,39 +57,6 @@ public class ExamFragment extends RemoteDataFragment {
         return (ViewGroup) getView().findViewById(R.id.exam_content);
     }
 
-    public static class Exams implements RemoteData {
 
-        Throwable throwable;
-        Bitmap bitmap;
-
-        @Override
-        public Throwable getThrowable() {
-            return throwable;
-        }
-
-        @Override
-        public void save(String file) {
-            try {
-                FileOutputStream fos = GGApp.GG_APP.openFileOutput(file, Context.MODE_PRIVATE);
-                bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        public boolean load(String file) {
-            try {
-                bitmap = BitmapFactory.decodeStream(GGApp.GG_APP.openFileInput(file));
-            } catch(Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-            return bitmap != null;
-        }
-
-
-    }
 
 }

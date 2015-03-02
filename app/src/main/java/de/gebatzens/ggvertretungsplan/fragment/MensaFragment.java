@@ -17,56 +17,35 @@
  * along with GGVertretungsplan.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.gebatzens.ggvertretungsplan;
+package de.gebatzens.ggvertretungsplan.fragment;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
-import android.text.Html;
-import android.text.Spanned;
-import android.util.JsonReader;
-import android.util.JsonWriter;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 
-import javax.net.ssl.HttpsURLConnection;
+import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.R;
 
 public class MensaFragment extends RemoteDataFragment {
 
@@ -305,79 +284,5 @@ public class MensaFragment extends RemoteDataFragment {
         String image;
     }
 
-    public static class Mensa extends ArrayList<String[]> implements RemoteData {
 
-        Throwable throwable;
-
-        @Override
-        public Throwable getThrowable() {
-            return throwable;
-        }
-
-        public void save(String file) {
-            try {
-                OutputStream out = GGApp.GG_APP.openFileOutput(file, Context.MODE_PRIVATE);
-                JsonWriter writer = new JsonWriter(new OutputStreamWriter(out));
-
-                writer.setIndent("  ");
-                writer.beginArray();
-                for(String[] s : this) {
-                    writer.beginObject();
-
-                    writer.name("id").value(s[0]);
-                    writer.name("date").value(s[1]);
-                    writer.name("meal").value(s[2]);
-                    writer.name("garnish").value(s[3]);
-                    writer.name("vegi").value(s[4]);
-                    writer.name("image").value(s[5]);
-
-                    writer.endObject();
-                }
-                writer.endArray();
-                writer.close();
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        public boolean load(String file) {
-            clear();
-            try {
-                InputStream in = GGApp.GG_APP.openFileInput(file);
-                JsonReader reader = new JsonReader(new InputStreamReader(in));
-                reader.beginArray();
-                while(reader.hasNext()) {
-                    reader.beginObject();
-                    String[] s = new String[6];
-
-                    while(reader.hasNext()) {
-                        String name = reader.nextName();
-                        if(name.equals("id"))
-                            s[0] = reader.nextString();
-                        else if(name.equals("date"))
-                            s[1] = reader.nextString();
-                        else if(name.equals("meal"))
-                            s[2] = reader.nextString();
-                        else if(name.equals("garnish"))
-                            s[3] = reader.nextString();
-                        else if(name.equals("vegi"))
-                            s[4] = reader.nextString();
-                        else if(name.equals("image"))
-                            s[5] = reader.nextString();
-                        else
-                            reader.skipValue();
-                    }
-                    reader.endObject();
-                    add(s);
-                }
-                reader.endArray();
-                reader.close();
-            } catch(Exception e) {
-                e.printStackTrace();
-                return false;
-            }
-
-            return true;
-        }
-    }
 }
