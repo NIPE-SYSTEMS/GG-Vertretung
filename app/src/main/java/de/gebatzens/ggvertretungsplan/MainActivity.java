@@ -58,6 +58,7 @@ public class MainActivity extends FragmentActivity {
     public RemoteDataFragment mContent;
     public Toolbar mToolbar;
     ListView mDrawerList;
+    TextView mDrawerFirstUse;
     TextView mDrawerSettings;
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mToggle;
@@ -218,6 +219,16 @@ public class MainActivity extends FragmentActivity {
             }
         });
         ListviewHelper.getListViewSize(mDrawerList);
+
+        mDrawerFirstUse = (TextView) findViewById(R.id.left_drawer_firstuse);
+        mDrawerFirstUse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View viewIn) {
+                mDrawerLayout.closeDrawers();
+                Intent i = new Intent(MainActivity.this, FirstUseActivity.class);
+                startActivityForResult(i, 1);
+            }
+        });
 
         mDrawerSettings = (TextView) findViewById(R.id.left_drawer_settings);
         mDrawerSettings.setOnClickListener(new View.OnClickListener() {

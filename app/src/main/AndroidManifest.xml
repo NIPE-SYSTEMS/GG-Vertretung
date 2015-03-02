@@ -43,6 +43,10 @@
             android:label="@string/helpdesk">
         </activity>
 
+        <activity android:name=".FirstUseActivity"
+            android:label="@string/firstuse">
+        </activity>
+
         <receiver android:enabled="true" android:name="de.gebatzens.ggvertretungsplan.GGBroadcast"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
         <intent-filter>
