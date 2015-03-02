@@ -54,7 +54,8 @@ public class GGBroadcast extends BroadcastReceiver {
         }
         VPProvider prov = gg.provider;
 
-        GGPlan.GGPlans plans = gg.plans = prov.getPlans(false);
+        GGPlan.GGPlans plans = prov.getPlans(false);
+        gg.plans = plans;
         GGPlan today = plans.today;
         GGPlan tomo = plans.tomorrow;
 

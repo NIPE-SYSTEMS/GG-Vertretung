@@ -87,8 +87,7 @@ public class GGProvider extends VPProvider {
             return;
 
         try {
-            HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/token.php?token=" + token).openConnection();
-            con.setSSLSocketFactory(sslSocketFactory);
+            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/token.php?token=" + token);
 
             if(con.getResponseCode() == 401) {
                 logout(true, true);
@@ -123,6 +122,8 @@ public class GGProvider extends VPProvider {
         GGApp.GG_APP.deleteFile("gguserinfo");
         GGApp.GG_APP.deleteFile("ggvptoday");
         GGApp.GG_APP.deleteFile("ggvptomorrow");
+        GGApp.GG_APP.deleteFile("ggnews");
+        GGApp.GG_APP.deleteFile("ggmensa");
 
         prefs.edit().clear().commit();
         if(!logout_local_only) {
@@ -197,9 +198,8 @@ public class GGProvider extends VPProvider {
                     throw new VPLoginException();
             }
 
-            HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/infoapp_provider_new.php?site=substitutionplan&sessid=" + sessId).openConnection();
+            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/infoapp_provider_new.php?site=substitutionplan&sessid=" + sessId);
             con.setRequestMethod("GET");
-            con.setSSLSocketFactory(sslSocketFactory);
 
             if(con.getResponseCode() == 401) {
                 logout(true, true);
@@ -271,7 +271,8 @@ public class GGProvider extends VPProvider {
                     GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            GGApp.GG_APP.showToast(t instanceof IOException ? GGApp.GG_APP.getResources().getString(R.string.no_entries_in_substitutionplan) : GGApp.GG_APP.getResources().getString(R.string.unknown_error));
+                            GGApp.GG_APP.showToast(t instanceof IOException ? GGApp.GG_APP.getResources().getString(R.string.no_internet_connection) :
+                                    t instanceof VPLoginException ? GGApp.GG_APP.getString(R.string.youre_not_logged_in) : GGApp.GG_APP.getResources().getString(R.string.unknown_error));
                         }
                     });
             }
@@ -328,9 +329,8 @@ public class GGProvider extends VPProvider {
     public News getNews() {
         News n = new News();
         try {
-            HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/infoapp_provider_new.php?site=news&sessid="+sessId).openConnection();
+            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/infoapp_provider_new.php?site=news&sessid="+sessId);
             con.setRequestMethod("GET");
-            con.setSSLSocketFactory(GGProvider.sslSocketFactory);
 
             /*
              * 0 - ID
@@ -410,9 +410,8 @@ public class GGProvider extends VPProvider {
                     throw new VPLoginException();
             }
 
-            HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/infoapp_provider_new.php?site=mensa&sessid="+sessId).openConnection();
+            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/infoapp_provider_new.php?site=mensa&sessid="+sessId);
             con.setRequestMethod("GET");
-            con.setSSLSocketFactory(GGProvider.sslSocketFactory);
 
             /*
              * 0 - ID
@@ -483,10 +482,10 @@ public class GGProvider extends VPProvider {
     }
 
     public Bitmap getMensaImage(String filename) throws IOException {
-        URL imageURL = new URL("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=mensa_image&sessid=" + sessId + "&filename=" + filename);
-        HttpsURLConnection con = (HttpsURLConnection) imageURL.openConnection();
+
+        HttpsURLConnection con = openConnection("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=mensa_image&sessid=" + sessId + "&filename=" + filename);
         con.setRequestMethod("GET");
-        con.setSSLSocketFactory(GGProvider.sslSocketFactory);
+
         if(con.getResponseCode() == 200) {
             return BitmapFactory.decodeStream(con.getInputStream());
         } else {
@@ -505,10 +504,10 @@ public class GGProvider extends VPProvider {
                         throw new VPLoginException();
                 }
 
-                URL imageURL = new URL("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=examplan_image&sessid=" + sessId);
-                HttpsURLConnection con = (HttpsURLConnection) imageURL.openConnection();
+
+                HttpsURLConnection con = openConnection("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=examplan_image&sessid=" + sessId);
                 con.setRequestMethod("GET");
-                con.setSSLSocketFactory(GGProvider.sslSocketFactory);
+
                 if (con.getResponseCode() == 200) {
                     exams.bitmap = BitmapFactory.decodeStream(con.getInputStream());
                 } else if (con.getResponseCode() == 401) {
@@ -558,10 +557,8 @@ public class GGProvider extends VPProvider {
     public int login(String user, String pass) {
         try {
 
-            HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/auth.php").openConnection();
+            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/auth.php");
             con.setRequestMethod("POST");
-
-            con.setSSLSocketFactory(sslSocketFactory);
 
             con.setDoOutput(true);
             DataOutputStream wr = new DataOutputStream(con.getOutputStream());
@@ -683,6 +680,14 @@ public class GGProvider extends VPProvider {
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static HttpsURLConnection openConnection(String url) throws IOException {
+        HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/auth.php").openConnection();
+        con.setSSLSocketFactory(sslSocketFactory);
+        con.setConnectTimeout(3000);
+
+        return con;
     }
 
 }
