@@ -46,6 +46,7 @@ public class ExamFragment extends RemoteDataFragment {
     @Override
     public void createView(LayoutInflater inflater, ViewGroup vg) {
         TouchImageView tiv = new TouchImageView(getActivity());
+        tiv.setMaxZoom(6f);
         Bitmap bitmap = GGApp.GG_APP.exams.bitmap;
         if(bitmap != null)
             tiv.setImageBitmap(bitmap);
