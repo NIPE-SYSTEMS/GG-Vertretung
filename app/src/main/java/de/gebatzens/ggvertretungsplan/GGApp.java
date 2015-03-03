@@ -156,6 +156,7 @@ public class GGApp extends Application {
     }
 
     public void createProvider(String id) {
+        Log.w("ggvp", "createProvider " + id);
         Class<? extends VPProvider> clas = mProviderList.get(id);
         if(clas == null)
             throw new RuntimeException("Provider for " + id + " not found");

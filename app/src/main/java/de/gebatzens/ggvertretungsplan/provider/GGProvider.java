@@ -733,7 +733,6 @@ public class GGProvider extends VPProvider {
         HttpsURLConnection con = (HttpsURLConnection) new URL(url).openConnection();
         con.setSSLSocketFactory(sslSocketFactory);
         con.setConnectTimeout(3000);
-        con.connect();
 
         Log.w("ggvp", "connection to " + con.getURL().getHost() + " established");
 
