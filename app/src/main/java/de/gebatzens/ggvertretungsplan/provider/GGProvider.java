@@ -682,8 +682,8 @@ public class GGProvider extends VPProvider {
         }
     }
 
-    public static HttpsURLConnection openConnection(String url) throws IOException {
-        HttpsURLConnection con = (HttpsURLConnection) new URL(BASE_URL + "infoapp/auth.php").openConnection();
+    static HttpsURLConnection openConnection(String url) throws IOException {
+        HttpsURLConnection con = (HttpsURLConnection) new URL(url).openConnection();
         con.setSSLSocketFactory(sslSocketFactory);
         con.setConnectTimeout(3000);
 

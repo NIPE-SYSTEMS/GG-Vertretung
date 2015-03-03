@@ -46,10 +46,13 @@ public class MensaSwipeLayout extends SwipeRefreshLayout {
                 if(GGApp.GG_APP.getFragmentType() == GGApp.FragmentType.MENSA) {
                     ScrollView sv = ((ScrollView) ((MainActivity) getContext()).mContent.getView().findViewWithTag("mensa_scroll"));
 
-                    int i = -sv.getScrollY();
+                    if(sv != null) {
+                        int i = -sv.getScrollY();
 
-                    if (i != 0)
-                        return false;
+                        if (i != 0)
+                            return false;
+                    } else
+                        return super.onInterceptTouchEvent(event);
                 }
         }
 
