@@ -10,6 +10,8 @@
     <string name="no_entries_in_substitutionplan">No entries in schedule</string>
     <string name="special_messages">Special messages</string>
     <string name="no_filter_applied">No filter applied</string>
+    <string name="mainfilter_mode">Mode</string>
+    <string name="mainfilter_content">Filter</string>
     <string name="value">Value</string>
     <string name="helptext">The Main filter ensures the right substitution schedule is displayed for the specified class or specified teacher in the overview.\n\nThe Subject/Course filters are used to enter subjects/courses that you do not want to see in the overview, for example French or Latin.</string>
     <string name="settings">Settings</string>

@@ -62,6 +62,8 @@ public class FilterActivity extends Activity {
     TextView mainFilterCategory;
     TextView mainFilterContent;
     ImageButton mAddFilterButton;
+    int selected_mode;
+    int main_mode_position;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -91,17 +93,39 @@ public class FilterActivity extends Activity {
         mainFilterContent = (TextView) findViewById(R.id.filter_main_content);
         mainFilterContent.setText(list.mainFilter.filter);
 
-        LinearLayout l = (LinearLayout) findViewById(R.id.mainfilter_layout);
-        l.setOnClickListener(new View.OnClickListener() {
+        LinearLayout l_mode = (LinearLayout) findViewById(R.id.mainfilter_mode_layout);
+        l_mode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View viewIn) {
+                Filter.FilterList list = GGApp.GG_APP.filters;
+                selected_mode = list.mainFilter.type == Filter.FilterType.CLASS ? 0 : list.mainFilter.type == Filter.FilterType.TEACHER ? 1 : 2;
+                AlertDialog.Builder builder = new AlertDialog.Builder(FilterActivity.this);
+                builder.setTitle(R.string.mainfilter_mode)
+                        .setSingleChoiceItems(main_filterStrings, selected_mode, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                main_mode_position = which == 0 ? 0 : 1;
+                                Filter.FilterList list = GGApp.GG_APP.filters;
+                                list.mainFilter.type = Filter.FilterType.values()[main_mode_position];
+                                mainFilterCategory.setText(list.mainFilter.type == Filter.FilterType.CLASS ? getApplication().getString(R.string.schoolclass) : getApplication().getString(R.string.teacher));
+                                FilterActivity.saveFilter(GGApp.GG_APP.filters);
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog d = builder.create();
+                d.show();
+            }
+        });
+
+        LinearLayout l_content = (LinearLayout) findViewById(R.id.mainfilter_content_layout);
+        l_content.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View viewIn) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(FilterActivity.this);
                 builder.setTitle(getApplication().getString(R.string.set_main_filter));
-                builder.setView(getLayoutInflater().inflate(R.layout.filter_main_dialog, null));
+                builder.setView(getLayoutInflater().inflate(R.layout.filter_dialog, null));
                 builder.setPositiveButton(getApplication().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Spinner spinner = (Spinner) ((Dialog) dialog).findViewById(R.id.filter_spinner);
                         EditText text = (EditText) ((Dialog) dialog).findViewById(R.id.filter_text);
                         String text2 = text.getText().toString().trim();
                         if (text2.isEmpty())
@@ -110,8 +134,6 @@ public class FilterActivity extends Activity {
                             Filter.FilterList list = GGApp.GG_APP.filters;
                             list.mainFilter.filter = text2;
                             mainFilterContent.setText(list.mainFilter.filter);
-                            list.mainFilter.type = Filter.FilterType.values()[spinner.getSelectedItemPosition()];
-                            mainFilterCategory.setText(list.mainFilter.type == Filter.FilterType.CLASS ? getApplication().getString(R.string.schoolclass) : getApplication().getString(R.string.teacher));
                             FilterActivity.saveFilter(GGApp.GG_APP.filters);
                         }
                         dialog.dismiss();
@@ -126,13 +148,7 @@ public class FilterActivity extends Activity {
                 AlertDialog d = builder.create();
                 d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 d.show();
-                Spinner s = (Spinner) d.findViewById(R.id.filter_spinner);
-                ArrayAdapter<String> a = new ArrayAdapter<String>(FilterActivity.this,
-                        android.R.layout.simple_spinner_item, main_filterStrings);
-                a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                s.setAdapter(a);
                 Filter.FilterList list = GGApp.GG_APP.filters;
-                s.setSelection(list.mainFilter.type == Filter.FilterType.CLASS ? 0 : 1);
                 EditText mainEdit = (EditText) d.findViewById(R.id.filter_text);
                 mainEdit.setText(list.mainFilter.filter);
             }

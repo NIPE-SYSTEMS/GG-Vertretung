@@ -44,15 +44,47 @@
             android:orientation="vertical"
             android:padding="16dp"
             android:background="?android:selectableItemBackground"
-            android:id="@+id/mainfilter_layout">
+            android:id="@+id/mainfilter_mode_layout">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:fontFamily="sans-serif"
+                android:text="@string/mainfilter_mode"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif"
+                android:textColor="#727272"
                 android:id="@+id/filter_main_category"
-                android:text="@string/filters"/>
+                android:hint="@string/no_filter_applied"
+                android:text="@string/not_selected"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:background="#d1d1d1"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="?android:selectableItemBackground"
+            android:id="@+id/mainfilter_content_layout">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif"
+                android:text="@string/mainfilter_content"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,7 +93,7 @@
                 android:textColor="#727272"
                 android:id="@+id/filter_main_content"
                 android:hint="@string/no_filter_applied"
-                android:text="@string/filters"/>
+                android:text="@string/not_selected"/>
 
         </LinearLayout>
 
