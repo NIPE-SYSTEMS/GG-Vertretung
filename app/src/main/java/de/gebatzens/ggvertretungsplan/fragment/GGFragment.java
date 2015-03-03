@@ -74,7 +74,7 @@ public class GGFragment extends RemoteDataFragment {
 
     }
 
-    private void createCardItems(List<GGPlan.Entry> list, ViewGroup group, LayoutInflater inflater) {
+    private void createCardItems(List<GGPlan.Entry> list, ViewGroup group, LayoutInflater inflater, boolean clas) {
         if(list.size() == 0) {
             FrameLayout f2 = new FrameLayout(getActivity());
             f2.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
@@ -87,14 +87,14 @@ public class GGFragment extends RemoteDataFragment {
         for(GGPlan.Entry e : list) {
             FrameLayout f2 = new FrameLayout(getActivity());
             f2.setPadding(toPixels(1.3f),toPixels(0.3f),toPixels(1.3f),toPixels(0.3f));
-            f2.addView(createCardItem(e, inflater));
+            f2.addView(createCardItem(e, inflater, clas));
             group.addView(f2);
         }
     }
 
     int cardColorIndex = 0;
 
-    private CardView createCardItem(GGPlan.Entry entry, LayoutInflater i) {
+    private CardView createCardItem(GGPlan.Entry entry, LayoutInflater i, boolean clas) {
         CardView cv = createCardView();
         String[] colors = getActivity().getResources().getStringArray(GGApp.GG_APP.provider.getColorArray());
         cv.setCardBackgroundColor(Color.parseColor(colors[cardColorIndex]));
@@ -108,7 +108,7 @@ public class GGFragment extends RemoteDataFragment {
         tv.setText(entry.comment + (entry.room.isEmpty() ? "" : (entry.comment.isEmpty() ? "" : "\n") + "Raum " + entry.room));
         if(tv.getText().toString().trim().isEmpty())
             ((ViewGroup) tv.getParent()).removeView(tv);
-        ((TextView) cv.findViewById(R.id.cv_subject)).setText(Html.fromHtml(entry.subject));
+        ((TextView) cv.findViewById(R.id.cv_subject)).setText(Html.fromHtml((clas ? entry.clazz + " " : "") + entry.subject));
         return cv;
     }
 
@@ -193,7 +193,7 @@ public class GGFragment extends RemoteDataFragment {
                     ls.addView(tv);
                 }
             }
-            createCardItems(list, l, inflater);
+            createCardItems(list, l, inflater, filters.mainFilter.type != Filter.FilterType.CLASS);
 
             list = planm.filter(filters);
             createTextView(translateDay(planm.date), 30, inflater, l).setPadding(0, toPixels(20), 0, 0);
@@ -217,7 +217,7 @@ public class GGFragment extends RemoteDataFragment {
                 }
             }
 
-            createCardItems(list, l, inflater);
+            createCardItems(list, l, inflater, filters.mainFilter.type != Filter.FilterType.CLASS);
 
         } else if(type == TYPE_OVERVIEW) {
             //Keine Klasse
@@ -299,7 +299,7 @@ public class GGFragment extends RemoteDataFragment {
                         fl.mainFilter = main;
                         main.type = Filter.FilterType.CLASS;
                         main.filter = item;
-                        createCardItems(plan.filter(fl), l3, inflater);
+                        createCardItems(plan.filter(fl), l3, inflater, false);
 
                     } else {
                         l3.removeAllViews();
@@ -313,7 +313,7 @@ public class GGFragment extends RemoteDataFragment {
                             fl.mainFilter = main;
                             main.filter = s;
                             main.type = Filter.FilterType.CLASS;
-                            createCardItems(plan.filter(fl), l3, inflater);
+                            createCardItems(plan.filter(fl), l3, inflater, false);
                         }
                     }
                 }
