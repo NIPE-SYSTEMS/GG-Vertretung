@@ -41,6 +41,7 @@ import java.util.Locale;
 
 import de.gebatzens.ggvertretungsplan.GGApp;
 import de.gebatzens.ggvertretungsplan.R;
+import de.gebatzens.ggvertretungsplan.data.Exams;
 
 public class ExamFragment extends RemoteDataFragment {
 
@@ -103,45 +104,16 @@ public class ExamFragment extends RemoteDataFragment {
         l.setPadding(p, p, p, p);
         sv.addView(l);
         createTextView(getResources().getString(R.string.my_exams),toPixels(12),inflater,l);
-        for(int i = 0; i < GGApp.GG_APP.exams.size(); i++) {
-            if(GGApp.GG_APP.provider.getGroup().equals("lehrer")&&(GGApp.GG_APP.exams.get(i)[6].equals(GGApp.GG_APP.provider.getUsername()))) {
-                ExamItem exam_item = new ExamItem();
-                exam_item.id = GGApp.GG_APP.exams.get(i)[0];
-                exam_item.date = GGApp.GG_APP.exams.get(i)[1];
-                exam_item.schoolclass = GGApp.GG_APP.exams.get(i)[2];
-                exam_item.lesson = GGApp.GG_APP.exams.get(i)[3];
-                exam_item.length = GGApp.GG_APP.exams.get(i)[4];
-                exam_item.subject = GGApp.GG_APP.exams.get(i)[5];
-                exam_item.teacher = GGApp.GG_APP.exams.get(i)[6];
-                CardView cv = createCardItem(exam_item, inflater);
+        for(Exams.ExamItem item : GGApp.GG_APP.exams) {
+            if(GGApp.GG_APP.filters.mainFilter.matches(item)) {
+                CardView cv = createCardItem(item, inflater);
                 l.addView(cv);
-            } else if(GGApp.GG_APP.exams.get(i)[2].equals(GGApp.GG_APP.provider.getGroup())) {
-                ExamItem exam_item = new ExamItem();
-                exam_item.id = GGApp.GG_APP.exams.get(i)[0];
-                exam_item.date = GGApp.GG_APP.exams.get(i)[1];
-                exam_item.schoolclass = GGApp.GG_APP.exams.get(i)[2];
-                exam_item.lesson = GGApp.GG_APP.exams.get(i)[3];
-                exam_item.length = GGApp.GG_APP.exams.get(i)[4];
-                exam_item.subject = GGApp.GG_APP.exams.get(i)[5];
-                exam_item.teacher = GGApp.GG_APP.exams.get(i)[6];
-                CardView cv = createCardItem(exam_item, inflater);
-                l.addView(cv);
-            } else {
-                createTextView("No entries for you.",toPixels(12),inflater,view);
-                break;
             }
+
         }
         createTextView(getResources().getString(R.string.all_exams),toPixels(12),inflater,l);
-        for(int i = 0; i < GGApp.GG_APP.exams.size(); i++) {
-            ExamItem exam_item = new ExamItem();
-            exam_item.id = GGApp.GG_APP.exams.get(i)[0];
-            exam_item.date = GGApp.GG_APP.exams.get(i)[1];
-            exam_item.schoolclass = GGApp.GG_APP.exams.get(i)[2];
-            exam_item.lesson = GGApp.GG_APP.exams.get(i)[3];
-            exam_item.length = GGApp.GG_APP.exams.get(i)[4];
-            exam_item.subject = GGApp.GG_APP.exams.get(i)[5];
-            exam_item.teacher = GGApp.GG_APP.exams.get(i)[6];
-            CardView cv = createCardItem(exam_item, inflater);
+        for(Exams.ExamItem item : GGApp.GG_APP.exams) {
+            CardView cv = createCardItem(item, inflater);
             l.addView(cv);
         }
         cardColorIndex = 0;
@@ -152,7 +124,7 @@ public class ExamFragment extends RemoteDataFragment {
         return (ViewGroup) getView().findViewById(R.id.exam_content);
     }
 
-    private CardView createCardItem(ExamItem exam_item, LayoutInflater i) {
+    private CardView createCardItem(Exams.ExamItem exam_item, LayoutInflater i) {
         CardView ecv = createCardView();
         String[] colors = getActivity().getResources().getStringArray(GGApp.GG_APP.provider.getColorArray());
         ecv.setCardBackgroundColor(Color.parseColor(colors[cardColorIndex]));
@@ -209,15 +181,5 @@ public class ExamFragment extends RemoteDataFragment {
     private Date getDate(String date) throws ParseException {
         DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.parse(date);
-    }
-
-    public class ExamItem {
-        String id;
-        String date;
-        String schoolclass;
-        String lesson;
-        String length;
-        String subject;
-        String teacher;
     }
 }

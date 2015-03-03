@@ -525,7 +525,7 @@ public class GGProvider extends VPProvider {
                     String name = parser.getName();
                     if (name.equals("item")) {
 
-                        String[] s = new String[7];
+                        Exams.ExamItem s = new Exams.ExamItem();
                         exams.add(s);
 
                         while (parser.next() != XmlPullParser.END_TAG) {
@@ -533,25 +533,25 @@ public class GGProvider extends VPProvider {
                                 continue;
 
                             if (parser.getName().equals("id"))
-                                s[0] = parser.nextText();
+                                s.id = parser.nextText();
 
                             else if (parser.getName().equals("date"))
-                                s[1] = parser.nextText();
+                                s.date = parser.nextText();
 
                             else if (parser.getName().equals("schoolclass"))
-                                s[2] = parser.nextText();
+                                s.schoolclass = parser.nextText();
 
                             else if (parser.getName().equals("lesson"))
-                                s[3] = parser.nextText();
+                                s.lesson = parser.nextText();
 
                             else if (parser.getName().equals("length"))
-                                s[4] = parser.nextText();
+                                s.length = parser.nextText();
 
                             else if (parser.getName().equals("subject"))
-                                s[5] = parser.nextText();
+                                s.subject = parser.nextText();
 
                             else if (parser.getName().equals("teacher"))
-                                s[6] = parser.nextText();
+                                s.teacher = parser.nextText();
                         }
                     }
                 }

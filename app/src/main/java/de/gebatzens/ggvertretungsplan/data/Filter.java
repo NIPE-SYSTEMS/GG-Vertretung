@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import de.gebatzens.ggvertretungsplan.GGApp;
 import de.gebatzens.ggvertretungsplan.R;
+import de.gebatzens.ggvertretungsplan.fragment.ExamFragment;
 
 public class Filter {
     public FilterType type;
@@ -38,6 +39,18 @@ public class Filter {
                 return e.subst.toLowerCase().equals(filter.toLowerCase()) || e.comment.toLowerCase().endsWith(filter.toLowerCase());
             case SUBJECT:
                 return e.subject.toLowerCase().replace(" ", "").equals(filter.toLowerCase().replace(" ", ""));
+        }
+        return false;
+    }
+
+    public boolean matches(Exams.ExamItem item) {
+        switch(type) {
+            case CLASS:
+                return item.schoolclass.toLowerCase().equals(filter.toLowerCase());
+            case TEACHER:
+                return item.teacher.toLowerCase().equals(filter.toLowerCase());
+            case SUBJECT:
+                return item.subject.toLowerCase().equals(filter.toLowerCase());
         }
         return false;
     }

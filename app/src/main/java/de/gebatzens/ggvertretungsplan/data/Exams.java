@@ -30,9 +30,10 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
 import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.fragment.ExamFragment;
 import de.gebatzens.ggvertretungsplan.fragment.RemoteDataFragment;
 
-public class Exams extends ArrayList<String[]> implements RemoteDataFragment.RemoteData {
+public class Exams extends ArrayList<Exams.ExamItem> implements RemoteDataFragment.RemoteData {
 
     public Throwable throwable;
 
@@ -48,16 +49,16 @@ public class Exams extends ArrayList<String[]> implements RemoteDataFragment.Rem
 
             writer.setIndent("  ");
             writer.beginArray();
-            for(String[] s : this) {
+            for(ExamItem s : this) {
                 writer.beginObject();
 
-                writer.name("id").value(s[0]);
-                writer.name("date").value(s[1]);
-                writer.name("schoolclass").value(s[2]);
-                writer.name("lesson").value(s[3]);
-                writer.name("length").value(s[4]);
-                writer.name("subject").value(s[5]);
-                writer.name("teacher").value(s[6]);
+                writer.name("id").value(s.id);
+                writer.name("date").value(s.date);
+                writer.name("schoolclass").value(s.schoolclass);
+                writer.name("lesson").value(s.lesson);
+                writer.name("length").value(s.length);
+                writer.name("subject").value(s.subject);
+                writer.name("teacher").value(s.teacher);
 
                 writer.endObject();
             }
@@ -76,24 +77,24 @@ public class Exams extends ArrayList<String[]> implements RemoteDataFragment.Rem
             reader.beginArray();
             while(reader.hasNext()) {
                 reader.beginObject();
-                String[] s = new String[7];
+                ExamItem s = new ExamItem();
 
                 while(reader.hasNext()) {
                     String name = reader.nextName();
                     if(name.equals("id"))
-                        s[0] = reader.nextString();
+                        s.id = reader.nextString();
                     else if(name.equals("date"))
-                        s[1] = reader.nextString();
+                        s.date = reader.nextString();
                     else if(name.equals("schoolclass"))
-                        s[2] = reader.nextString();
+                        s.schoolclass = reader.nextString();
                     else if(name.equals("lesson"))
-                        s[3] = reader.nextString();
+                        s.lesson = reader.nextString();
                     else if(name.equals("length"))
-                        s[4] = reader.nextString();
+                        s.length = reader.nextString();
                     else if(name.equals("subject"))
-                        s[5] = reader.nextString();
+                        s.subject = reader.nextString();
                     else if(name.equals("teacher"))
-                        s[6] = reader.nextString();
+                        s.teacher = reader.nextString();
                     else
                         reader.skipValue();
                 }
@@ -108,5 +109,15 @@ public class Exams extends ArrayList<String[]> implements RemoteDataFragment.Rem
         }
 
         return true;
+    }
+
+    public static class ExamItem {
+        public String id;
+        public String date;
+        public String schoolclass;
+        public String lesson;
+        public String length;
+        public String subject;
+        public String teacher;
     }
 }
