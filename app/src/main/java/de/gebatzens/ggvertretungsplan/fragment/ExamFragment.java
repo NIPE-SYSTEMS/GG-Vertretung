@@ -135,18 +135,18 @@ public class ExamFragment extends RemoteDataFragment {
         params.setMargins(0, 0, 0, toPixels(6));
         ecv.setLayoutParams(params);
         i.inflate(R.layout.exam_cardview_entry, ecv, true);
-        /*Date d = new Date();
+        Date d = new Date();
         Calendar c = Calendar.getInstance();
         c.setTime(d);
         c.add(Calendar.DAY_OF_YEAR, -1);
         Date dt = c.getTime();
         try {
             if(getDate(exam_item.date).before(dt)) {
-                ecv.setAlpha(0.65f);
+                ecv.setAlpha(0.35f);
             }
         } catch (ParseException e) {
             e.printStackTrace();
-        }*/
+        }
         ((TextView) ecv.findViewById(R.id.ecv_date)).setText(getFormatedDate(exam_item.date));
         ((TextView) ecv.findViewById(R.id.ecv_lesson)).setText(exam_item.lesson + ".");
         ((TextView) ecv.findViewById(R.id.ecv_subject_teacher)).setText(exam_item.subject + " [" + exam_item.teacher + "]");
