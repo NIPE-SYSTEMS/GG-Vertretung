@@ -100,7 +100,7 @@ public class FilterActivity extends Activity {
                 Filter.FilterList list = GGApp.GG_APP.filters;
                 selected_mode = list.mainFilter.type == Filter.FilterType.CLASS ? 0 : list.mainFilter.type == Filter.FilterType.TEACHER ? 1 : 2;
                 AlertDialog.Builder builder = new AlertDialog.Builder(FilterActivity.this);
-                builder.setTitle(R.string.mainfilter_mode)
+                builder.setTitle(getApplication().getString(R.string.set_mainfilter_mode))
                         .setSingleChoiceItems(main_filterStrings, selected_mode, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 main_mode_position = which == 0 ? 0 : 1;
@@ -111,6 +111,12 @@ public class FilterActivity extends Activity {
                                 dialog.dismiss();
                             }
                         });
+                builder.setNegativeButton(getApplication().getString(R.string.abort), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
                 AlertDialog d = builder.create();
                 d.show();
             }
@@ -144,7 +150,7 @@ public class FilterActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
-                });//
+                });
                 AlertDialog d = builder.create();
                 d.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
                 d.show();
