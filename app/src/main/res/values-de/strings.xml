@@ -105,6 +105,7 @@
     <string name="ok">OK</string>
     <string name="mainfilter">Hauptfilter</string>
     <string name="set_main_filter">Hauptfilter einstellen</string>
+    <string name="set_mainfilter_mode">Modus einstellen</string>
     <string name="not_selected">Nicht ausgewählt</string>
     <string name="autoupdate">App-Updates</string>
     <string name="autoupdate_summary">Benachrichtigen, wenn eine neue Version der App verfügbar ist</string>
