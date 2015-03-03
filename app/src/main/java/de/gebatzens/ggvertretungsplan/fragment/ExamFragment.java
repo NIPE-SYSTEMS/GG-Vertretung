@@ -153,8 +153,11 @@ public class ExamFragment extends RemoteDataFragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        String lesson = exam_item.lesson;
+        if(Integer.parseInt(exam_item.length) > 1)
+            lesson += ". - " + (Integer.parseInt(exam_item.lesson) + Integer.parseInt(exam_item.length) - 1) + ".";
         ((TextView) ecv.findViewById(R.id.ecv_date)).setText(getFormatedDate(exam_item.date));
-        ((TextView) ecv.findViewById(R.id.ecv_lesson)).setText(exam_item.lesson + ".");
+        ((TextView) ecv.findViewById(R.id.ecv_lesson)).setText(lesson);
         ((TextView) ecv.findViewById(R.id.ecv_subject_teacher)).setText(GGPlan.Entry.translateSubject(exam_item.subject) + " [" + exam_item.teacher + "]");
         ((TextView) ecv.findViewById(R.id.ecv_schoolclass)).setText(exam_item.schoolclass);
         return ecv;
