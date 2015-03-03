@@ -31,6 +31,7 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -198,10 +199,11 @@ public class GGApp extends Application {
     }
 
     public void refreshAsync(final Runnable finished, final boolean updateFragments, final FragmentType type) {
-        new AsyncTask<Object, Void, Void>() {
+        Log.w("ggvp", "refreshAsync " + type + " " + provider);
 
+        new Thread() {
             @Override
-            protected Void doInBackground(Object... params) {
+            public void run() {
                 boolean update = updateFragments;
                 switch(type) {
                     case PLAN:
@@ -231,9 +233,8 @@ public class GGApp extends Application {
 
                 if(finished != null)
                     activity.runOnUiThread(finished);
-                return null;
             }
-        }.execute();
+        }.start();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

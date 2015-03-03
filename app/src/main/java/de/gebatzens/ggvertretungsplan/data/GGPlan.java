@@ -323,6 +323,10 @@ public class GGPlan {
             comment = comment.replace("  ", " ");
 
         }
+
+        public static String translateSubject(String s) {
+            return null;
+        }
     }
 
 }

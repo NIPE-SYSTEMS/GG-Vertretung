@@ -70,50 +70,49 @@ public class GGProvider extends VPProvider {
     public GGProvider(GGApp gg, String id) {
         super(gg, id);
 
-        new AsyncTask<Object, Void, Void>() {
-
+        new Thread() {
             @Override
-            protected Void doInBackground(Object... params) {
-                startNewSession(prefs.getString("token", null));
-                return null;
+            public void run() {
+                try {
+                    startNewSession(prefs.getString("token", null));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-        }.execute();
+        }.start();
 
     }
 
-    private void startNewSession(String token) {
+    private void startNewSession(String token) throws IOException {
         if(token == null || token.isEmpty())
             return;
 
-        try {
-            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/token.php?token=" + token);
+        HttpsURLConnection con = openConnection(BASE_URL + "infoapp/token.php?token=" + token);
 
-            if(con.getResponseCode() == 401) {
-                logout(true, true);
-                sessId = null;
-                return;
-            }
-
-            Scanner scan = new Scanner(new BufferedInputStream(con.getInputStream()));
-            String resp = "";
-            while(scan.hasNextLine())
-                resp += scan.nextLine();
-            scan.close();
-
-            Pattern p = Pattern.compile("<sessid>(.*?)</sessid>");
-            Matcher m = p.matcher(resp);
-            if(m.find()) {
-                sessId = m.group(1);
-                //prefs.edit().putString("sessid", sessId).apply();
-            } else {
-                sessId = null;
-                //Token invalid
-            }
-        } catch(Exception e) {
-            e.printStackTrace();
+        if(con.getResponseCode() == 401) {
+            logout(true, true);
+            sessId = null;
+            return;
         }
 
-        Log.w("ggvp", "sessid=" + sessId);
+        Scanner scan = new Scanner(new BufferedInputStream(con.getInputStream()));
+        String resp = "";
+        while(scan.hasNextLine())
+            resp += scan.nextLine();
+        scan.close();
+
+        Pattern p = Pattern.compile("<sessid>(.*?)</sessid>");
+        Matcher m = p.matcher(resp);
+        if(m.find()) {
+            sessId = m.group(1);
+            Log.w("ggvp", "new session created " + sessId);
+            //prefs.edit().putString("sessid", sessId).apply();
+        } else {
+            sessId = null;
+            Log.w("ggvp", "invalid response (token invalid?)");
+            //Token invalid
+        }
+
     }
 
     @Override
@@ -500,6 +499,7 @@ public class GGProvider extends VPProvider {
 
     @Override
     public Exams getExams() {
+        Log.w("ggvp", "get GG Exams " + sessId);
         Exams exams = new Exams();
         try {
             if (sessId == null || sessId.isEmpty()) {
@@ -733,6 +733,9 @@ public class GGProvider extends VPProvider {
         HttpsURLConnection con = (HttpsURLConnection) new URL(url).openConnection();
         con.setSSLSocketFactory(sslSocketFactory);
         con.setConnectTimeout(3000);
+        con.connect();
+
+        Log.w("ggvp", "connection to " + con.getURL().getHost() + " established");
 
         return con;
     }
