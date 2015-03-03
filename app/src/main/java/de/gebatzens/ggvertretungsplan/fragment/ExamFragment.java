@@ -42,6 +42,7 @@ import java.util.Locale;
 import de.gebatzens.ggvertretungsplan.GGApp;
 import de.gebatzens.ggvertretungsplan.R;
 import de.gebatzens.ggvertretungsplan.data.Exams;
+import de.gebatzens.ggvertretungsplan.data.GGPlan;
 
 public class ExamFragment extends RemoteDataFragment {
 
@@ -154,7 +155,7 @@ public class ExamFragment extends RemoteDataFragment {
         }
         ((TextView) ecv.findViewById(R.id.ecv_date)).setText(getFormatedDate(exam_item.date));
         ((TextView) ecv.findViewById(R.id.ecv_lesson)).setText(exam_item.lesson + ".");
-        ((TextView) ecv.findViewById(R.id.ecv_subject_teacher)).setText(exam_item.subject + " [" + exam_item.teacher + "]");
+        ((TextView) ecv.findViewById(R.id.ecv_subject_teacher)).setText(GGPlan.Entry.translateSubject(exam_item.subject) + " [" + exam_item.teacher + "]");
         ((TextView) ecv.findViewById(R.id.ecv_schoolclass)).setText(exam_item.schoolclass);
         return ecv;
     }

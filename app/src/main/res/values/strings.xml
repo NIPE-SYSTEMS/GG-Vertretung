@@ -121,5 +121,15 @@
     <string name="firstuse">First use</string>
     <string name="my_exams">My exams</string>
     <string name="all_exams">All exams</string>
+    <string name="maths">Mathematics</string>
+    <string name="german">German</string>
+    <string name="english">English</string>
+    <string name="physics">Physics</string>
+    <string name="history">History</string>
+    <string name="geo">Geography</string>
+    <string name="latin">Latin</string>
+    <string name="chem">Chemistry</string>
+    <string name="compsc">Computer science</string>
+    <string name="phil">Philosophy</string>
 
 </resources>

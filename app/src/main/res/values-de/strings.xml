@@ -121,5 +121,15 @@
     <string name="firstuse">Erste Schritte</string>
     <string name="all_exams">Alle Klausuren</string>
     <string name="my_exams">Meine Klausuren</string>
+    <string name="maths">Mathematik</string>
+    <string name="german">Deutsch</string>
+    <string name="english">Englisch</string>
+    <string name="physics">Physik</string>
+    <string name="history">Geschichte</string>
+    <string name="geo">Geographie</string>
+    <string name="latin">Latein</string>
+    <string name="chem">Chemie</string>
+    <string name="compsc">Informatik</string>
+    <string name="phil">Philosophie</string>
 
 </resources>
