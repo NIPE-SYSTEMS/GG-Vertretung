@@ -1,13 +1,10 @@
 package de.gebatzens.ggvertretungsplan;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 
 public class FirstUseActivity extends Activity {

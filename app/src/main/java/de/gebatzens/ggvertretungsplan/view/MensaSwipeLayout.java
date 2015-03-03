@@ -23,13 +23,10 @@ import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ListView;
 import android.widget.ScrollView;
 
 import de.gebatzens.ggvertretungsplan.GGApp;
 import de.gebatzens.ggvertretungsplan.MainActivity;
-import de.gebatzens.ggvertretungsplan.fragment.NewsFragment;
 
 public class MensaSwipeLayout extends SwipeRefreshLayout {
 

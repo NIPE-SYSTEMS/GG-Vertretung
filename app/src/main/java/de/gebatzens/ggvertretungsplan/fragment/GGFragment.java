@@ -19,12 +19,8 @@
 
 package de.gebatzens.ggvertretungsplan.fragment;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.text.Html;
@@ -33,28 +29,25 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import de.gebatzens.ggvertretungsplan.FilterActivity;
 import de.gebatzens.ggvertretungsplan.GGApp;
-import de.gebatzens.ggvertretungsplan.data.Filter;
-import de.gebatzens.ggvertretungsplan.data.GGPlan;
 import de.gebatzens.ggvertretungsplan.R;
 import de.gebatzens.ggvertretungsplan.SettingsActivity;
-import de.gebatzens.ggvertretungsplan.VPLoginException;
+import de.gebatzens.ggvertretungsplan.data.Filter;
+import de.gebatzens.ggvertretungsplan.data.GGPlan;
 
 public class GGFragment extends RemoteDataFragment {
 

@@ -41,9 +41,6 @@ import de.gebatzens.ggvertretungsplan.data.Exams;
 import de.gebatzens.ggvertretungsplan.data.GGPlan;
 import de.gebatzens.ggvertretungsplan.data.Mensa;
 import de.gebatzens.ggvertretungsplan.data.News;
-import de.gebatzens.ggvertretungsplan.fragment.ExamFragment;
-import de.gebatzens.ggvertretungsplan.fragment.MensaFragment;
-import de.gebatzens.ggvertretungsplan.fragment.NewsFragment;
 
 public class SWSProvider extends VPProvider {
 

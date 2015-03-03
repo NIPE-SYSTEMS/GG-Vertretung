@@ -35,7 +35,7 @@ public class Filter {
             case CLASS:
                 return e.clazz.toLowerCase().equals(filter.toLowerCase());
             case TEACHER:
-                return e.subst.toLowerCase().equals(filter.toLowerCase());
+                return e.subst.toLowerCase().equals(filter.toLowerCase()) || e.comment.toLowerCase().endsWith(filter.toLowerCase());
             case SUBJECT:
                 return e.subject.toLowerCase().replace(" ", "").equals(filter.toLowerCase().replace(" ", ""));
         }

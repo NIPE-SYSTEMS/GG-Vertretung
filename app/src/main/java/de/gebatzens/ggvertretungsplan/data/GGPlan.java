@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.gebatzens.ggvertretungsplan.FilterActivity;
 import de.gebatzens.ggvertretungsplan.GGApp;
 import de.gebatzens.ggvertretungsplan.R;
 import de.gebatzens.ggvertretungsplan.fragment.RemoteDataFragment;
