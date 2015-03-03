@@ -329,6 +329,12 @@ public class GGProvider extends VPProvider {
     public News getNews() {
         News n = new News();
         try {
+            if (sessId == null || sessId.isEmpty()) {
+                startNewSession(prefs.getString("token", null));
+                if (sessId == null || sessId.isEmpty())
+                    throw new VPLoginException();
+            }
+
             HttpsURLConnection con = openConnection(BASE_URL + "infoapp/infoapp_provider_new.php?site=news&sessid="+sessId);
             con.setRequestMethod("GET");
 
@@ -612,7 +618,7 @@ public class GGProvider extends VPProvider {
                         gg.activity.mContent.setFragmentLoading();
                     }
                 });
-                GGApp.GG_APP.refreshAsync(null, true, GGApp.FragmentType.PLAN);
+                GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());
 
             } else
                 return 3;
