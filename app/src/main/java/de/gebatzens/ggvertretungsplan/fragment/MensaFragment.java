@@ -51,7 +51,6 @@ import de.gebatzens.ggvertretungsplan.R;
 public class MensaFragment extends RemoteDataFragment {
 
     SwipeRefreshLayout swipeContainer;
-    int cardColorIndex = 0;
     String cache_file_prefix = "cache_mensa_";
 
     public MensaFragment() {
@@ -119,7 +118,6 @@ public class MensaFragment extends RemoteDataFragment {
             mi.image = GGApp.GG_APP.mensa.get(i)[5];
             l.addView(createCardItem(mi, inflater));
         }
-        cardColorIndex = 0;
     }
 
     @Override
