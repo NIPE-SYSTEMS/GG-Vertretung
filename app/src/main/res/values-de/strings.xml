@@ -10,6 +10,8 @@
     <string name="no_entries_in_substitutionplan">Keine Einträge im Vertretungsplan</string>
     <string name="special_messages">Besondere Mitteilungen</string>
     <string name="no_filter_applied">Kein Filter ausgewählt</string>
+    <string name="value">Wert</string>
+    <string name="helptext">Der Hauptfilter sorgt dafür, dass für die angegebene Klasse bzw. den angegebenen Lehrer in der Übersicht der passende Vertretungsplan angezeigt wird.\n\nDer Fach/Kurs Filter ist dafür da, um Fächer/Kurse einzutragen, welche man nicht in der Übersicht sehen will z.B. Französich oder Latein.</string>
     <string name="settings">Einstellungen</string>
     <string name="check_connection_and_repeat">Verbindung überprüfen und wiederholen</string>
     <string name="again">Nochmal</string>
@@ -109,7 +111,6 @@
     <string name="read">Gelesen</string>
     <string name="nothing">Nichts</string>
     <string name="help">Hilfe</string>
-    <string name="helptext"></string>
     <string name="password">Passwort</string>
     <string name="vegi">Vegetarisch</string>
     <string name="garnish">Beilage</string>
