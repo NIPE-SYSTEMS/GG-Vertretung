@@ -192,9 +192,7 @@ public class SWSProvider extends VPProvider {
 
     @Override
     public Exams getExams() {
-        Exams e = new Exams();
-        e.bitmap = BitmapFactory.decodeResource(GGApp.GG_APP.getResources(), R.drawable.mensa_icon);
-        return e;
+        return new Exams();
     }
 
     public Bitmap getMensaImage(String filename) throws IOException {

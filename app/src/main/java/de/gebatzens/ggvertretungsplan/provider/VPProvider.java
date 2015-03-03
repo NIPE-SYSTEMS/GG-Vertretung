@@ -93,6 +93,10 @@ public abstract class VPProvider {
         return prefs.getString("username", null);
     }
 
+    public String getGroup() {
+        return prefs.getString("group", null);
+    }
+
     public static String getWeekday(Date date) {
         return new SimpleDateFormat("EEEE").format(date);
     }

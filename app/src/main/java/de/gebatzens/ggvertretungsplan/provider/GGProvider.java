@@ -501,28 +501,70 @@ public class GGProvider extends VPProvider {
     @Override
     public Exams getExams() {
         Exams exams = new Exams();
-        if(!exams.load("ggexams")) {
-            try {
-                if (sessId == null || sessId.isEmpty()) {
-                    startNewSession(prefs.getString("token", null));
-                    if (sessId == null || sessId.isEmpty())
-                        throw new VPLoginException();
-                }
-
-
-                HttpsURLConnection con = openConnection("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=examplan_image&sessid=" + sessId);
-                con.setRequestMethod("GET");
-
-                if (con.getResponseCode() == 200) {
-                    exams.bitmap = BitmapFactory.decodeStream(con.getInputStream());
-                } else if (con.getResponseCode() == 401) {
-                    logout(true, true);
+        try {
+            if (sessId == null || sessId.isEmpty()) {
+                startNewSession(prefs.getString("token", null));
+                if (sessId == null || sessId.isEmpty())
                     throw new VPLoginException();
+            }
+
+            HttpsURLConnection con = openConnection("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=examplan&sessid=" + sessId);
+            con.setRequestMethod("GET");
+
+            if (con.getResponseCode() == 200) {
+                XmlPullParser parser = Xml.newPullParser();
+                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                parser.setInput(new BufferedReader(new InputStreamReader(con.getInputStream())));
+                parser.nextTag();
+                parser.require(XmlPullParser.START_TAG, null, "examplan");
+
+                while (parser.next() != XmlPullParser.END_TAG) {
+                    if (parser.getEventType() != XmlPullParser.START_TAG)
+                        continue;
+
+                    String name = parser.getName();
+                    if (name.equals("item")) {
+
+                        String[] s = new String[7];
+                        exams.add(s);
+
+                        while (parser.next() != XmlPullParser.END_TAG) {
+                            if (parser.getEventType() != XmlPullParser.START_TAG)
+                                continue;
+
+                            if (parser.getName().equals("id"))
+                                s[0] = parser.nextText();
+
+                            else if (parser.getName().equals("date"))
+                                s[1] = parser.nextText();
+
+                            else if (parser.getName().equals("schoolclass"))
+                                s[2] = parser.nextText();
+
+                            else if (parser.getName().equals("lesson"))
+                                s[3] = parser.nextText();
+
+                            else if (parser.getName().equals("length"))
+                                s[4] = parser.nextText();
+
+                            else if (parser.getName().equals("subject"))
+                                s[5] = parser.nextText();
+
+                            else if (parser.getName().equals("teacher"))
+                                s[6] = parser.nextText();
+                        }
+                    }
                 }
-                exams.save("ggexams");
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else if (con.getResponseCode() == 401) {
+                logout(true, true);
+                throw new VPLoginException();
+            }
+            exams.save("ggexams");
+        } catch (Exception e) {
+            e.printStackTrace();
+            if(!exams.load("ggexams")) {
                 exams.throwable = e;
+                return exams;
             }
         }
         return exams;

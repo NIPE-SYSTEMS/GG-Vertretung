@@ -115,5 +115,7 @@
     <string name="garnish">Garnish</string>
     <string name="exams">Exams</string>
     <string name="firstuse">First use</string>
+    <string name="my_exams">My exams</string>
+    <string name="all_exams">All exams</string>
 
 </resources>

@@ -20,46 +20,93 @@
 package de.gebatzens.ggvertretungsplan.data;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.util.JsonReader;
+import android.util.JsonWriter;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 import de.gebatzens.ggvertretungsplan.GGApp;
 import de.gebatzens.ggvertretungsplan.fragment.RemoteDataFragment;
 
-public class Exams implements RemoteDataFragment.RemoteData {
+public class Exams extends ArrayList<String[]> implements RemoteDataFragment.RemoteData {
 
     public Throwable throwable;
-    public Bitmap bitmap;
 
     @Override
     public Throwable getThrowable() {
         return throwable;
     }
 
-    @Override
     public void save(String file) {
         try {
-            FileOutputStream fos = GGApp.GG_APP.openFileOutput(file, Context.MODE_PRIVATE);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, fos);
-            fos.close();
-        } catch (IOException e) {
+            OutputStream out = GGApp.GG_APP.openFileOutput(file, Context.MODE_PRIVATE);
+            JsonWriter writer = new JsonWriter(new OutputStreamWriter(out));
+
+            writer.setIndent("  ");
+            writer.beginArray();
+            for(String[] s : this) {
+                writer.beginObject();
+
+                writer.name("id").value(s[0]);
+                writer.name("date").value(s[1]);
+                writer.name("schoolclass").value(s[2]);
+                writer.name("lesson").value(s[3]);
+                writer.name("length").value(s[4]);
+                writer.name("subject").value(s[5]);
+                writer.name("teacher").value(s[6]);
+
+                writer.endObject();
+            }
+            writer.endArray();
+            writer.close();
+        } catch(Exception e) {
             e.printStackTrace();
         }
     }
 
-    @Override
     public boolean load(String file) {
+        clear();
         try {
-            bitmap = BitmapFactory.decodeStream(GGApp.GG_APP.openFileInput(file));
+            InputStream in = GGApp.GG_APP.openFileInput(file);
+            JsonReader reader = new JsonReader(new InputStreamReader(in));
+            reader.beginArray();
+            while(reader.hasNext()) {
+                reader.beginObject();
+                String[] s = new String[7];
+
+                while(reader.hasNext()) {
+                    String name = reader.nextName();
+                    if(name.equals("id"))
+                        s[0] = reader.nextString();
+                    else if(name.equals("date"))
+                        s[1] = reader.nextString();
+                    else if(name.equals("schoolclass"))
+                        s[2] = reader.nextString();
+                    else if(name.equals("lesson"))
+                        s[3] = reader.nextString();
+                    else if(name.equals("length"))
+                        s[4] = reader.nextString();
+                    else if(name.equals("subject"))
+                        s[5] = reader.nextString();
+                    else if(name.equals("teacher"))
+                        s[6] = reader.nextString();
+                    else
+                        reader.skipValue();
+                }
+                reader.endObject();
+                add(s);
+            }
+            reader.endArray();
+            reader.close();
         } catch(Exception e) {
             e.printStackTrace();
             return false;
         }
-        return bitmap != null;
+
+        return true;
     }
-
-
 }

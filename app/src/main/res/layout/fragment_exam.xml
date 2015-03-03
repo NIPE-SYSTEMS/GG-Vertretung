@@ -6,13 +6,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <LinearLayout
+        <de.gebatzens.ggvertretungsplan.view.ExamSwipeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:id="@+id/exam_content"/>
+            android:id="@+id/exam_refresh">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:id="@+id/exam_content" />
+
+        </de.gebatzens.ggvertretungsplan.view.ExamSwipeLayout>
 
         <View
             android:layout_width="match_parent"
