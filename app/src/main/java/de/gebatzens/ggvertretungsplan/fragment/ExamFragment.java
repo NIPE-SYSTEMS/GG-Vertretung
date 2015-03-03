@@ -103,18 +103,22 @@ public class ExamFragment extends RemoteDataFragment {
         int p = toPixels(6);
         l.setPadding(p, p, p, p);
         sv.addView(l);
-        createTextView(getResources().getString(R.string.my_exams),toPixels(12),inflater,l);
+        createTextView(getResources().getString(R.string.my_exams), toPixels(12), inflater, l);
         for(Exams.ExamItem item : GGApp.GG_APP.exams) {
             if(GGApp.GG_APP.filters.mainFilter.matches(item)) {
                 CardView cv = createCardItem(item, inflater);
-                l.addView(cv);
+                if(cv != null) {
+                    l.addView(cv);
+                }
             }
 
         }
         createTextView(getResources().getString(R.string.all_exams),toPixels(12),inflater,l);
         for(Exams.ExamItem item : GGApp.GG_APP.exams) {
             CardView cv = createCardItem(item, inflater);
-            l.addView(cv);
+            if(cv != null) {
+                l.addView(cv);
+            }
         }
         cardColorIndex = 0;
     }
@@ -142,7 +146,8 @@ public class ExamFragment extends RemoteDataFragment {
         Date dt = c.getTime();
         try {
             if(getDate(exam_item.date).before(dt)) {
-                ecv.setAlpha(0.35f);
+                //ecv.setAlpha(0.35f);
+                return null;
             }
         } catch (ParseException e) {
             e.printStackTrace();
