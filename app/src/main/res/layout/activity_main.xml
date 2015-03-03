@@ -91,7 +91,7 @@
                     android:layout_marginBottom="6.6dp"
                     android:background="#f0f0f0"/>
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/left_drawer_firstuse"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -106,7 +106,7 @@
                     android:paddingRight="16dp"
                     android:textColor="#3e3e3e"
                     android:background="?android:selectableItemBackground"
-                    android:minHeight="?android:attr/listPreferredItemHeightSmall" />
+                    android:minHeight="?android:attr/listPreferredItemHeightSmall" />-->
 
                 <TextView
                     android:id="@+id/left_drawer_settings"

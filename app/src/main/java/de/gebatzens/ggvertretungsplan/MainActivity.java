@@ -220,7 +220,7 @@ public class MainActivity extends FragmentActivity {
         });
         ListviewHelper.getListViewSize(mDrawerList);
 
-        mDrawerFirstUse = (TextView) findViewById(R.id.left_drawer_firstuse);
+        /*mDrawerFirstUse = (TextView) findViewById(R.id.left_drawer_firstuse);
         mDrawerFirstUse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View viewIn) {
@@ -228,7 +228,7 @@ public class MainActivity extends FragmentActivity {
                 Intent i = new Intent(MainActivity.this, FirstUseActivity.class);
                 startActivityForResult(i, 1);
             }
-        });
+        });*/
 
         mDrawerSettings = (TextView) findViewById(R.id.left_drawer_settings);
         mDrawerSettings.setOnClickListener(new View.OnClickListener() {
