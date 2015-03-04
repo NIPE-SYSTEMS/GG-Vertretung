@@ -132,5 +132,6 @@
     <string name="compsc">Computer science</string>
     <string name="phil">Philosophy</string>
     <string name="lhour">Lesson</string>
+    <string name="religion">Religion</string>
 
 </resources>

@@ -347,6 +347,8 @@ public class GGPlan {
                 res = R.string.phil;
             else if(st.equals("inf"))
                 res = R.string.compsc;
+            else if(st.equals("evr"))
+                res = R.string.religion;
 
             return res == -1 ? s : GGApp.GG_APP.getString(res);
         }
