@@ -19,6 +19,7 @@
 
 package de.gebatzens.ggvertretungsplan.fragment;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -26,9 +27,12 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -52,6 +56,7 @@ public class MensaFragment extends RemoteDataFragment {
 
     SwipeRefreshLayout swipeContainer;
     String cache_file_prefix = "cache_mensa_";
+    Boolean screen_orientation_horizotal = false;
 
     public MensaFragment() {
         type = GGApp.FragmentType.MENSA;
@@ -98,6 +103,14 @@ public class MensaFragment extends RemoteDataFragment {
 
     @Override
     public void createView(LayoutInflater inflater, ViewGroup view) {
+        Display display = ((WindowManager) getActivity().getApplicationContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        int rotation = display.getRotation();
+        Log.d("Screen orientation", String.valueOf(rotation));
+        if((rotation == 3)||(rotation == 1)) {
+            screen_orientation_horizotal = true;
+        } else {
+            screen_orientation_horizotal = false;
+        }
         ScrollView sv = new ScrollView(getActivity());
         sv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         sv.setTag("mensa_scroll");
@@ -150,6 +163,11 @@ public class MensaFragment extends RemoteDataFragment {
         ((TextView) mcv.findViewById(R.id.mcv_garnish)).setText(getResources().getString(R.string.garnish) + ": " + mensa_item.garnish.replace("mit ","").replace("mit",""));
         ((TextView) mcv.findViewById(R.id.mcv_day)).setText(getDayByDate(mensa_item.date));
         ((ImageView) mcv.findViewById(R.id.mcv_imgvegi)).setImageBitmap((Integer.valueOf(mensa_item.vegi) == 1) ? BitmapFactory.decodeResource(getResources(), R.drawable.vegi) : BitmapFactory.decodeResource(getResources(), R.drawable.meat));
+        if(screen_orientation_horizotal) {
+            LinearLayout mcvImageContainer = (LinearLayout) mcv.findViewById(R.id.mcv_image_container);
+            ViewGroup.LayoutParams mcvImageContainerLayoutParams = mcvImageContainer.getLayoutParams();
+            mcvImageContainerLayoutParams.height = toPixels(240);
+        }
         ViewHolder vh = new ViewHolder();
         vh.imgview = (ImageView) mcv.findViewById(R.id.mcv_image);
         vh.filename = mensa_item.image;
