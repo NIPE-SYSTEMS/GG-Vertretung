@@ -42,6 +42,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.MainActivity;
 import de.gebatzens.ggvertretungsplan.R;
 import de.gebatzens.ggvertretungsplan.VPLoginException;
 
@@ -180,6 +181,9 @@ public abstract class RemoteDataFragment extends Fragment {
                                                 GGApp.GG_APP.showToast(getResources().getString(R.string.unknown_error_at_logon));
                                                 break;
                                         }
+
+                                        if(v != 0)
+                                            ((MainActivity) GGApp.GG_APP.activity).mContent.updateFragment();
 
                                     }
 

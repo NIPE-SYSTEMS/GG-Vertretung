@@ -65,7 +65,7 @@ public class GGProvider extends VPProvider {
     public static final String BASE_URL = "https://gymnasium-glinde.logoip.de/";
 
     GGApp ggapp;
-    String sessId;
+    Session session;
 
     public GGProvider(GGApp gg, String id) {
         super(gg, id);
@@ -87,11 +87,11 @@ public class GGProvider extends VPProvider {
         if(token == null || token.isEmpty())
             return;
 
-        HttpsURLConnection con = openConnection(BASE_URL + "infoapp/token.php?token=" + token);
+        HttpsURLConnection con = openConnection(BASE_URL + "infoapp/token.php?token=" + token, false);
 
         if(con.getResponseCode() == 401) {
             logout(true, true);
-            sessId = null;
+            session = null;
             return;
         }
 
@@ -104,11 +104,12 @@ public class GGProvider extends VPProvider {
         Pattern p = Pattern.compile("<sessid>(.*?)</sessid>");
         Matcher m = p.matcher(resp);
         if(m.find()) {
-            sessId = m.group(1);
-            Log.w("ggvp", "new session created " + sessId);
+            session = new Session();
+            session.id = m.group(1);
+            Log.w("ggvp", "new session created " + session.id);
             //prefs.edit().putString("sessid", sessId).apply();
         } else {
-            sessId = null;
+            session = null;
             Log.w("ggvp", "invalid response (token invalid?)");
             //Token invalid
         }
@@ -175,14 +176,14 @@ public class GGProvider extends VPProvider {
                     }
                     return null;
                 }
-            }.execute(sessId);
+            }.execute(session.id);
         }
-        sessId = null;
+        session = null;
     }
 
     @Override
     public GGPlan.GGPlans getPlans(boolean toast) {
-        Log.w("ggvp", "Get GG Plans " + sessId);
+        Log.w("ggvp", "Get GG Plans " + session);
         GGPlan.GGPlans plans = new GGPlan.GGPlans();
         plans.tomorrow = new GGPlan();
         plans.today = new GGPlan();
@@ -190,13 +191,13 @@ public class GGProvider extends VPProvider {
         plans.tomorrow.date = new Date();
 
         try {
-            if (sessId == null || sessId.isEmpty()) {
+            if (session == null) {
                 startNewSession(prefs.getString("token", null));
-                if (sessId == null || sessId.isEmpty())
+                if (session == null)
                     throw new VPLoginException();
             }
 
-            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/infoapp_provider_new.php?site=substitutionplan&sessid=" + sessId);
+            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/infoapp_provider_new.php?site=substitutionplan&sessid=" + session.id, true);
             con.setRequestMethod("GET");
 
             if(con.getResponseCode() == 401) {
@@ -327,13 +328,13 @@ public class GGProvider extends VPProvider {
     public News getNews() {
         News n = new News();
         try {
-            if (sessId == null || sessId.isEmpty()) {
+            if (session == null) {
                 startNewSession(prefs.getString("token", null));
-                if (sessId == null || sessId.isEmpty())
+                if (session == null)
                     throw new VPLoginException();
             }
 
-            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/infoapp_provider_new.php?site=news&sessid="+sessId);
+            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/infoapp_provider_new.php?site=news&sessid=" + session.id, true);
             con.setRequestMethod("GET");
 
             /*
@@ -408,13 +409,13 @@ public class GGProvider extends VPProvider {
     public Mensa getMensa() {
         Mensa m = new Mensa();
         try {
-            if (sessId == null || sessId.isEmpty()) {
+            if (session == null) {
                 startNewSession(prefs.getString("token", null));
-                if (sessId == null || sessId.isEmpty())
+                if (session == null)
                     throw new VPLoginException();
             }
 
-            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/infoapp_provider_new.php?site=mensa&sessid="+sessId);
+            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/infoapp_provider_new.php?site=mensa&sessid=" + session.id, true);
             con.setRequestMethod("GET");
 
             /*
@@ -487,7 +488,7 @@ public class GGProvider extends VPProvider {
 
     public Bitmap getMensaImage(String filename) throws IOException {
 
-        HttpsURLConnection con = openConnection("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=mensa_image&sessid=" + sessId + "&filename=" + filename);
+        HttpsURLConnection con = openConnection("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=mensa_image&sessid=" + session.id + "&filename=" + filename, true);
         con.setRequestMethod("GET");
 
         if(con.getResponseCode() == 200) {
@@ -499,16 +500,16 @@ public class GGProvider extends VPProvider {
 
     @Override
     public Exams getExams() {
-        Log.w("ggvp", "get GG Exams " + sessId);
+        Log.w("ggvp", "get GG Exams " + session);
         Exams exams = new Exams();
         try {
-            if (sessId == null || sessId.isEmpty()) {
+            if (session == null) {
                 startNewSession(prefs.getString("token", null));
-                if (sessId == null || sessId.isEmpty())
+                if (session == null)
                     throw new VPLoginException();
             }
 
-            HttpsURLConnection con = openConnection("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=examplan&sessid=" + sessId);
+            HttpsURLConnection con = openConnection("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=examplan&sessid=" + session.id, true);
             con.setRequestMethod("GET");
 
             if (con.getResponseCode() == 200) {
@@ -604,7 +605,7 @@ public class GGProvider extends VPProvider {
     public int login(String user, String pass) {
         try {
 
-            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/auth.php");
+            HttpsURLConnection con = openConnection(BASE_URL + "infoapp/auth.php", true);
             con.setRequestMethod("POST");
 
             con.setDoOutput(true);
@@ -635,8 +636,8 @@ public class GGProvider extends VPProvider {
 
                         String name = parser.getName();
                         if (name.equals("sessid")) {
-                            sessId = parser.nextText();
-                            prefs.edit().putString("sessid", sessId).apply();
+                            session = new Session();
+                            session.id = parser.nextText();
                         } else if(name.equals("username") || name.equals("token") || name.equals("firstname") || name.equals("lastname") || name.equals("group")) {
                             prefs.edit().putString(name, parser.nextText()).apply();
                         }
@@ -729,7 +730,9 @@ public class GGProvider extends VPProvider {
         }
     }
 
-    static HttpsURLConnection openConnection(String url) throws IOException {
+    HttpsURLConnection openConnection(String url, boolean checkSession) throws IOException {
+        if(checkSession && session.isExpired())
+            startNewSession(prefs.getString("token", null));
         HttpsURLConnection con = (HttpsURLConnection) new URL(url).openConnection();
         con.setSSLSocketFactory(sslSocketFactory);
         con.setConnectTimeout(3000);
@@ -737,6 +740,24 @@ public class GGProvider extends VPProvider {
         Log.w("ggvp", "connection to " + con.getURL().getHost() + " established");
 
         return con;
+    }
+
+    static class Session {
+        String id;
+        Date start;
+
+        public Session() {
+            start = new Date();
+        }
+
+        public boolean isExpired() {
+            return (System.currentTimeMillis() - start.getTime()) > (1000 * 3600 * 20);
+        }
+
+        @Override
+        public String toString() {
+            return start + " " + id;
+        }
     }
 
 }
