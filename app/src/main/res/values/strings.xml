@@ -131,5 +131,6 @@
     <string name="chem">Chemistry</string>
     <string name="compsc">Computer science</string>
     <string name="phil">Philosophy</string>
+    <string name="lhour">Lesson</string>
 
 </resources>

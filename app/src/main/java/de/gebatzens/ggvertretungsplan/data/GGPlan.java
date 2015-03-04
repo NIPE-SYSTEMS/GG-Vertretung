@@ -298,7 +298,7 @@ public class GGPlan {
                 Matcher m2 = Pattern.compile(":(.*)").matcher(comment);
 
                 if(m1.find())
-                    comment =  GGApp.GG_APP.getResources().getString(R.string.instead_of) + " " + m1.group(1).replaceAll("\\w+ \\(heute\\)", "").replaceAll("heute,? ", "") + " " +  GGApp.GG_APP.getResources().getString(R.string.lesson);
+                    comment =  GGApp.GG_APP.getResources().getString(R.string.instead_of) + " " + m1.group(1).replaceAll("\\w+ \\(heute\\)", "").replaceAll("heute,? ", "") + " " +  GGApp.GG_APP.getResources().getString(R.string.lhour);
 
                 if(m2.find())
                     repsub = m2.group(1).trim();
