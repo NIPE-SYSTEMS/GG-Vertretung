@@ -186,8 +186,12 @@ public class MensaFragment extends RemoteDataFragment {
             protected void onPostExecute(ViewHolder result) {
                 try {
                     ImageView imgView = (ImageView) result.imgview;
-                    imgView.setImageBitmap((Bitmap) result.bitmap);
-                    imgView.setScaleType(ImageView.ScaleType.FIT_XY);
+                    if(result.bitmap != null) {
+                        imgView.setImageBitmap((Bitmap) result.bitmap);
+                    } else {
+                        imgView.setImageBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.no_content));
+                    }
+                    imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -277,6 +281,8 @@ public class MensaFragment extends RemoteDataFragment {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
