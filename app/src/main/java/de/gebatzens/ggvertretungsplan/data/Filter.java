@@ -46,7 +46,7 @@ public class Filter {
     public boolean matches(Exams.ExamItem item) {
         switch(type) {
             case CLASS:
-                return item.schoolclass.toLowerCase().equals(filter.toLowerCase());
+                return item.schoolclass.toLowerCase().contains(filter.toLowerCase());
             case TEACHER:
                 return item.teacher.toLowerCase().equals(filter.toLowerCase());
             case SUBJECT:
