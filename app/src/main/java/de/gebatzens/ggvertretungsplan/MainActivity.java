@@ -256,8 +256,10 @@ public class MainActivity extends FragmentActivity {
                             b = GGApp.GG_APP.news == null;
                             break;
                         case MENSA:
-                            //TODO
-                            b = false;
+                            b = GGApp.GG_APP.mensa == null;
+                            break;
+                        case EXAMS:
+                            b = GGApp.GG_APP.exams == null;
                             break;
                     }
                 }
