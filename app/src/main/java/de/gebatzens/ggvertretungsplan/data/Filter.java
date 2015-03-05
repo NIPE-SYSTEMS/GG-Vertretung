@@ -48,7 +48,7 @@ public class Filter {
             case CLASS:
                 return item.schoolclass.toLowerCase().contains(filter.toLowerCase());
             case TEACHER:
-                return item.teacher.toLowerCase().equals(filter.toLowerCase());
+                return item.teacher.toLowerCase().contains(filter.toLowerCase());
             case SUBJECT:
                 return item.subject.toLowerCase().equals(filter.toLowerCase());
         }
