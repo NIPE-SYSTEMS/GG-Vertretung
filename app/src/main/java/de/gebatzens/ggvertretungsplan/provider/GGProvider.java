@@ -442,30 +442,30 @@ public class GGProvider extends VPProvider {
                     String name = parser.getName();
                     if (name.equals("item")) {
 
-                        String[] s = new String[6];
-                        m.add(s);
+                        Mensa.MensaItem item = new Mensa.MensaItem();
+                        m.add(item);
 
                         while (parser.next() != XmlPullParser.END_TAG) {
                             if (parser.getEventType() != XmlPullParser.START_TAG)
                                 continue;
 
                             if (parser.getName().equals("id"))
-                                s[0] = parser.nextText();
+                                item.id = parser.nextText();
 
                             else if (parser.getName().equals("date"))
-                                s[1] = parser.nextText();
+                                item.date = parser.nextText();
 
                             else if (parser.getName().equals("meal"))
-                                s[2] = parser.nextText();
+                                item.meal = parser.nextText();
 
                             else if (parser.getName().equals("garnish"))
-                                s[3] = parser.nextText();
+                                item.garnish = parser.nextText();
 
                             else if (parser.getName().equals("vegi"))
-                                s[4] = parser.nextText();
+                                item.vegi = parser.nextText();
 
                             else if (parser.getName().equals("image"))
-                                s[5] = parser.nextText();
+                                item.image = parser.nextText();
                         }
                     }
                 }

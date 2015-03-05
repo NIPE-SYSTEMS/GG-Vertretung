@@ -25,6 +25,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Browser;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -48,9 +49,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.ServiceConfigurationError;
 
 import de.gebatzens.ggvertretungsplan.GGApp;
 import de.gebatzens.ggvertretungsplan.R;
+import de.gebatzens.ggvertretungsplan.data.Mensa;
 
 public class MensaFragment extends RemoteDataFragment {
 
@@ -99,6 +102,8 @@ public class MensaFragment extends RemoteDataFragment {
                 R.color.custom_material_blue,
                 R.color.custom_material_orange);
 
+
+
     }
 
     @Override
@@ -111,26 +116,32 @@ public class MensaFragment extends RemoteDataFragment {
         } else {
             screen_orientation_horizotal = false;
         }
-        ScrollView sv = new ScrollView(getActivity());
+        final ScrollView sv = new ScrollView(getActivity());
         sv.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         sv.setTag("mensa_scroll");
         ((LinearLayout) view.findViewById(R.id.mensa_content)).addView(sv);
-        LinearLayout l = new LinearLayout(getActivity());
+        final LinearLayout l = new LinearLayout(getActivity());
         l.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         l.setOrientation(LinearLayout.VERTICAL);
         int p = toPixels(6);
         l.setPadding(p, p, p, p);
         sv.addView(l);
-        for(int i = 0; i < GGApp.GG_APP.mensa.size(); i++) {
-            MensaItem mi = new MensaItem();
-            mi.id = GGApp.GG_APP.mensa.get(i)[0];
-            mi.date = GGApp.GG_APP.mensa.get(i)[1];
-            mi.garnish = GGApp.GG_APP.mensa.get(i)[3];
-            mi.meal = GGApp.GG_APP.mensa.get(i)[2];
-            mi.vegi = GGApp.GG_APP.mensa.get(i)[4];
-            mi.image = GGApp.GG_APP.mensa.get(i)[5];
-            l.addView(createCardItem(mi, inflater));
+        for(Mensa.MensaItem item : GGApp.GG_APP.mensa) {
+            l.addView(createCardItem(item, inflater));
+
         }
+        sv.post(new Runnable() {
+            @Override
+            public void run() {
+                for(int i = 0; i < l.getChildCount(); i++) {
+                    View v = l.getChildAt(i);
+                    if(!GGApp.GG_APP.mensa.get(i).isPast()) {
+                        sv.scrollTo(0, (int) v.getY());
+                        return;
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -138,25 +149,15 @@ public class MensaFragment extends RemoteDataFragment {
         return (ViewGroup) getView().findViewById(R.id.mensa_content);
     }
 
-    private CardView createCardItem(MensaItem mensa_item, LayoutInflater i) {
+    private CardView createCardItem(Mensa.MensaItem mensa_item, LayoutInflater i) {
         CardView mcv = createCardView();
         mcv.setContentPadding(0, 0, 0, 0);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.setMargins(0, 0, 0, toPixels(6));
         mcv.setLayoutParams(params);
         i.inflate(R.layout.mensa_cardview_entry, mcv, true);
-        Date d = new Date();
-        Calendar c = Calendar.getInstance();
-        c.setTime(d);
-        c.add(Calendar.DAY_OF_YEAR, -1);
-        Date dt = c.getTime();
-        try {
-            if(getDate(mensa_item.date).before(dt)) {
-                mcv.setAlpha(0.65f);
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        if(mensa_item.isPast())
+            mcv.setAlpha(0.65f);
         String[] colors = getActivity().getResources().getStringArray(GGApp.GG_APP.provider.getColorArray());
         ((TextView) mcv.findViewById(R.id.mcv_date)).setText(getFormatedDate(mensa_item.date));
         ((TextView) mcv.findViewById(R.id.mcv_meal)).setText(mensa_item.meal);
@@ -259,11 +260,6 @@ public class MensaFragment extends RemoteDataFragment {
         }
     }
 
-    private Date getDate(String date) throws ParseException {
-        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.parse(date);
-    }
-
     private boolean cacheCheckDir() {
         File schulinfoapp_dir = new File(Environment.getExternalStorageDirectory() + "/SchulinfoAPP");
         if(schulinfoapp_dir.isDirectory()) {
@@ -309,15 +305,6 @@ public class MensaFragment extends RemoteDataFragment {
         ImageView imgview;
         Bitmap bitmap;
         String filename;
-    }
-
-    public class MensaItem {
-        String id;
-        String date;
-        String meal;
-        String garnish;
-        String vegi;
-        String image;
     }
 
 

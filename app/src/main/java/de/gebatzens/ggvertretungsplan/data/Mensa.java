@@ -27,12 +27,18 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import de.gebatzens.ggvertretungsplan.GGApp;
+import de.gebatzens.ggvertretungsplan.fragment.MensaFragment;
 import de.gebatzens.ggvertretungsplan.fragment.RemoteDataFragment;
 
-public class Mensa extends ArrayList<String[]> implements RemoteDataFragment.RemoteData {
+public class Mensa extends ArrayList<Mensa.MensaItem> implements RemoteDataFragment.RemoteData {
 
     public Throwable throwable;
 
@@ -48,15 +54,15 @@ public class Mensa extends ArrayList<String[]> implements RemoteDataFragment.Rem
 
             writer.setIndent("  ");
             writer.beginArray();
-            for(String[] s : this) {
+            for(MensaItem s : this) {
                 writer.beginObject();
 
-                writer.name("id").value(s[0]);
-                writer.name("date").value(s[1]);
-                writer.name("meal").value(s[2]);
-                writer.name("garnish").value(s[3]);
-                writer.name("vegi").value(s[4]);
-                writer.name("image").value(s[5]);
+                writer.name("id").value(s.id);
+                writer.name("date").value(s.date);
+                writer.name("meal").value(s.meal);
+                writer.name("garnish").value(s.garnish);
+                writer.name("vegi").value(s.vegi);
+                writer.name("image").value(s.image);
 
                 writer.endObject();
             }
@@ -75,27 +81,27 @@ public class Mensa extends ArrayList<String[]> implements RemoteDataFragment.Rem
             reader.beginArray();
             while(reader.hasNext()) {
                 reader.beginObject();
-                String[] s = new String[6];
+                MensaItem item = new MensaItem();
 
                 while(reader.hasNext()) {
                     String name = reader.nextName();
                     if(name.equals("id"))
-                        s[0] = reader.nextString();
+                        item.id = reader.nextString();
                     else if(name.equals("date"))
-                        s[1] = reader.nextString();
+                        item.date = reader.nextString();
                     else if(name.equals("meal"))
-                        s[2] = reader.nextString();
+                        item.meal = reader.nextString();
                     else if(name.equals("garnish"))
-                        s[3] = reader.nextString();
+                        item.garnish = reader.nextString();
                     else if(name.equals("vegi"))
-                        s[4] = reader.nextString();
+                        item.vegi = reader.nextString();
                     else if(name.equals("image"))
-                        s[5] = reader.nextString();
+                        item.image = reader.nextString();
                     else
                         reader.skipValue();
                 }
                 reader.endObject();
-                add(s);
+                add(item);
             }
             reader.endArray();
             reader.close();
@@ -105,5 +111,36 @@ public class Mensa extends ArrayList<String[]> implements RemoteDataFragment.Rem
         }
 
         return true;
+    }
+
+    private static Date getDate(String date) throws ParseException {
+        DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.parse(date);
+    }
+
+    public static class MensaItem {
+        public String id;
+        public String date;
+        public String meal;
+        public String garnish;
+        public String vegi;
+        public String image;
+
+        public boolean isPast() {
+            Date d = new Date();
+            Calendar c = Calendar.getInstance();
+            c.setTime(d);
+            c.add(Calendar.DAY_OF_YEAR, -1);
+            Date dt = c.getTime();
+            try {
+                if(getDate(this.date).before(dt)) {
+                    return true;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
     }
 }
