@@ -731,7 +731,7 @@ public class GGProvider extends VPProvider {
     }
 
     HttpsURLConnection openConnection(String url, boolean checkSession) throws IOException {
-        if(checkSession && session.isExpired())
+        if(checkSession && session != null && session.isExpired())
             startNewSession(prefs.getString("token", null));
         HttpsURLConnection con = (HttpsURLConnection) new URL(url).openConnection();
         con.setSSLSocketFactory(sslSocketFactory);
