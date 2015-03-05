@@ -12,6 +12,7 @@
         android:id="@+id/usernameInput"
         android:hint="@string/username"
         android:singleLine="true"
+        android:inputType="textFilter"
         android:layout_width="match_parent"/>
 
     <EditText android:layout_height="wrap_content"
