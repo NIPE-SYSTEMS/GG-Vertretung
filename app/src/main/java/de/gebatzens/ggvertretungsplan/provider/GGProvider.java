@@ -262,9 +262,6 @@ public class GGProvider extends VPProvider {
         if(plans.throwable != null) {
             if (plans.load("ggvp")) {
                 final Throwable t = plans.throwable;
-                String s = GGApp.GG_APP.getResources().getString(R.string.no_internet_connection)+"\n" + plans.today.loadDate;
-                plans.today.loadDate = s;
-                plans.tomorrow.loadDate = s;
                 plans.throwable = null;
                 if(toast)
                     GGApp.GG_APP.activity.runOnUiThread(new Runnable() {
