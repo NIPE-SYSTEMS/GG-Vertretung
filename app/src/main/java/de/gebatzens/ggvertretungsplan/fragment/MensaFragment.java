@@ -127,21 +127,10 @@ public class MensaFragment extends RemoteDataFragment {
         l.setPadding(p, p, p, p);
         sv.addView(l);
         for(Mensa.MensaItem item : GGApp.GG_APP.mensa) {
-            l.addView(createCardItem(item, inflater));
+            if(!item.isPast())
+                l.addView(createCardItem(item, inflater));
 
         }
-        sv.post(new Runnable() {
-            @Override
-            public void run() {
-                for(int i = 0; i < l.getChildCount(); i++) {
-                    View v = l.getChildAt(i);
-                    if(!GGApp.GG_APP.mensa.get(i).isPast()) {
-                        sv.scrollTo(0, (int) v.getY());
-                        return;
-                    }
-                }
-            }
-        });
     }
 
     @Override
