@@ -29,12 +29,12 @@ import de.gebatzens.ggvertretungsplan.MainActivity;
 import de.gebatzens.ggvertretungsplan.R;
 import de.gebatzens.ggvertretungsplan.provider.VPProvider;
 
-public class GGFragmentAdapter extends FragmentPagerAdapter {
+public class SubstAdapter extends FragmentPagerAdapter {
 
-    GGFragment heute, morgen, overview;
+    SubstPagerFragment heute, morgen, overview;
     MainActivity mActivity;
 
-    public GGFragmentAdapter(Fragment m, Bundle savedState, MainActivity ma) {
+    public SubstAdapter(Fragment m, Bundle savedState, MainActivity ma) {
         super(m.getChildFragmentManager());
         createFragments();
         mActivity = ma;
@@ -42,30 +42,30 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
     }
 
     private void createFragments() {
-        heute = new GGFragment();
-        heute.setParams(GGFragment.TYPE_TODAY);
-        morgen = new GGFragment();
-        morgen.setParams(GGFragment.TYPE_TOMORROW);
-        overview = new GGFragment();
-        overview.setParams(GGFragment.TYPE_OVERVIEW);
+        heute = new SubstPagerFragment();
+        heute.setParams(SubstPagerFragment.TYPE_TODAY);
+        morgen = new SubstPagerFragment();
+        morgen.setParams(SubstPagerFragment.TYPE_TOMORROW);
+        overview = new SubstPagerFragment();
+        overview.setParams(SubstPagerFragment.TYPE_OVERVIEW);
 
     }
 
     public void updateFragments() {
-        heute.setParams(GGFragment.TYPE_TODAY);
-        morgen.setParams(GGFragment.TYPE_TOMORROW);
-        overview.setParams(GGFragment.TYPE_OVERVIEW);
+        heute.setParams(SubstPagerFragment.TYPE_TODAY);
+        morgen.setParams(SubstPagerFragment.TYPE_TOMORROW);
+        overview.setParams(SubstPagerFragment.TYPE_OVERVIEW);
         heute.updateFragment();
         morgen.updateFragment();
         overview.updateFragment();
-        ((GGContentFragment)mActivity.mContent).mSlidingTabLayout.setViewPager(((GGContentFragment)mActivity.mContent).mViewPager);
+        ((SubstFragment)mActivity.mContent).mSlidingTabLayout.setViewPager(((SubstFragment)mActivity.mContent).mViewPager);
     }
 
     public void setFragmentsLoading() {
         heute.setFragmentLoading();
         morgen.setFragmentLoading();
         overview.setFragmentLoading();
-        ((GGContentFragment)mActivity.mContent).mSlidingTabLayout.setViewPager(((GGContentFragment)mActivity.mContent).mViewPager);
+        ((SubstFragment)mActivity.mContent).mSlidingTabLayout.setViewPager(((SubstFragment)mActivity.mContent).mViewPager);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class GGFragmentAdapter extends FragmentPagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup view, int pos) {
         Object o = super.instantiateItem(view, pos);
-        ((GGFragment)o).setParams(pos == 0 ? GGFragment.TYPE_OVERVIEW : pos == 1 ? GGFragment.TYPE_TODAY : GGFragment.TYPE_TOMORROW);
+        ((SubstPagerFragment)o).setParams(pos == 0 ? SubstPagerFragment.TYPE_OVERVIEW : pos == 1 ? SubstPagerFragment.TYPE_TODAY : SubstPagerFragment.TYPE_TOMORROW);
         return o;
     }
 

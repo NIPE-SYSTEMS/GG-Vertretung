@@ -31,13 +31,13 @@ import android.widget.TextView;
 
 import de.gebatzens.ggvertretungsplan.R;
 
-public class RibbonMenuListAdapter extends BaseAdapter {
+public class NavigationListAdapter extends BaseAdapter {
     private Context context;
     private String[] mTitle;
     private int[] mIcon;
     private LayoutInflater inflater;
  
-    public RibbonMenuListAdapter(Context pContext, String[] pTitle, int[] pIcon) {
+    public NavigationListAdapter(Context pContext, String[] pTitle, int[] pIcon) {
         context = pContext;
         mTitle = pTitle;
         mIcon = pIcon;
@@ -46,7 +46,7 @@ public class RibbonMenuListAdapter extends BaseAdapter {
     @SuppressLint("ViewHolder")
 	public View getView(int position, View convertView, ViewGroup parent) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View itemView = inflater.inflate(R.layout.ribbon_drawer_list_item, parent, false);
+        View itemView = inflater.inflate(R.layout.navigation_item, parent, false);
         TextView txtTitle = (TextView) itemView.findViewById(R.id.menuTitle);
         ArrayAdapter a;
         ImageView imgIcon = (ImageView) itemView.findViewById(R.id.menuIcon);

@@ -38,23 +38,23 @@ import de.gebatzens.ggvertretungsplan.MainActivity;
 import de.gebatzens.ggvertretungsplan.R;
 import de.gebatzens.ggvertretungsplan.view.SlidingTabLayout;
 
-public class GGContentFragment extends RemoteDataFragment {
+public class SubstFragment extends RemoteDataFragment {
 
     public Toolbar mToolbar;
     public ViewPager mViewPager;
     public SlidingTabLayout mSlidingTabLayout;
-    public GGFragmentAdapter mGGFrag;
+    public SubstAdapter mGGFrag;
     public SwipeRefreshLayout swipeContainer;
     public Bundle bundle;
 
-    public GGContentFragment() {
+    public SubstFragment() {
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment, container, false);
+        return inflater.inflate(R.layout.fragment_subst, container, false);
     }
 
     private int toPixels(int dp) {
@@ -66,7 +66,7 @@ public class GGContentFragment extends RemoteDataFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         bundle = ((MainActivity) getActivity()).savedState;
         mViewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        mGGFrag = new GGFragmentAdapter(this, savedInstanceState, (MainActivity) getActivity());
+        mGGFrag = new SubstAdapter(this, savedInstanceState, (MainActivity) getActivity());
         if(bundle != null) {
             mGGFrag.heute.spinnerPos = bundle.getInt("ggvp_frag_today_spinner");
             mGGFrag.morgen.spinnerPos = bundle.getInt("ggvp_frag_tomorrow_spinner");

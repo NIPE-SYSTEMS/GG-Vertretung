@@ -29,15 +29,15 @@ import android.widget.ScrollView;
 
 import de.gebatzens.ggvertretungsplan.GGApp;
 import de.gebatzens.ggvertretungsplan.MainActivity;
-import de.gebatzens.ggvertretungsplan.fragment.GGContentFragment;
-import de.gebatzens.ggvertretungsplan.fragment.GGFragment;
+import de.gebatzens.ggvertretungsplan.fragment.SubstFragment;
+import de.gebatzens.ggvertretungsplan.fragment.SubstPagerFragment;
 
-public class GGSwipeLayout extends SwipeRefreshLayout {
+public class SubstSwipeLayout extends SwipeRefreshLayout {
 
     private int mTouchSlop;
     private float mPrevX;
 
-    public GGSwipeLayout(Context context, AttributeSet attrs) {
+    public SubstSwipeLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
@@ -59,8 +59,8 @@ public class GGSwipeLayout extends SwipeRefreshLayout {
                     return false;
 
                 if(GGApp.GG_APP.getFragmentType() == GGApp.FragmentType.PLAN) {
-                    int i = ((GGContentFragment) ((MainActivity) getContext()).mContent).mViewPager.getCurrentItem();
-                    GGFragment frag = (GGFragment) ((FragmentPagerAdapter) ((GGContentFragment) ((MainActivity) getContext()).mContent).mViewPager.getAdapter()).getItem(i);
+                    int i = ((SubstFragment) ((MainActivity) getContext()).mContent).mViewPager.getCurrentItem();
+                    SubstPagerFragment frag = (SubstPagerFragment) ((FragmentPagerAdapter) ((SubstFragment) ((MainActivity) getContext()).mContent).mViewPager.getAdapter()).getItem(i);
                     ScrollView sv = (ScrollView) frag.getView().findViewWithTag("ggfrag_scrollview");
 
                     if (sv != null && sv.getScrollY() != 0)

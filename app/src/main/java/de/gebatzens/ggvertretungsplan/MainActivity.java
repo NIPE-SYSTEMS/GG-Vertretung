@@ -43,7 +43,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -51,11 +50,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.gebatzens.ggvertretungsplan.fragment.ExamFragment;
-import de.gebatzens.ggvertretungsplan.fragment.GGContentFragment;
+import de.gebatzens.ggvertretungsplan.fragment.SubstFragment;
 import de.gebatzens.ggvertretungsplan.fragment.MensaFragment;
 import de.gebatzens.ggvertretungsplan.fragment.NewsFragment;
 import de.gebatzens.ggvertretungsplan.fragment.RemoteDataFragment;
-import de.gebatzens.ggvertretungsplan.view.RibbonMenuListAdapter;
+import de.gebatzens.ggvertretungsplan.view.NavigationListAdapter;
 
 
 public class MainActivity extends FragmentActivity {
@@ -76,7 +75,7 @@ public class MainActivity extends FragmentActivity {
     public RemoteDataFragment createFragment() {
         switch(GGApp.GG_APP.getFragmentType()) {
             case PLAN:
-                return new GGContentFragment();
+                return new SubstFragment();
             case NEWS:
                 return new NewsFragment();
             case MENSA:
@@ -204,7 +203,7 @@ public class MainActivity extends FragmentActivity {
 
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
         //ArrayAdapter<String> aa = new ArrayAdapter<String>(this, R.layout.drawer_list_item, mStrings);
-        RibbonMenuListAdapter aa = new RibbonMenuListAdapter(this, mStrings, mIcons);
+        NavigationListAdapter aa = new NavigationListAdapter(this, mStrings, mIcons);
         mDrawerList.setAdapter(aa);
         mDrawerList.setItemChecked(Arrays.asList(GGApp.FragmentType.values()).indexOf(GGApp.GG_APP.getFragmentType()), true);
 
@@ -349,7 +348,7 @@ public class MainActivity extends FragmentActivity {
             ((TextView) findViewById(R.id.drawer_image_text)).setText(GGApp.GG_APP.provider.getFullName());
 
             if(GGApp.GG_APP.getFragmentType() == GGApp.FragmentType.PLAN) {
-                ((GGContentFragment)mContent).mSlidingTabLayout.setBackgroundColor(GGApp.GG_APP.provider.getColor());
+                ((SubstFragment)mContent).mSlidingTabLayout.setBackgroundColor(GGApp.GG_APP.provider.getColor());
                 mContent.setFragmentLoading();
             }
             GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());

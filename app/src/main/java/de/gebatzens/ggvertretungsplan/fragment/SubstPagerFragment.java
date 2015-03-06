@@ -51,7 +51,7 @@ import de.gebatzens.ggvertretungsplan.SettingsActivity;
 import de.gebatzens.ggvertretungsplan.data.Filter;
 import de.gebatzens.ggvertretungsplan.data.GGPlan;
 
-public class GGFragment extends RemoteDataFragment {
+public class SubstPagerFragment extends RemoteDataFragment {
 
     public static final int TYPE_OVERVIEW = 0, TYPE_TODAY = 1, TYPE_TOMORROW = 2;
 
@@ -59,7 +59,7 @@ public class GGFragment extends RemoteDataFragment {
     int type = -1;
     int spinnerPos = 0;
 
-    public GGFragment() {
+    public SubstPagerFragment() {
         super.type = GGApp.FragmentType.PLAN;
     }
 

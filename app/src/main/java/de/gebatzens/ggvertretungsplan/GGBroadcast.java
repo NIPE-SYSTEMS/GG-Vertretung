@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Properties;
 
 import de.gebatzens.ggvertretungsplan.data.GGPlan;
-import de.gebatzens.ggvertretungsplan.fragment.GGContentFragment;
+import de.gebatzens.ggvertretungsplan.fragment.SubstFragment;
 import de.gebatzens.ggvertretungsplan.provider.VPProvider;
 
 public class GGBroadcast extends BroadcastReceiver {
@@ -66,7 +66,7 @@ public class GGBroadcast extends BroadcastReceiver {
             gg.activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ((GGContentFragment)gg.activity.mContent).mGGFrag.updateFragments();
+                    ((SubstFragment)gg.activity.mContent).mGGFrag.updateFragments();
                 }
             });
 
@@ -252,7 +252,7 @@ public class GGBroadcast extends BroadcastReceiver {
                             params[0].activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ((GGContentFragment)params[0].activity.mContent).mGGFrag.setFragmentsLoading();
+                                    ((SubstFragment)params[0].activity.mContent).mGGFrag.setFragmentsLoading();
                                 }
                             });
 
