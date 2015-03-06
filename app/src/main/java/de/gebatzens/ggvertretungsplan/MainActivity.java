@@ -63,6 +63,7 @@ public class MainActivity extends FragmentActivity {
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mToggle;
     String[] mStrings;
+    Runnable mPendingRunnable;
     int[] mIcons = new int[] {R.drawable.drawer_list_button_image_vertretungsplan, R.drawable.drawer_list_button_image_news, R.drawable.drawer_list_button_image_mensa,
                                 R.drawable.drawer_list_button_image_exam};
     ImageView mNacvigationImage;
@@ -169,6 +170,16 @@ public class MainActivity extends FragmentActivity {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+                if (GGApp.GG_APP.getDataForFragment(GGApp.GG_APP.getFragmentType()) == null)
+                    GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());
+
+                removeAllFragments();
+
+                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                mContent = createFragment();
+                transaction.replace(R.id.content_fragment, mContent, "gg_content_fragment");
+                transaction.commit();
+
             }
 
             /** Called when a drawer has settled in a completely open state. */
@@ -205,16 +216,6 @@ public class MainActivity extends FragmentActivity {
                 GGApp.GG_APP.setFragmentType(GGApp.FragmentType.values()[position]);
                 mDrawerLayout.closeDrawers();
                 mToolbar.setSubtitle(mStrings[position]);
-
-                if(GGApp.GG_APP.getDataForFragment(GGApp.GG_APP.getFragmentType()) == null)
-                    GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());
-
-                removeAllFragments();
-
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                mContent = createFragment();
-                transaction.replace(R.id.content_fragment, mContent, "gg_content_fragment");
-                transaction.commit();
 
             }
         });
