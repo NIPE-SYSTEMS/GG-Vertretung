@@ -91,12 +91,6 @@ public class ExamFragment extends RemoteDataFragment {
                 R.color.custom_material_blue,
                 R.color.custom_material_orange);
 
-        FrameLayout contentFrame = (FrameLayout) getActivity().findViewById(R.id.content_fragment);
-        contentFrame.setVisibility(View.VISIBLE);
-        LinearLayout fragmentLayout = (LinearLayout) getActivity().findViewById(R.id.fragment_layout);
-        Animation fadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fade_in);
-        fragmentLayout.startAnimation(fadeIn);
-
     }
 
     @Override

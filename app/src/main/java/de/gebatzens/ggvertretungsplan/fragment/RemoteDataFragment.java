@@ -34,8 +34,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -244,6 +247,12 @@ public abstract class RemoteDataFragment extends Fragment {
         if(GGApp.GG_APP.getDataForFragment(type) == null) {
             getContentView().addView(createLoadingView());
         }
+
+        FrameLayout contentFrame = (FrameLayout) getActivity().findViewById(R.id.content_fragment);
+        contentFrame.setVisibility(View.VISIBLE);
+        LinearLayout fragmentLayout = (LinearLayout) getActivity().findViewById(R.id.fragment_layout);
+        Animation fadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fade_in);
+        fragmentLayout.startAnimation(fadeIn);
 
     }
 

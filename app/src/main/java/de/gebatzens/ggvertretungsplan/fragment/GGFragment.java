@@ -137,12 +137,6 @@ public class GGFragment extends RemoteDataFragment {
     @Override
     public void createView(final LayoutInflater inflater, ViewGroup group) {
 
-        FrameLayout contentFrame = (FrameLayout) getActivity().findViewById(R.id.content_fragment);
-        contentFrame.setVisibility(View.VISIBLE);
-        LinearLayout fragmentLayout = (LinearLayout) getActivity().findViewById(R.id.fragment_layout);
-        Animation fadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fade_in);
-        fragmentLayout.startAnimation(fadeIn);
-
         cardColorIndex = 0;
         ScrollView sv = new ScrollView(getActivity());
         sv.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));
