@@ -25,6 +25,5 @@
             android:id="@+id/ShaderTabLayout"
             android:background="@drawable/tablayoutbackground"/>
 
-
     </RelativeLayout>
 </LinearLayout>

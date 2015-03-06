@@ -37,8 +37,12 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -58,12 +62,10 @@ public class MainActivity extends FragmentActivity {
     public RemoteDataFragment mContent;
     public Toolbar mToolbar;
     ListView mDrawerList;
-    TextView mDrawerFirstUse;
     TextView mDrawerSettings;
     DrawerLayout mDrawerLayout;
     ActionBarDrawerToggle mToggle;
     String[] mStrings;
-    Runnable mPendingRunnable;
     int[] mIcons = new int[] {R.drawable.drawer_list_button_image_vertretungsplan, R.drawable.drawer_list_button_image_news, R.drawable.drawer_list_button_image_mensa,
                                 R.drawable.drawer_list_button_image_exam};
     ImageView mNacvigationImage;
@@ -170,13 +172,12 @@ public class MainActivity extends FragmentActivity {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-                if (GGApp.GG_APP.getDataForFragment(GGApp.GG_APP.getFragmentType()) == null)
+                if(GGApp.GG_APP.getDataForFragment(GGApp.GG_APP.getFragmentType()) == null)
                     GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());
 
                 removeAllFragments();
 
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                mContent = createFragment();
                 transaction.replace(R.id.content_fragment, mContent, "gg_content_fragment");
                 transaction.commit();
 
@@ -213,10 +214,32 @@ public class MainActivity extends FragmentActivity {
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                GGApp.GG_APP.setFragmentType(GGApp.FragmentType.values()[position]);
-                mDrawerLayout.closeDrawers();
-                mToolbar.setSubtitle(mStrings[position]);
-
+                if(GGApp.GG_APP.getFragmentType() != GGApp.FragmentType.values()[position]) {
+                    GGApp.GG_APP.setFragmentType(GGApp.FragmentType.values()[position]);
+                    mDrawerLayout.closeDrawers();
+                    mToolbar.setSubtitle(mStrings[position]);
+                    mContent = createFragment();
+                    Animation fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+                    fadeIn.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+                            // Called when the Animation starts
+                        }
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            FrameLayout contentframe = (FrameLayout) findViewById(R.id.content_fragment);
+                            contentframe.setVisibility(View.INVISIBLE);
+                        }
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+                            // This is called each time the Animation repeats
+                        }
+                    });
+                    FrameLayout contentframe = (FrameLayout) findViewById(R.id.content_fragment);
+                    contentframe.startAnimation(fadeIn);
+                } else{
+                    mDrawerLayout.closeDrawers();
+                }
             }
         });
         ListviewHelper.getListViewSize(mDrawerList);

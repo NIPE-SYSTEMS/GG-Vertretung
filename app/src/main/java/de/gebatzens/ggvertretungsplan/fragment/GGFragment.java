@@ -134,6 +134,10 @@ public class GGFragment extends RemoteDataFragment {
 
     @Override
     public void createView(final LayoutInflater inflater, ViewGroup group) {
+
+        FrameLayout contentFrame = (FrameLayout) getActivity().findViewById(R.id.content_fragment);
+        contentFrame.setVisibility(View.VISIBLE);
+
         cardColorIndex = 0;
         ScrollView sv = new ScrollView(getActivity());
         sv.setLayoutParams(new ScrollView.LayoutParams(ScrollView.LayoutParams.MATCH_PARENT, ScrollView.LayoutParams.MATCH_PARENT));

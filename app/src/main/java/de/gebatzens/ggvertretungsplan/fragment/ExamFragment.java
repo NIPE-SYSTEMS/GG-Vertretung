@@ -19,7 +19,6 @@
 
 package de.gebatzens.ggvertretungsplan.fragment;
 
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,7 +26,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -63,6 +62,9 @@ public class ExamFragment extends RemoteDataFragment {
 
     @Override
     public void onViewCreated(View v, Bundle b) {
+
+        FrameLayout contentFrame = (FrameLayout) getActivity().findViewById(R.id.content_fragment);
+        contentFrame.setVisibility(View.VISIBLE);
         super.onViewCreated(v, b);
 
         swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.exam_refresh);

@@ -18,11 +18,11 @@
             android:layout_width="match_parent"
             app:theme="@style/ToolBarStyle"/>
 
+
         <FrameLayout
             android:id="@+id/content_fragment"
-            android:layout_weight="2"
             android:layout_width="match_parent"
-            android:layout_height="0dp"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <de.gebatzens.ggvertretungsplan.view.ScrimInsetsFrameLayout

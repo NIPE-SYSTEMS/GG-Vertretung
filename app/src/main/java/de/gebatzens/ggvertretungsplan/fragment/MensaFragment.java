@@ -34,6 +34,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -102,6 +103,8 @@ public class MensaFragment extends RemoteDataFragment {
                 R.color.custom_material_blue,
                 R.color.custom_material_orange);
 
+        FrameLayout contentFrame = (FrameLayout) getActivity().findViewById(R.id.content_fragment);
+        contentFrame.setVisibility(View.VISIBLE);
 
 
     }
