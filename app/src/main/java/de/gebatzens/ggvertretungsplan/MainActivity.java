@@ -178,14 +178,6 @@ public class MainActivity extends FragmentActivity {
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
-                if(GGApp.GG_APP.getDataForFragment(GGApp.GG_APP.getFragmentType()) == null)
-                    GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());
-
-                removeAllFragments();
-
-                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.content_fragment, mContent, "gg_content_fragment");
-                transaction.commit();
             }
 
             /** Called when a drawer has settled in a completely open state. */
@@ -234,6 +226,14 @@ public class MainActivity extends FragmentActivity {
                         public void onAnimationEnd(Animation animation) {
                             FrameLayout contentFrame = (FrameLayout) findViewById(R.id.content_fragment);
                             contentFrame.setVisibility(View.INVISIBLE);
+                            if(GGApp.GG_APP.getDataForFragment(GGApp.GG_APP.getFragmentType()) == null)
+                                GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());
+
+                            removeAllFragments();
+
+                            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                            transaction.replace(R.id.content_fragment, mContent, "gg_content_fragment");
+                            transaction.commit();
                         }
                         @Override
                         public void onAnimationRepeat(Animation animation) {
