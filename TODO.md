@@ -1,6 +1,6 @@
 ##To-Do-Liste
 
-* Mensaplan für GG und SWS
-  * Hier fehlt noch Unterstützung der Schulen
+* Mensaplan für SWS
+  * Der von der SWS will das klären
 * News für SWS
-* Klausurenplan
+* Klausurenplan für SWS
