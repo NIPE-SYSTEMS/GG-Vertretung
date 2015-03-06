@@ -86,7 +86,7 @@ public class GGContentFragment extends RemoteDataFragment {
         }
         mSlidingTabLayout.setViewPager(mViewPager);
 
-        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+        swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.refresh);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

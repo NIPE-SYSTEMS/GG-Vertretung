@@ -66,7 +66,7 @@ public class ExamFragment extends RemoteDataFragment {
     public void onViewCreated(View v, Bundle b) {
         super.onViewCreated(v, b);
 
-        swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.exam_refresh);
+        swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.refresh);
         // Setup refresh listener which triggers new data loading
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

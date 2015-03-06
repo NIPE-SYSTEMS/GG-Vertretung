@@ -33,6 +33,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -138,8 +139,13 @@ public class MainActivity extends FragmentActivity {
             public boolean onMenuItemClick(MenuItem menuItem) {
 
                 if(menuItem.getItemId() == R.id.action_refresh) {
-                    mContent.setFragmentLoading();
-                    GGApp.GG_APP.refreshAsync(null, true, GGApp.GG_APP.getFragmentType());
+                    ((SwipeRefreshLayout) mContent.getView().findViewById(R.id.refresh)).setRefreshing(true);
+                    GGApp.GG_APP.refreshAsync(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((SwipeRefreshLayout) mContent.getView().findViewById(R.id.refresh)).setRefreshing(false);
+                        }
+                    }, true, GGApp.GG_APP.getFragmentType());
                 } else if(menuItem.getItemId() == R.id.action_settings) {
                     Intent i = new Intent(MainActivity.this, SettingsActivity.class);
                     startActivityForResult(i, 1);
