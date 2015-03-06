@@ -26,6 +26,8 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -62,9 +64,6 @@ public class ExamFragment extends RemoteDataFragment {
 
     @Override
     public void onViewCreated(View v, Bundle b) {
-
-        FrameLayout contentFrame = (FrameLayout) getActivity().findViewById(R.id.content_fragment);
-        contentFrame.setVisibility(View.VISIBLE);
         super.onViewCreated(v, b);
 
         swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.exam_refresh);
@@ -91,6 +90,12 @@ public class ExamFragment extends RemoteDataFragment {
                 R.color.custom_material_red,
                 R.color.custom_material_blue,
                 R.color.custom_material_orange);
+
+        FrameLayout contentFrame = (FrameLayout) getActivity().findViewById(R.id.content_fragment);
+        contentFrame.setVisibility(View.VISIBLE);
+        LinearLayout fragmentLayout = (LinearLayout) getActivity().findViewById(R.id.fragment_layout);
+        Animation fadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fade_in);
+        fragmentLayout.startAnimation(fadeIn);
 
     }
 

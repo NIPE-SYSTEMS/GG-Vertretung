@@ -26,6 +26,8 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -86,6 +88,9 @@ public class NewsFragment extends RemoteDataFragment {
 
         FrameLayout contentFrame = (FrameLayout) getActivity().findViewById(R.id.content_fragment);
         contentFrame.setVisibility(View.VISIBLE);
+        LinearLayout fragmentLayout = (LinearLayout) getActivity().findViewById(R.id.fragment_layout);
+        Animation fadeIn = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.fade_in);
+        fragmentLayout.startAnimation(fadeIn);
 
     }
 

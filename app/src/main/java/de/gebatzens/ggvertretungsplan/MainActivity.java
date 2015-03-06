@@ -180,7 +180,6 @@ public class MainActivity extends FragmentActivity {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.replace(R.id.content_fragment, mContent, "gg_content_fragment");
                 transaction.commit();
-
             }
 
             /** Called when a drawer has settled in a completely open state. */
@@ -219,24 +218,24 @@ public class MainActivity extends FragmentActivity {
                     mDrawerLayout.closeDrawers();
                     mToolbar.setSubtitle(mStrings[position]);
                     mContent = createFragment();
-                    Animation fadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
-                    fadeIn.setAnimationListener(new Animation.AnimationListener() {
+                    Animation fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+                    fadeOut.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
                             // Called when the Animation starts
                         }
                         @Override
                         public void onAnimationEnd(Animation animation) {
-                            FrameLayout contentframe = (FrameLayout) findViewById(R.id.content_fragment);
-                            contentframe.setVisibility(View.INVISIBLE);
+                            FrameLayout contentFrame = (FrameLayout) findViewById(R.id.content_fragment);
+                            contentFrame.setVisibility(View.INVISIBLE);
                         }
                         @Override
                         public void onAnimationRepeat(Animation animation) {
                             // This is called each time the Animation repeats
                         }
                     });
-                    FrameLayout contentframe = (FrameLayout) findViewById(R.id.content_fragment);
-                    contentframe.startAnimation(fadeIn);
+                    FrameLayout contentFrame = (FrameLayout) findViewById(R.id.content_fragment);
+                    contentFrame.startAnimation(fadeOut);
                 } else{
                     mDrawerLayout.closeDrawers();
                 }
