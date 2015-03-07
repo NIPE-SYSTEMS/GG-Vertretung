@@ -26,7 +26,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
@@ -71,7 +70,10 @@ public class GGApp extends Application {
         GGBroadcast.createAlarm(this);
         recreateProvider();
         filters = FilterActivity.loadFilter();
-        //refreshAsync(null, false, getFragmentType());
+
+
+        startService(new Intent(this, MQTTService.class));
+
 
     }
 
