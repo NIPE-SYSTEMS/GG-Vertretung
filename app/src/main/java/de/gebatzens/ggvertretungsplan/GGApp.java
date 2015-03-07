@@ -71,10 +71,6 @@ public class GGApp extends Application {
         recreateProvider();
         filters = FilterActivity.loadFilter();
 
-
-        startService(new Intent(this, MQTTService.class));
-
-
     }
 
     public RemoteDataFragment.RemoteData getDataForFragment(FragmentType type) {
@@ -155,6 +151,8 @@ public class GGApp extends Application {
 
     public void recreateProvider() {
         createProvider(getSelectedProvider());
+        if(provider instanceof GGProvider)
+            startService(new Intent(this, MQTTService.class));
     }
 
     public void createProvider(String id) {
