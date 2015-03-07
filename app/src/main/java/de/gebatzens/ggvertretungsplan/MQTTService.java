@@ -19,8 +19,11 @@
 
 package de.gebatzens.ggvertretungsplan;
 
+import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.SystemClock;
 import android.util.Log;
 
 import org.fusesource.mqtt.client.BlockingConnection;
@@ -75,6 +78,25 @@ public class MQTTService extends IntentService {
             }
         } catch (Exception e) {
             Log.e("ggmqtt", "Failed to connect to server", e);
+        }
+    }
+
+    @Override
+    public void onTaskRemoved(Intent paramIntent) {
+        try {
+            if(!paramIntent.getStringExtra("runtimeLevel").trim().equals("exit")) {
+                Intent localIntent = new Intent(getApplicationContext(), getClass());
+                localIntent.setPackage(getPackageName());
+                PendingIntent localPendingIntent = PendingIntent.getService(getApplicationContext(), 1, localIntent, PendingIntent.FLAG_ONE_SHOT);
+                ((AlarmManager)getApplicationContext().getSystemService(ALARM_SERVICE)).set(3, 1000L + SystemClock.elapsedRealtime(), localPendingIntent);
+                super.onTaskRemoved(paramIntent);
+            }
+        } catch(NullPointerException e) {
+            Intent localIntent = new Intent(getApplicationContext(), getClass());
+            localIntent.setPackage(getPackageName());
+            PendingIntent localPendingIntent = PendingIntent.getService(getApplicationContext(), 1, localIntent, PendingIntent.FLAG_ONE_SHOT);
+            ((AlarmManager)getApplicationContext().getSystemService(ALARM_SERVICE)).set(3, 1000L + SystemClock.elapsedRealtime(), localPendingIntent);
+            super.onTaskRemoved(paramIntent);
         }
     }
 }
