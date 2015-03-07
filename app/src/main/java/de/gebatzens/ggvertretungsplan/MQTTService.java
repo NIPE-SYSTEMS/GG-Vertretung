@@ -31,6 +31,9 @@ import org.fusesource.mqtt.client.Topic;
 
 import java.net.URISyntaxException;
 
+import de.gebatzens.ggvertretungsplan.provider.GGProvider;
+import de.gebatzens.ggvertretungsplan.provider.VPProvider;
+
 public class MQTTService extends IntentService {
 
     int id = 1000;
@@ -41,9 +44,17 @@ public class MQTTService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        VPProvider provider = GGApp.GG_APP.provider;
+        if(!(provider instanceof GGProvider))
+            return;
+
+        String token;
+        if((token = provider.prefs.getString("token", null)) == null)
+            return;
+
         MQTT client = new MQTT();
         try {
-            client.setHost("tcp://192.168.177.29:1883");
+            client.setHost("tcp://10.49.1.19:1883");
         } catch (URISyntaxException e) {
             Log.e("ggmqtt", "Failed to set Host", e);
         }
@@ -52,7 +63,7 @@ public class MQTTService extends IntentService {
         try {
             con.connect();
             Log.w("ggmqtt", "Connected");
-            con.subscribe(new Topic[]{new Topic("gg/test", QoS.AT_LEAST_ONCE)});
+            con.subscribe(new Topic[]{new Topic("gg/schulinfoapp/" + token, QoS.AT_LEAST_ONCE)});
             while(true) {
                 Message message = con.receive();
                 String msg = new String(message.getPayload(), "UTF-8");
