@@ -135,8 +135,6 @@
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
         android:padding="12dp"
-        android:drawSelectorOnTop="true"
-        android:clickable="true"
         android:elevation="3dp"
         android:id="@+id/addfilter_button" />
 

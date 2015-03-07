@@ -133,5 +133,8 @@
     <string name="phil">Philosophy</string>
     <string name="lhour">Lesson</string>
     <string name="religion">Religion</string>
+    <string name="next">Next</string>
+    <string name="setup_title_1">Welcome to the SchoolInfoAPP!</string>
+    <string name="setup_description">Welcome to the SchoolInfoAPP!</string>
 
 </resources>
