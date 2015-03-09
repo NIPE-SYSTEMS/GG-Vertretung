@@ -47,17 +47,23 @@ public class MQTTService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        Log.w("ggmqtt", "MQTT Service started");
         VPProvider provider = GGApp.GG_APP.provider;
-        if(!(provider instanceof GGProvider))
+        if(!(provider instanceof GGProvider)) {
+            Log.w("ggmqtt", "Provider not GGProvider " + provider);
             return;
+        }
 
         String token;
-        if((token = provider.prefs.getString("token", null)) == null)
+        if((token = provider.prefs.getString("token", null)) == null) {
+            Log.w("ggmqtt", "Not Logged in");
             return;
+        }
 
         MQTT client = new MQTT();
         try {
-            client.setHost("tcp://10.49.1.19:1883");
+            client.setHost("tls://10.49.1.19:1883");
+            client.setSslContext(GGProvider.sc);
         } catch (URISyntaxException e) {
             Log.e("ggmqtt", "Failed to set Host", e);
         }
