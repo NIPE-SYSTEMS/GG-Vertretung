@@ -23,7 +23,8 @@ import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.os.SystemClock;
+import android.os.*;
+import android.os.Process;
 import android.util.Log;
 
 import org.fusesource.mqtt.client.BlockingConnection;
@@ -33,6 +34,8 @@ import org.fusesource.mqtt.client.QoS;
 import org.fusesource.mqtt.client.Topic;
 
 import java.net.URISyntaxException;
+
+import javax.net.ssl.SSLContext;
 
 import de.gebatzens.ggvertretungsplan.provider.GGProvider;
 import de.gebatzens.ggvertretungsplan.provider.VPProvider;
@@ -63,7 +66,6 @@ public class MQTTService extends IntentService {
         MQTT client = new MQTT();
         try {
             client.setHost("tls://10.49.1.19:1883");
-            client.setSslContext(GGProvider.sc);
         } catch (URISyntaxException e) {
             Log.e("ggmqtt", "Failed to set Host", e);
         }
