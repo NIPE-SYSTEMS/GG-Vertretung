@@ -203,9 +203,17 @@ public class GGProvider extends VPProvider {
             if(con.getResponseCode() == 401) {
                 logout(true, true);
                 throw new VPLoginException();
+            } else if(con.getResponseCode() == 419) {
+                startNewSession(prefs.getString("token", null));
+                if(session == null) {
+                    //Should not happen
+                    throw new VPLoginException();
+                } else {
+                    return getPlans(toast);
+                }
             }
 
-            XmlPullParser parser = Xml.newPullParser();
+                XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(new BufferedReader(new InputStreamReader(con.getInputStream())));
             parser.nextTag();
@@ -346,9 +354,15 @@ public class GGProvider extends VPProvider {
             if(con.getResponseCode() == 401) {
                 logout(true, true);
                 throw new VPLoginException();
-            }
-
-            if (con.getResponseCode() == 200) {
+            } else if(con.getResponseCode() == 419) {
+                startNewSession(prefs.getString("token", null));
+                if(session == null) {
+                    //Should not happen
+                    throw new VPLoginException();
+                } else {
+                    return getNews();
+                }
+            } else if (con.getResponseCode() == 200) {
                 XmlPullParser parser = Xml.newPullParser();
                 parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
                 parser.setInput(new BufferedReader(new InputStreamReader(con.getInputStream())));
@@ -426,9 +440,15 @@ public class GGProvider extends VPProvider {
             if(con.getResponseCode() == 401) {
                 logout(true, true);
                 throw new VPLoginException();
-            }
-
-            if (con.getResponseCode() == 200) {
+            } else if(con.getResponseCode() == 419) {
+                startNewSession(prefs.getString("token", null));
+                if(session == null) {
+                    //Should not happen
+                    throw new VPLoginException();
+                } else {
+                    return getMensa();
+                }
+            } else if (con.getResponseCode() == 200) {
                 XmlPullParser parser = Xml.newPullParser();
                 parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
                 parser.setInput(new BufferedReader(new InputStreamReader(con.getInputStream())));
@@ -509,7 +529,18 @@ public class GGProvider extends VPProvider {
             HttpsURLConnection con = openConnection("https://gymnasium-glinde.logoip.de/infoapp/infoapp_provider_new.php?site=examplan&sessid=" + session.id, true);
             con.setRequestMethod("GET");
 
-            if (con.getResponseCode() == 200) {
+            if(con.getResponseCode() == 401) {
+                logout(true, true);
+                throw new VPLoginException();
+            } else if(con.getResponseCode() == 419) {
+                startNewSession(prefs.getString("token", null));
+                if(session == null) {
+                    //Should not happen
+                    throw new VPLoginException();
+                } else {
+                    return getExams();
+                }
+            } else if (con.getResponseCode() == 200) {
                 XmlPullParser parser = Xml.newPullParser();
                 parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
                 parser.setInput(new BufferedReader(new InputStreamReader(con.getInputStream())));
@@ -553,9 +584,6 @@ public class GGProvider extends VPProvider {
                         }
                     }
                 }
-            } else if (con.getResponseCode() == 401) {
-                logout(true, true);
-                throw new VPLoginException();
             }
             exams.save("ggexams");
         } catch (Exception e) {
